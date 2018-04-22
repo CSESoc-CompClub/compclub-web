@@ -23,7 +23,7 @@ class Event(models.Model):
     availability_period = models.TextField()
 
 
-class WorkShops(models.Model):
+class Workshops(models.Model):
     name = models.CharField()
     time = models.DateTimeField()
     description = models.TextField()
