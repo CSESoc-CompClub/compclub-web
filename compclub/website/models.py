@@ -2,15 +2,15 @@ from django.db import models
 
 
 class Position(models.Model):
-    position_name = models.CharField()
+    name = models.CharField('position name')
 
 
 class User(models.Model):
     zId = models.CharField(primary_key=True)
     name = models.CharField(max_length=100)
     position = models.ForeignKey(Position)
-    email_address = models.EmailField()
-    phone_number = models.CharField()
+    email = models.EmailField('email address')
+    number = models.CharField('phone number')
     is_activated = models.BooleanField()
 
 
@@ -43,8 +43,8 @@ class EventAssignment(models.Model):
 class Registration(models.Model):
     eventId = models.ForeignKey(Event)
     name = models.CharField(max_length=100)
-    email_address = models.EmailField()
-    phone_number = models.CharField()
+    email = models.EmailField('email address')
+    number = models.CharField('phone number')
     date_of_birth = models.DateField()
     parent_email = models.EmailField()
     parent_number = models.CharField()
