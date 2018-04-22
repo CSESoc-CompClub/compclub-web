@@ -1,3 +1,50 @@
 from django.db import models
 
-# Create your models here.
+
+class Position(models.Model):
+    position_name = models.CharField()
+
+
+class User(models.Model):
+    zId = models.CharField(primary_key=True)
+    name = models.CharField(max_length=100)
+    position = models.ForeignKey(Position)
+    email_address = models.EmailField()
+    phone_number = models.CharField()
+    is_activated = models.BooleanField()
+
+
+class Event(models.Model):
+    name = models.CharField()
+    publish_date = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User)
+    description = models.TextField()
+    prerequisite = models.TextField()
+    availability_period = models.TextField()
+
+
+class WorkShops(models.Model):
+    name = models.CharField()
+    time = models.DateTimeField()
+    description = models.TextField()
+    location = models.CharField()
+
+
+class EventAvailabiliy(models.Model):
+    zId = models.ForeignKey(User)
+    eventId = models.ForeignKey(Event)
+
+
+class EventAssignment(models.Model):
+    zId = models.ForeignKey(User)
+    eventId = models.ForeignKey(Event)
+
+
+class Registration(models.Model):
+    eventId = models.ForeignKey(Event)
+    name = models.CharField(max_length=100)
+    email_address = models.EmailField()
+    phone_number = models.CharField()
+    date_of_birth = models.DateField()
+    parent_email = models.EmailField()
+    parent_number = models.CharField()
