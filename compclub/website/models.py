@@ -17,6 +17,8 @@ class User(models.Model):
     email = models.EmailField(verbose_name='email address')
     number = models.CharField(verbose_name='phone number')
     is_activated = models.BooleanField()
+    availability = models.ManyToManyField(Event)    # noqa: F821
+    assigned_event = models.ManyToManyField(Event)  # noqa: F821
 
     def __str__(self):
         """Return a string representation of a user."""
@@ -55,16 +57,6 @@ class Workshop(models.Model):
     def __str__(self):
         """Return a string representation of a workshop."""
         return f"{self.name} ({self.time})"
-
-
-class EventAvailabiliy(models.Model):
-    zId = models.ForeignKey(User)
-    eventId = models.ForeignKey(Event)
-
-
-class EventAssignment(models.Model):
-    zId = models.ForeignKey(User)
-    eventId = models.ForeignKey(Event)
 
 
 class Registration(models.Model):
