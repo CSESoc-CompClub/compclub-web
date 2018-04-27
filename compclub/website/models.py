@@ -11,7 +11,7 @@ class Position(models.Model):
 class User(models.Model):
     """Model representing a user."""
 
-    zId = models.CharField(primary_key=True)
+    zid = models.CharField(primary_key=True)
     name = models.CharField(max_length=100)
     position = models.ForeignKey(Position)
     email = models.EmailField(verbose_name='email address')
@@ -39,7 +39,7 @@ class Event(models.Model):
     owner = models.ForeignKey(User)
     description = models.TextField(null=True)
     prerequisite = models.TextField()
-    availability_period = models.TextField()
+    period = models.TextField(verbose_name="availability_period")
 
     def __str__(self):
         """Return a string representation of an event."""
@@ -49,6 +49,7 @@ class Event(models.Model):
 class Workshop(models.Model):
     """Model representing a workshop in a CompClub event."""
 
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField()
     time = models.DateTimeField()
     description = models.TextField(null=True)
@@ -62,7 +63,7 @@ class Workshop(models.Model):
 class Registration(models.Model):
     """Model representing a student registration."""
 
-    eventId = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email address')
     number = models.CharField(verbose_name='phone number')
