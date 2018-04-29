@@ -42,8 +42,8 @@ class Student(models.Model):
         verbose_name='parent\'s phone number', max_length=15)
 
     def __str__(self):
-        """Return a string representation of a registration."""
-        return f"event ID: {self.eventId} {self.name}"
+        """Return a string representation of a student."""
+        return self.user.first_name
 
 
 class Event(models.Model):
