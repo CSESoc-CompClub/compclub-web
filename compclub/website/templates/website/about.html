@@ -1,81 +1,16 @@
-<!doctype html>
-<html lang="en">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-body {font-family: "Lato", sans-serif}
-.mySlides {display: none}
-</style>
-   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-    <!-- Fontawesome CSS -->
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' />
-    <!-- jquery confirm CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
-    <title>CSESoc CompClub</title>
-  </head>
-  <body>
-    <!-- Banner -->
-    <div class="thumbnail">
-        <img class="img-thumbnail" src="https://lh3.googleusercontent.com/HkGfnxmuIGLumSLQ_dbGhTsjo9cYH-1MhpylzZBYR68kWE_9-Dcl-M6707HWj0vZXi03HnVXIw=w2047" alt="Chania" ;>
-    </div>
-    <!-- navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse col-12"  id="navbarNavDropdown">
-            <ul class="navbar-nav mt-2 mt-lg-0 ">
-              <li class="nav-item active ">
-                <a class="nav-link "href="/home">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/events">Event</a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link" href="/login">Login</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/signup">Sign Up</a>
-              </li>
-            </ul>
-            <ul class="navbar-nav mt-2 mt-lg-0 ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-primary" href="https://www.csesoc.unsw.edu.au">Go to CSE</a>
-                </li>
-                <!-- search form -->
-<!--                 <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form> -->
-            </ul>
-          </div>
-    </nav>
+{% extends "website/default.html" %}
 
-    <!-- About Section -->
-		<div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="band">
+{% block title %} {{ block.super }} - About Us {% endblock %}
+
+{% block content %}
+  {{ block.super }}
+
+  <!-- About Section -->
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="band">
     <h2 class="">About Us</h2>
     <p class=""> CompClub is a subsection of CSESoc devoted to getting high school kids into computing and giving them skills in different areas.
-		We run weekly workshops throughout the semester as well as a series of holiday workshops.
-		</p>
-   	<img class="imagen" border="0" src="https://ugc.kn3.net/i/origin/http://i.imgur.com/t655rGH.gif" alt="Ja" title="Ja">
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <!-- jquery-confirm JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-  </body>
-</html>
+    We run weekly workshops throughout the semester as well as a series of holiday workshops.
+    </p>
+    <img class="imagen" border="0" src="https://ugc.kn3.net/i/origin/http://i.imgur.com/t655rGH.gif" alt="Ja" title="Ja">
+  </div>
+{% endblock %}
