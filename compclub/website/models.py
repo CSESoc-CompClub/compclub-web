@@ -1,9 +1,21 @@
 """Provides models for the CompClub website."""
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+
+
+class CustomUser(AbstractUser):
+    """
+    Extension of Django user model. Makes email, first and last name fields compulsory.
+    Adds phone number field.
+    """
+    first_name = models.CharField(max_length=200, blank=False)
+    last_name = models.CharField(max_length=200, blank=False)
+    email = models.EmailField(blank=False)
+    number = models.CharField(verbose_name="phone number", max_length=15)
 
 
 class Position(models.Model):
@@ -14,9 +26,8 @@ class Position(models.Model):
 
 class Volunteer(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    number = models.CharField(verbose_name="phone_number", max_length=15)
-    availability = models.ManyToManyField('Event', related_name='availability', blank=True)
-    assigned_event = models.ManyToManyField('Event', related_name='assigned', blank=True)
+    availability = models.ManyToManyField('Event', related_name="availability", blank=True)
+    assigned_event = models.ManyToManyField('Event', related_name="assigned", blank=True)
     position = models.ForeignKey(
         Position, on_delete=models.SET_NULL, null=True, blank=True)
 
