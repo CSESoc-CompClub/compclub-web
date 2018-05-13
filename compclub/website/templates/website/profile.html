@@ -1,5 +1,5 @@
 <html>
-  <a href="/logout">Logout</a>
+  <a href="{% url 'website:logout' %}">Logout</a>
   <h3>{{ request.user.username }}</h3>
 
   <ul>
