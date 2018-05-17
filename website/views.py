@@ -9,7 +9,6 @@ def index(request):
     context = {
         # TODO
     }
-    print("Potato")
     return HttpResponse(template.render(context, request))
 
 
