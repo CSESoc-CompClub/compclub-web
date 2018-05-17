@@ -15,14 +15,14 @@ class Position(models.Model):
 class Volunteer(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     number = models.CharField(verbose_name="phone_number", max_length=15)
-    availability = models.ManyToManyField('Event', related_name="availability")
-    assigned_event = models.ManyToManyField('Event', related_name="assigned")
+    availability = models.ManyToManyField('Event', related_name='availability', blank=True)
+    assigned_event = models.ManyToManyField('Event', related_name='assigned', blank=True)
     position = models.ForeignKey(
-        Position, on_delete=models.SET_NULL, null=True)
+        Position, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         """Return a string representation of a volunteer."""
-        return self.user.first_name
+        return f"{self.user.username} ({self.user.first_name} {self.user.last_name})"
 
 
 @receiver(post_save, sender=get_user_model())
@@ -60,7 +60,7 @@ class Event(models.Model):
     owner = models.ForeignKey(Volunteer, on_delete=models.SET_NULL, null=True)
     description = models.TextField(null=True)
     prerequisite = models.TextField()
-    period = models.TextField(verbose_name="availability_period")
+    period = models.TextField(verbose_name='availability period')
 
     def __str__(self):
         """Return a string representation of an event."""
@@ -70,7 +70,7 @@ class Event(models.Model):
 class Workshop(models.Model):
     """Model representing a workshop in a CompClub event."""
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, related_name='workshop', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     time = models.DateTimeField()
     description = models.TextField(null=True)
