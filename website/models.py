@@ -89,7 +89,7 @@ class Workshop(models.Model):
 
     def __str__(self):
         """Return a string representation of a workshop."""
-        return f"{self.name} ({self.time})"
+        return f"{self.event.name}: {self.name} ({self.time})"
 
 
 class Registration(models.Model):
