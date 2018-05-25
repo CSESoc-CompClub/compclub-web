@@ -28,7 +28,10 @@ def make_event(name, days_from_now, n_week, workshop_time: time, description,
         the created Event
     '''
     start_date = date.today() + timedelta(days=days_from_now)
-    finish_date = start_date + timedelta(days=n_week*7)
+    if n_week == 1:  # single event
+        finish_date = start_date + timedelta(days=1)
+    else:
+        finish_date = start_date + timedelta(days=n_week *7 - 6)
 
     start_dt = datetime.combine(start_date, time.min)
     finish_dt = datetime.combine(finish_date, time.min)
