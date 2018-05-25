@@ -7,7 +7,7 @@ from .models import CustomUser, Event, Volunteer, Workshop
 
 class UserCreateForm(UserCreationForm):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'first_name' , 'last_name', 'email')
 
 # Register your models here.
