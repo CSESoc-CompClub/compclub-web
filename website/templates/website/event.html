@@ -1,0 +1,19 @@
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} - Event {% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  <div class="container">
+    <h1>{{ event.name }}</h1>
+    {% if workshops|length > 1 %}
+    <h3>{{ workshops|length }} workshops starting from {{ event.start_date }}</h3>
+    {% else %}
+    <h3>{{ event.start_date }}</h3>
+    {% endif %}
+    <p>{{ event.description }}</p>
+    <h4>Prerequisites</h4>
+    <p>{{ event.prerequisite }}</p>
+    <p>Location: {{ location }}</p>
+  </div>
+{% endblock %}

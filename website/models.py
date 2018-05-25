@@ -5,6 +5,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 
 class CustomUser(AbstractUser):
@@ -72,10 +73,16 @@ class Event(models.Model):
     description = models.TextField(null=True)
     prerequisite = models.TextField()
     period = models.TextField(verbose_name='availability period')
+    slug = models.SlugField(default='event', unique=False) # url name of event
 
     def __str__(self):
         """Return a string representation of an event."""
         return self.name
+    
+    def save(self, *args, **kwargs):
+        """Override save to update slug"""
+        self.slug = slugify(self.name)
+        super(Event, self).save(*args, **kwargs)
 
 
 class Workshop(models.Model):

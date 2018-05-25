@@ -5,6 +5,36 @@
 {% block content %}
   {{ block.super }}
   <div class="container">
-    <h1>List of events</h1>
+    <div class="event-list-header">
+      <h1>Events</h1>
+      {% if user.is_authenticated %}
+        <button>Create New Event</button>
+      {% endif %}
+    </div>
+
+    {% if events_list %}
+      <div class="event-list">
+      {% for event in events_list %}
+        <div class="event-card">
+          <div class="event-card-container">
+            <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
+              <h2>{{ event.name }}</h2>
+            </a>
+            <p>{{ event.start_date }} to {{ event.finish_date }}</p>
+            <p>{{ event.description }}</p>
+            <p>Prerequisites: {{ event.prerequisite }}</p>
+            <div class="event-card-footer">
+                <a class="event-card-footer-link" href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
+                    Learn more >
+                </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <h2>There aren't any events at this time</h2>
+      <p>Stay tuned for further events!</p>
+    {% endif %}
   </div>
 {% endblock %}
