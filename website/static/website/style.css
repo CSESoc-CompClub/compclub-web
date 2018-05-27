@@ -10,6 +10,8 @@ html, body {
 
 .event-list {
     margin-top: 2.0rem;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .event-card {
@@ -18,7 +20,7 @@ html, body {
     border-radius: 8px;
     background-color: #fafbfc;
     font-size: 1.2rem;
-    margin: 0 10% 2.0rem;
+    margin: 0 0 2.0rem;
     width: 80%;
 }
 
