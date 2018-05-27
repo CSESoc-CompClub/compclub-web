@@ -1,27 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
+
 
 html, body {
-    background-color: #f4f7f6;
+    background-color: #1C1E20;
+    /* margin: 0 0;
+    padding: 0 0; */
 }
 
 .event-list-header {
-    margin-left: 10%;
+    color: white;
+    /* margin-left: 10%; */
     margin-top: 2.5rem;
 }
 
 .event-list {
     margin-top: 2.0rem;
-    margin-left: 10%;
-    margin-right: 10%;
+    /* margin-left: 10%;
+    margin-right: 10%; */
 }
 
 .event-card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    border-top: 4px solid #034f84;
-    border-radius: 8px;
-    background-color: #fafbfc;
+    border-top: 4px solid lightskyblue;
+    /* border-radius: 8px; */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
     font-size: 1.2rem;
     margin: 0 0 2.0rem;
-    width: 80%;
+    width: 100%;
 }
 
 
@@ -31,12 +37,16 @@ html, body {
 
 .event-card-container p {
     margin: 6px 0 0;
+    font-weight: lighter;
 }
 
 .event-card-container a, .event-card-container a:visited {
     text-decoration: none;
-    color: navy;
+    color: inherit;
 }
+
+/* .event-link {
+} */
 
 .event-card-footer {
     border-top: 1px solid #a0a0a0;
