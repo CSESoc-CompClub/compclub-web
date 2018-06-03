@@ -5,15 +5,15 @@
 {% block content %}
   {{ block.super }}
   <div class="container">
-    <div class="event-list-header">
-      <h1>Events</h1>
-      {% if user.is_authenticated %}
-        <button>Create New Event</button>
-      {% endif %}
-    </div>
+    <div class="event-list">
+      <div class="event-list-header">
+        <h1>Events</h1>
+        {% if user.is_authenticated %}
+          <button>Create New Event</button>
+        {% endif %}
+      </div>
 
     {% if events_list %}
-      <div class="event-list">
       {% for event in events_list %}
        <div class="event-holder">
           <div class = "calendar">

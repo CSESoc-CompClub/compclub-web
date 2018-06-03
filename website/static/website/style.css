@@ -2,15 +2,17 @@
 
 
 html, body {
-    background-color: #1C1E20;
+    /*background-color: #1C1E20; */
+    background-color: #747474;
     /* margin: 0 0;
     padding: 0 0; */
 }
 
 .event-list-header {
-    color: white;
-    /* margin-left: 10%; */
-    margin-top: 2.5rem;
+    color: black;
+    margin-left: 10%;
+    padding-top: 2.5rem;
+    background-color: inherit;
 }
 
 h2:after {
@@ -25,9 +27,10 @@ h2:after {
 }
 
 .event-list {
-    margin-top: 2.0rem;
-    /* margin-left: 10%;
-    margin-right: 10%; */
+    padding-top: 2.0rem;
+    background-color: inherit;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .event-holder{
@@ -38,8 +41,9 @@ h2:after {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border-top: 4px solid lightskyblue;
     /* border-radius: 8px; */
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
+   /* background-color: rgba(255, 255, 255, 0.1); */
+    background-color: white;
+    color: black;
     font-size: 1.2rem;
     margin: 0 0 2.0rem;
     display: inline-block;
@@ -78,13 +82,10 @@ h2:after {
     float: right;
 }
 
-
-
-
 .calendar {
     width:10%;
     display: inline-block;
-    color: white;
+    color: black;
     float: left;
 }
 
