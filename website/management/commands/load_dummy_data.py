@@ -101,12 +101,12 @@ class Command(BaseCommand):
             )
 
             make_event(
-                'Test: Intro to Programming',
+                'Intro to Programming',
                 15,
                 6,
                 time(16, 0), # 16:00 local time
-                'Learn how to code and make programs using the Python programming language',
-                'No prior programming experience required',
+                'Have you ever wanted to learn to write computer programs? Jump in with the modern programming language Python and learn to develop fun and exciting software from scratch.',
+                'No programming experience required',
                 '2 hours?',
                 'UNSW K17 oud lab'
             )

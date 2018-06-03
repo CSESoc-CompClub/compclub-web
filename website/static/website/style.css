@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
-
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 html, body {
-    background-color: #1C1E20;
+    background-color: #262E40;
     /* margin: 0 0;
     padding: 0 0; */
 }
@@ -13,15 +13,30 @@ html, body {
     margin-top: 2.5rem;
 }
 
-h2:after {
+.event-list-header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+}
+
+.event-card-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 16px;
+}
+
+.event-card-title:after {
     content: '';
+    position: absolute;
     display: block;
     bottom: 0;
-    padding-right:2%;
-    width: 14%;
-    height: 3px;
-    background: white;
-    margin-top: 1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #FFBC37;
 }
 
 .event-list {
@@ -36,11 +51,10 @@ h2:after {
 
 .event-card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    border-top: 4px solid lightskyblue;
+    border-top: 4px solid #FFBC37;
     /* border-radius: 8px; */
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
-    font-size: 1.2rem;
     margin: 0 0 2.0rem;
     display: inline-block;
     width: 90%;
@@ -48,18 +62,21 @@ h2:after {
 
 
 .event-card-container {
-    padding: 12px 16px 2px;
+    padding: 24px 24px 2px;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .event-card-container p {
-    display: inline-block;
-    margin: 6px 0 0;
-    font-weight: lighter;
+    margin: 0 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
 .event-card-container a, .event-card-container a:visited {
     text-decoration: none;
     color: inherit;
+    display: block;
 }
 
 /* .event-link {
@@ -74,24 +91,43 @@ h2:after {
 }
 
 .event-card-footer-link {
+    padding: 6px 12px 6px 12px;
     margin: 6px 0 0px 0;
     float: right;
+    transition-duration: 0.3s;
 }
 
-
-
+.event-card-footer-link:hover,
+.event-card-footer-link:active {
+    background-color: #BF7F00;
+    /* background-color: #FFBC37; */
+}
 
 .calendar {
-    width:10%;
+    vertical-align: top;
+    position: relative;
+    width: 80px;
     display: inline-block;
     color: white;
-    float: left;
+    /* float: left; */
 }
 
 .calender-container {
     font-size: 2.5em;
     padding: 12px 16px 2px;
     text-align: center;
-    float: right;
+    /* float: right; */
 }
 
+
+.calendar-month {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    line-height: 0.6em;
+}
+
+.calendar-day {
+    /* line-height: 0.5em; */
+    color: #FFBC37;
+    margin-top: 0;
+}
