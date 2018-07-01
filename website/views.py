@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from .models import Event, Workshop
 
 def index(request):
@@ -16,9 +17,11 @@ def index(request):
 
 def event_index(request):
     template = loader.get_template('website/event_index.html')
-    # get list of current and future events
-    events = Event.objects.filter(
-        finish_date__gte=datetime.now()).order_by('start_date')
+    # get list of current and future events, and how many workshops they consist of
+    events = Event.objects \
+        .annotate(n_workshops=Count('workshop')) \
+        .filter(finish_date__gte=datetime.now()) \
+        .order_by('start_date')
     context = {
         'events_list': events,
     }

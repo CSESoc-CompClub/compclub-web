@@ -6,7 +6,7 @@
   {{ block.super }}
   <div class="container">
     <div class="event-list-header">
-      <h1>Events</h1>
+      <h1 class="event-list-title">Events</h1>
       {% if user.is_authenticated %}
         <button>Create New Event</button>
       {% endif %}
@@ -16,18 +16,31 @@
       {% for event in events_list %}
        <div class="event-holder">
           <div class = "calendar">
-              <div class ="calender-container">
-                <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
-                <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
-              </div>
+          {% if event.n_workshops > 1 %}
+            <div class="calender-container calendar-from">
+              <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
+              <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
+            </div>
+            <p class="calendar-divider">&#8212;</p>
+            <div class ="calender-container calendar-to">
+              <h3 class="calendar-month">{{ event.finish_date|date:"M" }}</h3>
+              <p class="calendar-day">{{ event.finish_date|date:"d" }} </p>
+            </div>
+            <h5 class="calendar-nworkshops">{{ event.n_workshops }} Workshops</h5>
+          {% else %}
+            <div class ="calender-container calendar-to">
+              <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
+              <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
+            </div>
+          {% endif %}
           </div>
           <div class="event-card">
             <div class="event-card-container">
               <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
                 <h2 class="event-card-title">{{ event.name }}</h2>
               </a>
-              <p>{{ event.description }}</p>
-              <p>Prerequisites: {{ event.prerequisite }}</p>
+              <p class="event-card-description">{{ event.description }}</p>
+              <p class="event-card-prereq"><span class="prereq-title">Prerequisites:</span> {{ event.prerequisite }}</p>
               <div class="event-card-footer">
                   <a class="event-card-footer-link" href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
                       Learn more
