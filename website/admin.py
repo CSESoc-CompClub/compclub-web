@@ -1,8 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Volunteer
+from .models import CustomUser, Event, Volunteer, Workshop
 
+
+class UserCreateForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name' , 'last_name', 'email')
 
 # Register your models here.
 class VolunteerInline(admin.StackedInline):
@@ -13,7 +19,15 @@ class VolunteerInline(admin.StackedInline):
 
 
 class CustomUserAdmin(BaseUserAdmin):
+    # add_form = UserCreateForm
     inlines = (VolunteerInline, )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('first_name', 'last_name', 'username', 'password1', 'password2', 'email', 'number'),
+        }),
+    )
 
     def get_inline_instances(self, request, obj=None):
         if not obj:
@@ -21,6 +35,6 @@ class CustomUserAdmin(BaseUserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
-admin.site.register(Volunteer)
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Event)
+admin.site.register(Workshop)
