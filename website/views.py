@@ -44,6 +44,12 @@ def event_page(request, event_id, slug):
     }
     return HttpResponse(template.render(context, request))
 
+def registration(request,event_id, slug):
+    template = loader.get_template('website/Registration_form.html')
+    context = {
+        # TODO
+    }
+    return HttpResponse(template.render(context, request))
 
 def about(request):
     template = loader.get_template('website/about.html')
@@ -57,3 +63,5 @@ def about(request):
 def user_profile(request):
     template = loader.get_template('website/profile.html')
     return HttpResponse(template.render({}, request))
+
+    

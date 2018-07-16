@@ -1,0 +1,56 @@
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} -- Volunteer Registration {% endblock %}
+
+
+{% block content %}
+  {{ block.super }}
+  <div class="container">
+        <div class="event-list-header">
+          <h1 class="event-list-title">Registration</h1>
+        </div>
+        <div class="event-card">
+            <div class="event-card-container">
+                <form method='POST' action='{% if action_url %}{{ action_url }}{% endif %}'> {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name" class="" >Name</label>
+                        <div class="input-group">
+                            <input type="text" placeholder='name' value='{{Registration.name}}'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" >Email</label>
+                        <div class="input-group">
+                            <input type="email" placeholder='email' value='{{Registration.email}}'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="number">Number</label>
+                        <div class="input-group">
+                            <input type="tel" placeholder='phone number' value='{{Registration.number}}'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">D.O.B</label>
+                        <div class="input-group">
+                            <input type="date" placeholder='Date Of Birth' value='{{Registration.number}}'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="parent_number">parent_number</label>
+                        <div class="input-group">
+                            <input type="tel" placeholder='parents number' value='{{Registration.number}}'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="parent_email">parent_email</label>
+                        <div class="input-group">
+                            <input type="email" placeholder='parent email' value='{{Registration.number}}'/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-warning">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
