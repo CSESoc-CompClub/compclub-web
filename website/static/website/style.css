@@ -189,3 +189,29 @@ html, body {
     display: block;
     text-align: right;
 }
+
+h3.event-detail{
+    color: #FFBC37;
+}
+
+h3.workshop-detail{
+    color:#FFD684;
+    font-size: 25px;
+}
+
+.event-detail-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-top: 4px solid #FFBC37;
+    /* border-radius: 8px; */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    display: block;
+    /* max-width: 80%; */
+}
+
+.event-detail-card-footer {
+    border-top: 1px solid #a0a0a0;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
