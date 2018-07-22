@@ -5,7 +5,8 @@ from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
-from .models import Event, Workshop
+from .models import Event, Workshop 
+from .form import RegistrationForm
 
 def index(request):
     template = loader.get_template('website/index.html')
@@ -45,11 +46,14 @@ def event_page(request, event_id, slug):
     return HttpResponse(template.render(context, request))
 
 def registration(request,event_id, slug):
-    template = loader.get_template('website/Registration_form.html')
-    context = {
-        # TODO
-    }
-    return HttpResponse(template.render(context, request))
+    if request.method=='POST':
+        registration_form = RegistrationForm(request.POST,prefix='Registration_form')
+        if all([registration.is_valid()]):
+            registration = registration_form.save()
+            return redirect('website:event_index')
+    registration_form =RegistrationForm(prefix='Registration_form')
+    context = {'registration_form':registration_form}
+    return render(request,'website/Registration_form.html',context)
 
 def about(request):
     template = loader.get_template('website/about.html')
