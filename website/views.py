@@ -1,11 +1,10 @@
 from datetime import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404,render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 from django.db.models import Count
-from .models import Event, Workshop 
+from .models import Event, Workshop,Registration 
 from .form import RegistrationForm
 
 def index(request):
@@ -48,7 +47,7 @@ def event_page(request, event_id, slug):
 def registration(request,event_id, slug):
     if request.method=='POST':
         registration_form = RegistrationForm(request.POST,prefix='Registration_form')
-        if all([registration.is_valid()]):
+        if all([registration_form.is_valid()]):
             registration = registration_form.save()
             return redirect('website:event_index')
     registration_form =RegistrationForm(prefix='Registration_form')

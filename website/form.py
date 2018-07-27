@@ -1,5 +1,6 @@
 from django.forms import DateInput, DateTimeInput, ModelForm, ValidationError
 from website.models import Registration
+from django.utils.translation import gettext_lazy as _
 
 class DatePicker(DateInput):
     input_type = 'date'
@@ -13,7 +14,8 @@ class RegistrationForm(ModelForm):
 
     class Meta:
         model = Registration
-        field = ['name','email','number','date_of_birth','parent_email','parent_number']
-    
+        fields = '__all__'
+        exclude = ()
+        
     def clean(self):
         cleaned_dae = super().clean()

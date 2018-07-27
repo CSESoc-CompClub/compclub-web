@@ -113,4 +113,4 @@ class Registration(models.Model):
 
     def __str__(self):
         """Return a string representation of a registration."""
-        return f"event ID: {self.eventId} {self.name}"
+        return f"{self.name}"

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import CustomUser, Event, Volunteer, Workshop
+from .models import CustomUser, Event, Volunteer, Workshop, Registration
 
 
 class UserCreateForm(UserCreationForm):
@@ -38,3 +38,4 @@ class CustomUserAdmin(BaseUserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Event)
 admin.site.register(Workshop)
+admin.site.register(Registration)
