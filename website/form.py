@@ -11,11 +11,17 @@ class DateTimePicker(DateTimeInput):
 class RegistrationForm(ModelForm):
     def __init__(self,*args,**kwargs):
         super(RegistrationForm,self).__init__(*args,**kwargs)
+        for field in self:
+            field.field.widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = Registration
         fields = '__all__'
         exclude = ()
-        
+        widgets = {
+            'date_of_birth': DatePicker,
+            
+        }
+
     def clean(self):
         cleaned_dae = super().clean()

@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from .models import Event, Workshop,Registration 
+from .models import Event, Workshop,Registration
 from .form import RegistrationForm
 
 def index(request):
@@ -44,15 +44,18 @@ def event_page(request, event_id, slug):
     }
     return HttpResponse(template.render(context, request))
 
-def registration(request,event_id, slug):
-    if request.method=='POST':
-        registration_form = RegistrationForm(request.POST,prefix='Registration_form')
+
+def registration(request, event_id, slug):
+    if request.method == 'POST':
+        registration_form = RegistrationForm(request.POST, prefix='Registration_form')
         if all([registration_form.is_valid()]):
-            registration = registration_form.save()
+            registration_form.save()
             return redirect('website:event_index')
-    registration_form =RegistrationForm(prefix='Registration_form')
-    context = {'registration_form':registration_form}
-    return render(request,'website/Registration_form.html',context)
+        print(registration_form)
+    registration_form = RegistrationForm(prefix='Registration_form')
+    context = {'registration_form': registration_form}
+    return render(request, 'website/Registration_form.html', context)
+
 
 def about(request):
     template = loader.get_template('website/about.html')
@@ -66,5 +69,3 @@ def about(request):
 def user_profile(request):
     template = loader.get_template('website/profile.html')
     return HttpResponse(template.render({}, request))
-
-    

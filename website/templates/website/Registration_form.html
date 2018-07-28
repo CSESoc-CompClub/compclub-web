@@ -12,42 +12,7 @@
         <div class="event-card">
             <div class="event-card-container">
                 <form method='post' action='{% if action_url %}{{ action_url }}{% endif %}'> {% csrf_token %}
-                    <div class="form-group">
-                        <label for="name" class="" >Name</label>
-                        <div class="input-group">
-                            <input type="text" placeholder='name' value='{{Registration.name}}'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" >Email</label>
-                        <div class="input-group">
-                            <input type="email" placeholder='email' value='{{Registration.email}}'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="number">Number</label>
-                        <div class="input-group">
-                            <input type="tel" placeholder='phone number' value='{{Registration.number}}'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">D.O.B</label>
-                        <div class="input-group">
-                            <input type="date" placeholder='Date Of Birth' value='{{Registration.date_of_birth}}'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="parent_number">parent_number</label>
-                        <div class="input-group">
-                            <input type="tel" placeholder='parents number' value='{{Registration.parent_number}}'/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="parent_email">parent_email</label>
-                        <div class="input-group">
-                            <input type="email" placeholder='parent email' value='{{Registration.parent_email}}'/>
-                        </div>
-                    </div>
+                    {{ registration_form }}
                     <button type="submit" class="btn btn-outline-warning">Submit</button>
                 </form>
             </div>
