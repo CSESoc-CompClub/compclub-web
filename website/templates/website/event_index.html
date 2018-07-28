@@ -4,8 +4,44 @@
 
 {% block body %}
   {{ block.super }}
-      <h2>List of events</h2>
-      <p class=""> CompClub is a subsection of CSESoc devoted to getting high school kids into computing and giving them skills in different areas.
-          We run weekly workshops throughout the semester as well as a series of holiday workshops.
-      </p>
+  <div class="container">
+    {% if user.is_staff %}
+      <a class="btn" href="{% url 'website:event_create' %}">Create Event</a>
+    {% endif %}
+    <div class="event-list-header">
+      <h1>Events</h1>
+    </div>
+
+    {% if events_list %}
+      <div class="event-list">
+      {% for event in events_list %}
+        <div class="event-card">
+          <div class="event-card-container">
+            <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
+              <h2>{{ event.name }}</h2>
+            </a>
+            <p>{{ event.start_date }} to {{ event.finish_date }}</p>
+            <p>{{ event.description }}</p>
+            <p>Prerequisites: {{ event.prerequisite }}</p>
+            <div class="event-card-footer">
+                <a class="event-card-footer-link" href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
+                    Learn more >
+                </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    {% else %}
+      <div class="event-list">
+        <div class="event-card">
+          <div class="event-card-container">
+            <h2>There aren't any events at this time</h2>
+            <p>Stay tuned for future events!</p>
+          </div>
+          <div class="event-card-footer"></div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

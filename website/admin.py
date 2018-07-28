@@ -2,12 +2,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import CustomUser, Event, Volunteer, Workshop
+
+from website.models import CustomUser, Event, Volunteer, Workshop
 
 
 class UserCreateForm(UserCreationForm):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'first_name' , 'last_name', 'email')
 
 # Register your models here.

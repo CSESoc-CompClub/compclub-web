@@ -2,9 +2,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.dispatch import receiver
 from django.db.models.signals import post_save
-from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.utils.text import slugify
 
 
 class CustomUser(AbstractUser):
@@ -26,8 +26,10 @@ class Position(models.Model):
 
 class Volunteer(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    availability = models.ManyToManyField('Event', related_name="availability", blank=True)
-    assigned_event = models.ManyToManyField('Event', related_name="assigned", blank=True)
+    availability = models.ManyToManyField(
+        'Event', related_name="availability", blank=True)
+    assigned_event = models.ManyToManyField(
+        'Event', related_name="assigned", blank=True)
     position = models.ForeignKey(
         Position, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -72,6 +74,12 @@ class Event(models.Model):
     description = models.TextField(null=True)
     prerequisite = models.TextField()
     period = models.TextField(verbose_name='availability period')
+    slug = models.SlugField(default='event', unique=False)  # url name of event
+
+    def save(self, *args, **kwargs):
+        if not self.id:  # if this is a new event
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """Return a string representation of an event."""
@@ -81,7 +89,8 @@ class Event(models.Model):
 class Workshop(models.Model):
     """Model representing a workshop in a CompClub event."""
 
-    event = models.ForeignKey(Event, related_name='workshop', on_delete=models.CASCADE)
+    event = models.ForeignKey(
+        Event, related_name='workshop', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     time = models.DateTimeField()
     description = models.TextField(null=True)
@@ -89,7 +98,7 @@ class Workshop(models.Model):
 
     def __str__(self):
         """Return a string representation of a workshop."""
-        return f"{self.name} ({self.time})"
+        return f"{self.event.name}: {self.name} ({self.time})"
 
 
 class Registration(models.Model):

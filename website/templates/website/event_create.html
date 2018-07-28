@@ -1,0 +1,227 @@
+{% extends "website/default.html" %}
+{% load widget_mods %}
+
+{% block title %} {{ block.super }} - Create Event {% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  <div class="container">
+    <h3 class="display-3 mb-3 mt-3">Create event</h3>
+
+    <form class="event-form" method="post" novalidate>
+      {% csrf_token %}
+
+      {% for error in event_form.non_field_errors %}
+	<div class="alert alert-danger" role="alert">{{ error }}</div>
+      {% endfor %}
+
+      {% for error in workshop_form.non_field_errors %}
+	<div class="alert alert-danger" role="alert">{{ error }}</div>
+      {% endfor %}
+
+      {% for hidden in event_form.hidden_fields %}
+	{{ hidden }}
+      {% endfor %}
+
+      {% for hidden in workshop_form.hidden_fields %}
+	{{ hidden }}
+      {% endfor %}
+
+      <div class="form-group">
+	{{ event_form.name.label_tag }}
+	{% if event_form.name.errors %}
+	  {% comment %}With the custom filter "add_attr" we can put extra css
+	  classes to this form field{% endcomment %}
+	  {{ event_form.name|add_attrs:"placeholder:Event title, is-invalid" }}
+	  {% for error in event_form.name.errors %}
+	    <div class="invalid-feedback">
+	      {{ error }}
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  {{ event_form.name|add_attrs:"placeholder:Event title" }}
+	{% endif %}
+      </div>
+
+      <div class="form-row">
+
+	<div class="form-group col-md-4">
+	  {{ event_form.start_date.label_tag }}
+	  {% if event_form.start_date.errors %}
+	    {{ event_form.start_date|add_attrs:"is-invalid" }}
+	    {% for error in event_form.start_date.errors %}
+	      <div class="invalid-feedback">
+		{{ error }}
+	      </div>
+	    {% endfor %}
+	  {% else %}
+	    {{ event_form.start_date }}
+	  {% endif %}
+	  <small class="form-text text-muted">
+	    {{ event_form.start_date.help_text }}
+	  </small>
+	</div>
+
+	<div class="form-group col-md-4">
+	  {{ event_form.finish_date.label_tag }}
+	  {% if event_form.finish_date.errors %}
+	    {{ event_form.finish_date|add_attrs:"is-invalid" }}
+	    {% for error in event_form.finish_date.errors %}
+	      <div class="invalid-feedback">
+		{{ error }}
+	      </div>
+	    {% endfor %}
+	  {% else %}
+	    {{ event_form.finish_date }}
+	  {% endif %}
+	  <small class="form-text text-muted">
+	    {{ event_form.finish_date.help_text }}
+	  </small>
+	</div>
+
+	<div class="form-group col-md-4">
+	  <label for="{{ event_form.owner.id_for_label }}">{{ event_form.owner.label }}:</label>
+	  <div class="input-group">
+	    <div class="input-group-prepend">
+	      <span class="input-group-text" id="inputGroupPrepend">@</span>
+	    </div>
+	    {% if event_form.owner.errors %}
+	      {{ event_form.owner|add_attrs:"is-invalid" }}
+	      {% for error in event_form.owner.errors %}
+		<div class="invalid-feedback">
+		  {{ error }}
+		</div>
+	      {% endfor %}
+	    {% else %}
+	      {{ event_form.owner }}
+	    {% endif %}
+	  </div>
+	  <small class="form-text text-muted">
+	    {{ event_form.owner.help_text }}
+	  </small>
+	</div>
+
+      </div>
+
+      <div class="form-group">
+	{{ event_form.description.label_tag }}
+	{% if event_form.description.errors %}
+	  {{ event_form.description|add_attrs:"rows:3, cols:10, is-invalid" }}
+	  {% for error in event_form.description.errors %}
+	    <div class="invalid-feedback">
+	      {{ error }}
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  {{ event_form.description }}
+	{% endif %}
+      </div>
+
+      <div class="form-group">
+	{{ event_form.prerequisite.label_tag }}
+	{% if event_form.prerequisite.errors %}
+	  {{ event_form.prerequisite|add_attrs:"placeholder:Assumed knowledge,rows:3, cols:10, is-invalid" }}
+	  {% for error in event_form.prerequisite.errors %}
+	    <div class="invalid-feedback">
+	      {{ error }}
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  {{ event_form.prerequisite|add_attrs:"placeholder:Assumed knowledge,rows:3, cols:10" }}
+	{% endif %}
+      </div>
+
+      <div class="form-group">
+	{{ event_form.period.label_tag }}
+	{% if event_form.period.errors %}
+	  {{ event_form.period|add_attrs:"rows:3, cols:10, is-invalid" }}
+	  {% for error in event_form.period.errors %}
+	    <div class="invalid-feedback">
+	      {{ error }}
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  {{ event_form.period|add_attrs:"rows:3, cols:10" }}
+	{% endif %}
+      </div>
+
+      <h4>Create workshop</h4>
+
+      <div class="form-group">
+	{{ workshop_form.name.label_tag }}
+	{% if workshop_form.name.errors %}
+	  {{ workshop_form.name|add_attrs:"placeholder:Workshop title, is-invalid" }}
+	  {% for error in workshop_form.name.errors %}
+	    <div class="invalid-feedback">
+	      {{ error }}
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  {{ workshop_form.name|add_attrs:"placeholder:Workshop title" }}
+	{% endif %}
+      </div>
+
+      <div class="form-row">
+
+	<div class="form-group col-md-4">
+	  {{ workshop_form.time.label_tag }}
+	  {% if workshop_form.time.errors %}
+	    {{ workshop_form.time|add_attrs:"is-invalid, placeholder:YYYY/MM/DD HH:MM" }}
+	    {% for error in workshop_form.time.errors %}
+	      <div class="invalid-feedback">
+		{{ error }}
+	      </div>
+	    {% endfor %}
+	  {% else %}
+	    {{ workshop_form.time|add_attrs:"placeholder:YYYY/MM/DD HH:MM" }}
+	  {% endif %}
+	  <small class="form-text text-muted">
+	    {{ workshop_form.time.help_text }}
+	  </small>
+	  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+	    <label class="btn btn-secondary active">
+	      <input type="radio" name="options" id="workshop-one-off" autocomplete="off" checked> One-off
+	    </label>
+	    <label class="btn btn-secondary">
+	      <input type="radio" name="options" id="workshop-daily" autocomplete="off"> Daily
+	    </label>
+	    <label class="btn btn-secondary">
+	      <input type="radio" name="options" id="workshop-weekly" autocomplete="off"> Weekly
+	    </label>
+	  </div>
+	</div>
+
+	<div class="form-group col-md-8">
+	  {{ workshop_form.location.label_tag }}
+	  {% if workshop_form.location.errors %}
+	    {{ workshop_form.location|add_attrs:"is-invalid" }}
+	    {% for error in workshop_form.location.errors %}
+	      <div class="invalid-feedback">
+		{{ error }}
+	      </div>
+	    {% endfor %}
+	  {% else %}
+	    {{ workshop_form.location }}
+	  {% endif %}
+	</div>
+
+      </div>
+
+      <div class="form-group">
+	{{ workshop_form.description.label_tag }}
+	{% if workshop_form.description.errors %}
+	  {{ workshop_form.description|add_attrs:"rows: 3, cols:10, is-invalid" }}
+	  {% for error in workshop_form.description.errors %}
+	    <div class="invalid-feedback">
+	      {{ error }}
+	    </div>
+	  {% endfor %}
+	{% else %}
+	  {{ workshop_form.description|add_attrs:"rows: 3, cols:10" }}
+	{% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+  </div>
+{% endblock %}
