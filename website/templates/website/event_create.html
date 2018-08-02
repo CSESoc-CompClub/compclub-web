@@ -166,14 +166,14 @@
 	<div class="form-group col-md-4">
 	  {{ workshop_form.time.label_tag }}
 	  {% if workshop_form.time.errors %}
-	    {{ workshop_form.time|add_attrs:"is-invalid, placeholder:YYYY/MM/DD HH:MM" }}
+	    {{ workshop_form.time|add_attrs:"is-invalid, placeholder:DD/MM/YYYY HH:MM" }}
 	    {% for error in workshop_form.time.errors %}
 	      <div class="invalid-feedback">
 		{{ error }}
 	      </div>
 	    {% endfor %}
 	  {% else %}
-	    {{ workshop_form.time|add_attrs:"placeholder:YYYY/MM/DD HH:MM" }}
+	    {{ workshop_form.time|add_attrs:"placeholder:DD/MM/YYYY HH:MM" }}
 	  {% endif %}
 	  <small class="form-text text-muted">
 	    {{ workshop_form.time.help_text }}
