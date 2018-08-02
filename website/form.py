@@ -1,6 +1,7 @@
 from django.forms import DateInput, DateTimeInput, ModelForm, ValidationError
 from website.models import Registration
 from django.utils.translation import gettext_lazy as _
+import re
 
 class DatePicker(DateInput):
     input_type = 'date'
@@ -24,4 +25,13 @@ class RegistrationForm(ModelForm):
         }
 
     def clean(self):
-        cleaned_dae = super().clean()
+        data = self.cleaned_data
+        name = data.get("name")
+        email = data.get("email")
+        number = data.get("number")
+        dob = data.get("date_of_birth")
+        pemail = data.get("parent_email")
+        pnumber = data.get("parent_number")
+        pattern = "\A04[\d{8}]|\A02[\d{8}]"
+        if((re.search(pattern,number)==None) or (re.search(pattern,pnumber)==None)):
+            raise ValueError("invalid number")
