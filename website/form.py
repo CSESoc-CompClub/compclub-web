@@ -25,11 +25,8 @@ class RegistrationForm(ModelForm):
         }
 
     def clean(self):
-        data = self.cleaned_data
-        name = data.get("name")
-        email = data.get("email")
+        data = self.cleaned_dat
         number = data.get("number")
-        dob = data.get("date_of_birth")
         pemail = data.get("parent_email")
         pnumber = data.get("parent_number")
         pattern = "\A04[\d{8}]|\A02[\d{8}]"
