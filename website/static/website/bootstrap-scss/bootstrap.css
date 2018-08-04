@@ -5,7 +5,6 @@
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400");
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -8611,62 +8610,5 @@ h3 {
     border-color: #dee2e6;
   }
 }
-html, body {
-  background-color: #1C1E20;
-  /* margin: 0 0;
-  padding: 0 0; */
-}
 
-.event-list-header {
-  color: white;
-  /* margin-left: 10%; */
-  margin-top: 2.5rem;
-}
-
-.event-list {
-  margin-top: 2rem;
-  /* margin-left: 10%;
-  margin-right: 10%; */
-}
-
-.event-card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  border-top: 4px solid lightskyblue;
-  /* border-radius: 8px; */
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1.2rem;
-  margin: 0 0 2rem;
-  width: 100%;
-}
-
-.event-card-container {
-  padding: 12px 16px 2px;
-}
-
-.event-card-container p {
-  margin: 6px 0 0;
-  font-weight: lighter;
-}
-
-.event-card-container a, .event-card-container a:visited {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* .event-link {
-} */
-.event-card-footer {
-  border-top: 1px solid #a0a0a0;
-  margin: 12px 0 0;
-  position: relative;
-  width: 100%;
-  display: inline-block;
-}
-
-.event-card-footer-link {
-  margin: 6px 0 0px 0;
-  float: right;
-}
-
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=bootstrap.css.map */
