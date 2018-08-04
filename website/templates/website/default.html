@@ -6,19 +6,12 @@
         <img src="https://lh3.googleusercontent.com/HkGfnxmuIGLumSLQ_dbGhTsjo9cYH-1MhpylzZBYR68kWE_9-Dcl-M6707HWj0vZXi03HnVXIw=w1280" alt="placeholder 960" class="img-fluid" />
     </div>
 </div>
-  <!-- navbar -->
-  {% include "website/navbar.html" %}
+<!-- navbar -->
+{% include "website/navbar.html" %}
 
-
-        <div class="container w3-container w3-content w3-center w3-padding-64">
-            <div class = "row align-items-start">
-                <div class = "col-lg align-self-centre">
-                    {% block body %}
-                    {% endblock %}
-                </div>
-            </div>
-
-        </div>
-
+<div class="text-light">
+  {% block body %}
+  {% endblock %}
+</div>
 
 {% endblock %}

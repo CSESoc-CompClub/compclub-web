@@ -7,37 +7,37 @@
   <div class="card">
     <div class="container card-body" style="max-width:800px" id="band">
       <div class="row">
-	<div class="col ml-auto">
-	  <span class="badge badge-info">{{event.slug}}</span>
-	  <h1>
-	    {{event.name}}
-	  </h1>
-	  <h3 class="text-info">Event Details</h3>
-	  <p>
-	    <b>Start date: </b>{{ event.start_date }}<br>
-	    <b>Finish date: </b>{{ event.finish_date}}<br>
-	    <b>Prerequisites: </b>{{ event.prerequisite }}<br>
-	  </p>
+        <div class="col ml-auto">
+          <span class="badge badge-info">{{event.slug}}</span>
+          <h1>
+            {{event.name}}
+          </h1>
+          <h3 class="text-info">Event Details</h3>
+          <p>
+            <b>Start date: </b>{{ event.start_date }}<br>
+            <b>Finish date: </b>{{ event.finish_date}}<br>
+            <b>Prerequisites: </b>{{ event.prerequisite }}<br>
+          </p>
 
-	  <h3 class="text-info">Description</h3>
-	  <p>{{ event.description }}</p>
+          <h3 class="text-info">Description</h3>
+          <p>{{ event.description }}</p>
 
-	  <h3 class="text-info">Workshop Schedule</h3>
-	  {% if workshops %}
-	    {% for workshop in workshops %}
-	      <div class="card">
-		<div class="card-body">
-		    {{ workshop.description }}<br>
-		    {{ workshop.location }}<br>
-		    {{ workshop.time }}
-		</div>
-	      </div>
-	    {% endfor %}
-	  {% else %}
-	    <p>To be confirmed</p>
-	  {% endif %}
-	  <button type="button" class="btn btn-link btn-outline-primary" type="submit" value="id">Express interest</button>
-	</div>
+          <h3 class="text-info">Workshop Schedule</h3>
+          {% if workshops %}
+            {% for workshop in workshops %}
+            <div class="card">
+              <div class="card-body">
+                {{ workshop.description }}<br>
+                {{ workshop.location }}<br>
+                {{ workshop.time }}
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <p>To be confirmed</p>
+          {% endif %}
+          <button type="button" class="btn btn-link btn-outline-primary" type="submit" value="id">Express interest</button>
+        </div>
       </div>
     </div>
   </div>
