@@ -1,9 +1,11 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
+from django.conf.urls import handler404, handler500
 
 from . import views
 
 app_name = 'website'
+
 
 urlpatterns = [
     path('accounts/login/', auth_views.login, {'redirect_authenticated_user': True}, name='login'),

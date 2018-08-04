@@ -14,7 +14,6 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
-
 def event_index(request):
     template = loader.get_template('website/event_index.html')
     # get list of current and future events, and how many workshops they consist of
