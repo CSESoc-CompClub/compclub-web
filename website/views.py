@@ -62,6 +62,11 @@ def event_create(request):
     return render(request, 'website/event_create.html', context)
 
 
+@staff_member_required
+def signups(request):
+    return render(request, 'website/signups.html')
+
+
 def about(request):
     return render(request, 'website/about.html')
 

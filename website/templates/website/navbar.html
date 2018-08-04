@@ -13,6 +13,11 @@
       <li class="nav-item {% if request.resolver_match.url_name == "event_index" %}active{% endif %}">
 	       <a class="nav-link" href="{% url 'website:event_index' %}">Events</a>
       </li>
+      {% if user.is_staff %}
+	<li>
+	  <a class="nav-link" href="{% url 'website:signups' %}">Sign-ups</a>
+	</li>
+      {% endif %}
       <li class="nav-item">
 	{% if user.is_authenticated %}
 	  <a class="nav-link" href="{% url 'website:logout' %}">Logout</a>
