@@ -25,7 +25,7 @@ class RegistrationForm(ModelForm):
         }
 
     def clean(self):
-        data = self.cleaned_dat
+        data = self.cleaned_data
         number = data.get("number")
         pemail = data.get("parent_email")
         pnumber = data.get("parent_number")
