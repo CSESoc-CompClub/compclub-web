@@ -2,9 +2,7 @@ from datetime import datetime
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template import loader
 
 from website.forms import EventForm, WorkshopForm
 from website.models import Event, Workshop
@@ -63,7 +61,9 @@ def event_create(request):
 
 @staff_member_required
 def signups(request):
-    return render(request, 'website/signups.html')
+    events = Event.objects.all()
+    context = {'events': events}
+    return render(request, 'website/signups.html', context)
 
 
 def about(request):
