@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+html, body {
+    background-color: #262E40;
+    /* margin: 0 0;
+    padding: 0 0; */
+}
+
+.event-list-header {
+    color: rgba(255, 255, 255, 0.9);
+    margin-left: 0;
+    margin-bottom: 30px;
+    padding-top: 2.5rem;
+    padding-left: 5%;
+    background-color: inherit;
+}
+
+.event-list-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 80px;
+    font-weight: 100;
+    /* text-align: center; */
+}
+
+.event-list-title:after {
+    content: '';
+    /* position: absolute; */
+    display: block;
+    margin-top: 12px;
+    /* bottom: 0;
+    left: 0; */
+    width: 100px;
+    height: 2px;
+    background: #FFBC37;
+}
+
+.event-card-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 16px;
+}
+
+.event-card-title:after {
+    content: '';
+    position: absolute;
+    display: block;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #FFBC37;
+}
+
+.event-list {
+    padding-top: 2.0rem;
+    background-color: inherit;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.event-holder{
+    width: 100%;
+}
+
+.event-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-top: 4px solid #FFBC37;
+    /* border-radius: 8px; */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    margin: 0 0 2.0rem 160px;
+    display: block;
+    /* max-width: 80%; */
+}
+
+
+.event-card-container {
+    padding: 24px 24px 12px;
+    font-family: 'Open Sans', sans-serif;
+    display: inline-block;
+    width: 100%;
+}
+
+.event-card-description {
+    margin: 0 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.event-card-prereq {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
+.prereq-title {
+    font-weight: bold;
+}
+
+.event-card-container a, .event-card-container a:visited {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* .event-link {
+} */
+
+.event-card-footer {
+    border-top: 1px solid #a0a0a0;
+    margin: 12px 0 0;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
+
+.event-card-footer-link {
+    padding: 6px 12px 6px 12px;
+    margin: 12px 0 0px 0;
+    float: right;
+    transition-duration: 0.3s;
+    background-color: #BF7F00;
+}
+
+.event-card-footer-link:hover,
+.event-card-footer-link:active {
+    background-color: rgb(148, 99, 0);
+    /* background-color: #FFBC37; */
+}
+
+.calendar {
+    /* vertical-align: top; */
+    position: relative;
+    width: 140px;
+    margin-right: 20px;
+    display: block;
+    color: white;
+    float: left;
+}
+
+.calender-container {
+    font-size: 2.5em;
+    padding-top: 12px;
+    padding-bottom: 2px;
+    display: inline-block;
+    text-align: center;
+    width: 60px;
+}
+
+.calendar-from {
+    /* float: left; */
+    padding-left: 0;
+    padding-right: 8px;
+}
+
+.calendar-to {
+    float: right;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.calendar-divider {
+    font-size: 1.0em;
+    padding: 30px 0;
+    margin: 0 0;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.calendar-month {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    line-height: 0.6em;
+}
+
+.calendar-day {
+    /* line-height: 0.5em; */
+    color: #FFBC37;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.calendar-nworkshops {
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    text-align: right;
+}
+
+h3.event-detail{
+    color: #FFBC37;
+}
+
+h3.workshop-detail{
+    color:#FFD684;
+    font-size: 25px;
+}
+
+.event-detail-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-top: 4px solid #FFBC37;
+    /* border-radius: 8px; */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    display: block;
+    /* max-width: 80%; */
+}
+
+.event-detail-card-footer {
+    border-top: 1px solid #a0a0a0;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}

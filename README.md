@@ -1,6 +1,5 @@
 # compclub-web
 
-Dependencies:
 - [Python 3.6+](https://python.org)
 - [pipenv](https://github.com/pypa/pipenv). Pipenv takes care of installing and managing Python dependencies.
 

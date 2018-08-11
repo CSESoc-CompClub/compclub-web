@@ -1,8 +1,12 @@
-from django.shortcuts import render
+from datetime import datetime
+from django.shortcuts import get_object_or_404,render, redirect
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from .models import Event, Workshop,Registration
+from .form import RegistrationForm
 
-# Create your views here.
 def index(request):
     template = loader.get_template('website/index.html')
     context = {
@@ -12,13 +16,47 @@ def index(request):
 
 def event_index(request):
     template = loader.get_template('website/event_index.html')
+    # get list of current and future events, and how many workshops they consist of
+    events = Event.objects \
+        .annotate(n_workshops=Count('workshop')) \
+        .filter(finish_date__gte=datetime.now()) \
+        .order_by('start_date')
     context = {
-        # TODO
+        'events_list': events,
     }
     return HttpResponse(template.render(context, request))
 
-def event_page(request, event_url_name):
-    return HttpResponse('<h1>Page for the event</h1>')
+
+def event_page(request, event_id, slug):
+    event = get_object_or_404(Event, pk=event_id)
+
+    # redirect to correct url if needed
+    if event.slug != slug:
+        return redirect('website:event_page', event_id=event.pk, slug=event.slug)
+
+    workshops = Workshop.objects.filter(event=event)
+    template = loader.get_template('website/event.html')
+    context = {
+        'event': event,
+        'workshops': workshops,
+        'location': workshops[0].location,
+    }
+    return HttpResponse(template.render(context, request))
+
+
+def registration(request, event_id, slug):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.method == 'POST':
+        registration_form = RegistrationForm(request.POST, prefix='Registration_form')
+        if all([registration_form.is_valid()]):
+            registration_form.save()
+            return redirect('website:event_index')
+    else:
+        registration_form = RegistrationForm(prefix='Registration_form')
+        registration_form.fields['event'].initial=event
+        context = {'registration_form': registration_form,'event':event}
+        return render(request, 'website/Registration_form.html', context)
+
 
 def about(request):
     template = loader.get_template('website/about.html')
@@ -27,5 +65,8 @@ def about(request):
     }
     return HttpResponse(template.render(context, request))
 
-def login(request):
-    return HttpResponse('login page')
+
+@login_required
+def user_profile(request):
+    template = loader.get_template('website/profile.html')
+    return HttpResponse(template.render({}, request))

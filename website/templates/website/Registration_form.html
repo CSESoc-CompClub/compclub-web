@@ -1,0 +1,39 @@
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} -- Volunteer Registration {% endblock %}
+
+
+{% block content %}
+  {{ block.super }}
+  <div class="container">
+        <div class="event-list-header">
+          <h1 class="event-list-title">Registration</h1>
+        </div>
+        <div class="event-card">
+            <div class="event-card-container">
+                    <table class="table">
+                            <thead class="thead-dark">
+                              <tr>
+                                <th scope="col">Event Name</th>
+                                <th scope="col">Date</th>
+                              </tr>
+                            </thead>
+                        {% if event %}
+                              <tbody>
+                                <tr class="table-active">
+                                  <td>{{event.name }}</td>
+                                  <td>{{event.start_date }} to {{event.finish_date }}</td>
+                                </tr>
+                              </tbody>
+                        {% else %}
+                          <p>To be confirmed</p>
+                        {% endif %}
+                      </table>
+                <form method='post' action='{% if action_url %}{{ action_url }}{% endif %}'> {% csrf_token %}
+                    {{ registration_form }}
+                    <button type="submit" class="btn btn-outline-warning">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

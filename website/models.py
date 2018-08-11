@@ -1,9 +1,22 @@
 """Provides models for the CompClub website."""
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+
+
+class CustomUser(AbstractUser):
+    """
+    Extension of Django user model. Makes email, first and last name fields compulsory.
+    Adds phone number field.
+    """
+    first_name = models.CharField(max_length=200, blank=False)
+    last_name = models.CharField(max_length=200, blank=False)
+    email = models.EmailField(blank=False)
+    number = models.CharField(verbose_name="phone number", max_length=15)
 
 
 class Position(models.Model):
@@ -14,15 +27,14 @@ class Position(models.Model):
 
 class Volunteer(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    number = models.CharField(verbose_name="phone_number", max_length=15)
-    availability = models.ManyToManyField('Event', related_name="availability")
-    assigned_event = models.ManyToManyField('Event', related_name="assigned")
+    availability = models.ManyToManyField('Event', related_name="availability", blank=True)
+    assigned_event = models.ManyToManyField('Event', related_name="assigned", blank=True)
     position = models.ForeignKey(
-        Position, on_delete=models.SET_NULL, null=True)
+        Position, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         """Return a string representation of a volunteer."""
-        return self.user.first_name
+        return f"{self.user.username} ({self.user.first_name} {self.user.last_name})"
 
 
 @receiver(post_save, sender=get_user_model())
@@ -60,17 +72,23 @@ class Event(models.Model):
     owner = models.ForeignKey(Volunteer, on_delete=models.SET_NULL, null=True)
     description = models.TextField(null=True)
     prerequisite = models.TextField()
-    period = models.TextField(verbose_name="availability_period")
+    period = models.TextField(verbose_name='availability period')
+    slug = models.SlugField(default='event', unique=False) # url name of event
 
     def __str__(self):
         """Return a string representation of an event."""
         return self.name
+    
+    def save(self, *args, **kwargs):
+        """Override save to update slug"""
+        self.slug = slugify(self.name)
+        super(Event, self).save(*args, **kwargs)
 
 
 class Workshop(models.Model):
     """Model representing a workshop in a CompClub event."""
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, related_name='workshop', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     time = models.DateTimeField()
     description = models.TextField(null=True)
@@ -78,7 +96,7 @@ class Workshop(models.Model):
 
     def __str__(self):
         """Return a string representation of a workshop."""
-        return f"{self.name} ({self.time})"
+        return f"{self.event.name}: {self.name} ({self.time})"
 
 
 class Registration(models.Model):
@@ -95,4 +113,4 @@ class Registration(models.Model):
 
     def __str__(self):
         """Return a string representation of a registration."""
-        return f"event ID: {self.eventId} {self.name}"
+        return f"{self.name}"
