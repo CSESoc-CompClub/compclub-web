@@ -42,20 +42,6 @@ def event_page(request, event_id, slug):
     }
     return HttpResponse(template.render(context, request))
 
-    # redirect to correct url if needed
-    if event.slug != slug:
-        return redirect(
-            'website:event_page', event_id=event.pk, slug=event.slug)
-
-    workshops = Workshop.objects.filter(event=event)
-    context = {
-        'event': event,
-        'workshops': workshops,
-        'location': workshops[0].location if len(workshops) > 0 else 'N/A',
-        'description': workshops[0].description if len(workshops) > 0 else 'N/A',
-    }
-    return render(request, 'website/event_detail.html', context)
-
 
 @staff_member_required
 def event_create(request):
