@@ -112,6 +112,14 @@ html, body {
 .calendar-nworkshops {
     color: rgba($color: #ffffff, $alpha: 0.8);
     display: inline-block;
+
+    // On mobile or smaller
+    @media (max-width: $breakpoint-tablet ){
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        margin-bottom: 0.8em;
+    }
 }
 
 %event-card {

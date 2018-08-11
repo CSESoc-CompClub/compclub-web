@@ -6867,6 +6867,12 @@ html, body {
 .calendar-nworkshops {
   color: rgba(255, 255, 255, 0.8);
   display: inline-block; }
+  @media (max-width: 768px) {
+    .calendar-nworkshops {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      margin-bottom: 0.8em; } }
 
 .event-list-card, .event-detail-card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
