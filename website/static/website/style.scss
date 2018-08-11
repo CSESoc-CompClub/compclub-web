@@ -1,53 +1,180 @@
 @import 'bootstrap-scss/bootstrap.scss';
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+$primary-color: #FFBC37;
+$secondary-color: #8f640d;
+$background-color: #262E40;
+$secondary-color-light: #FFD684;
+$normal-text-size: 16px;
+$breakpoint-tablet: 768px;
 
 html, body {
-    background-color: #1C1E20;
-    /* margin: 0 0;
-    padding: 0 0; */
+    background-color: $background-color;
+    font-size: $normal-text-size;
 }
 
 .event-list-header {
+    color: rgba($color: #ffffff, $alpha: 0.9);
+    margin-left: 0;
+    margin-bottom: 10px;
+    padding-top: 2.5rem;
+    background-color: inherit;
+    
+    @media (min-width: $breakpoint-tablet) {
+        padding-left: 5%;
+    }
+}
+
+.event-list-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 80px;
+    font-weight: 100;
     color: white;
-    /* margin-left: 10%; */
-    margin-top: 2.5rem;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+
+    &:after {
+        // Title underline
+        content: '';
+        display: block;
+        margin-top: 12px;
+        width: 100px;
+        height: 2px;
+        background: $primary-color;
+    }
 }
 
 .event-list {
-    margin-top: 2.0rem;
-    /* margin-left: 10%;
-    margin-right: 10%; */
+    padding: 2.0rem 0 0;
+
+    @media (min-width: $breakpoint-tablet) {
+        padding: 2.0rem 0 0 5%;
+    }
 }
 
-.event-card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    border-top: 4px solid lightskyblue;
-    /* border-radius: 8px; */
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1.2rem;
-    margin: 0 0 2.0rem;
+.event-holder {
     width: 100%;
 }
 
+.calendar {
+    position: relative;
+    display: block;
+    color: white;
 
-.event-card-container {
-    padding: 12px 16px 2px;
+    @media (min-width: $breakpoint-tablet) {
+        float: left;
+        width: 150px;
+    }
 }
 
-.event-card-container p {
-    margin: 6px 0 0;
-    font-weight: lighter;
+.calendar-container {
+    font-size: 2.5em;
+    padding-top: 12px;
+    padding-bottom: 2px;
+    display: inline-block;
+    text-align: center;
 }
 
-.event-card-container a, .event-card-container a:visited {
+.calendar-from {
+    padding-left: 0;
+    padding-right: 8px;
+}
+
+.calendar-to {
+    padding-left: 8px;
+    padding-right: 8px;
+    @media (min-width: 768px) {
+        float: right;
+    }
+}
+
+.calendar-month {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    line-height: 0.6em;
+}
+
+.calendar-day {
+    color: $primary-color;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.calendar-divider {
+    font-size: 1.0em;
+    padding: 30px 0;
+    margin: 0;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.calendar-nworkshops {
+    color: rgba($color: #ffffff, $alpha: 0.8);
+    display: inline-block;
+}
+
+%event-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-top: 4px solid $primary-color;
+
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    margin: 0 0 2.0rem 0;
+    display: block;
+    color: white; // TODO REMOVE AFTER MERGE
+}
+
+.event-list-card {
+    @extend %event-card;
+    
+    @media (min-width: $breakpoint-tablet) {
+        margin: 0 0 2.0rem 160px;
+    }
+}
+
+a, a:visited, a:hover {
     text-decoration: none;
     color: inherit;
 }
 
-/* .event-link {
-} */
+.event-card-container {
+    padding: 24px 24px 12px;
+    font-family: 'Open Sans', sans-serif;
+    display: inline-block;
+    width: 100%;
+}
+
+.event-card-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 16px;
+
+    &:after {
+        // underline
+        content: '';
+        position: absolute;
+        display: block;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: $primary-color;
+    }
+}
+
+.event-card-description {
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.event-card-prereq {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
 
 .event-card-footer {
     border-top: 1px solid #a0a0a0;
@@ -57,7 +184,35 @@ html, body {
     display: inline-block;
 }
 
-.event-card-footer-link {
-    margin: 6px 0 0px 0;
+.event-button {
+    padding: 6px 12px 6px 12px;
+    margin: 12px 0 0px 0;
+    transition-duration: 0.3s;
+    background-color: $secondary-color;
+    color: white; // TODO remove after merge
+    
+    &:hover, &:active {
+        background-color: $primary-color;
+        color: black;
+    }
+}
+
+.right {
     float: right;
+}
+
+// used by event.html
+
+.event-detail {
+    color: $primary-color;
+}
+
+.workshop-detail {
+    color: $secondary-color-light;
+    font-size: 24px;
+}
+
+.event-detail-card {
+    @extend %event-card;
+    
 }

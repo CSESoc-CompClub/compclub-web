@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
-
+from django.db.models import Count
 from website.forms import EventForm, WorkshopForm
 from website.models import Event, Workshop
 
@@ -15,9 +15,11 @@ def index(request):
 
 
 def event_index(request):
-    # get list of current and future events
-    events = Event.objects.filter(
-        finish_date__gte=datetime.now()).order_by('start_date')
+    # get list of current and future events, and how many workshops they consist of
+    events = Event.objects \
+        .annotate(n_workshops=Count('workshop')) \
+        .filter(finish_date__gte=datetime.now()) \
+        .order_by('start_date')
     context = {
         'events_list': events,
     }
@@ -26,6 +28,19 @@ def event_index(request):
 
 def event_page(request, event_id, slug):
     event = get_object_or_404(Event, pk=event_id)
+
+    # redirect to correct url if needed
+    if event.slug != slug:
+        return redirect('website:event_page', event_id=event.pk, slug=event.slug)
+
+    workshops = Workshop.objects.filter(event=event)
+    template = loader.get_template('website/event.html')
+    context = {
+        'event': event,
+        'workshops': workshops,
+        'location': workshops[0].location,
+    }
+    return HttpResponse(template.render(context, request))
 
     # redirect to correct url if needed
     if event.slug != slug:
