@@ -101,6 +101,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_REDIRECT_URL = 'website:index'
 LOGOUT_REDIRECT_URL = 'website:index'
 
 AUTH_USER_MODEL = 'website.CustomUser'
