@@ -3,5 +3,14 @@
 {% block title %} {{ block.super }} - Signups {% endblock %}
 
 {% block body %}
-  {{ block.super }}
+  <div class="container">
+    {% for event in events %}
+      <div class="row">
+	<div class="col-sm">
+	  <table class="table">
+	  </table>
+	</div>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}
