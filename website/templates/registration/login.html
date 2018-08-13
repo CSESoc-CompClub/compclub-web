@@ -1,8 +1,35 @@
-<html>
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-</html>
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} - Login {% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="header">
+      <h1 class="title">Login</h1>
+    </div>
+    <div class="login-container">
+      <form class="login-form" method="post">
+          <p class="login-notice">Login with your username and password.</p>
+          {% csrf_token %}
+          {% comment %} {{ form.as_p }} {% endcomment %}
+          {{ form.non_field_errors }}
+          {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+          {% for field in form.visible_fields %}
+          <div class="field-wrapper">
+            {{ field }}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <span class="form-text-underline"></span>
+          </div>
+          {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+          {% endif %}
+          {{ field.errors }}
+          {% endfor %}
+
+          <button class="event-button right" type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
