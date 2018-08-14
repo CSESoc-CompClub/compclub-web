@@ -1,34 +1,51 @@
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1C1E20;">
+<nav class="navbar navbar-expand-lg navbar-dark">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse col-12"  id="navbarNavDropdown">
     <ul class="navbar-nav mt-2 mt-lg-0 ">
-      <li class="nav-item {% if request.resolver_match.url_name == "index" %}active{% endif %}">
-	<a class="nav-link "href="/">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+  	    <a class="nav-link "href="/">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item {% if request.resolver_match.url_name == "about" %}active{% endif %}">
-	<a class="nav-link" href="{% url 'website:about' %}">About</a>
+      <li class="nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+	      <a class="nav-link" href="{% url 'website:about' %}">About</a>
       </li>
-      <li class="nav-item {% if request.resolver_match.url_name == "event_index" %}active{% endif %}">
+      {% comment %} TODO reinstate events page after filling homepage{% endcomment%}
+      <li class="nav-item {% if request.resolver_match.url_name == 'event_index' %}active{% endif %}">
 	       <a class="nav-link" href="{% url 'website:event_index' %}">Events</a>
       </li>
       {% if user.is_staff %}
-	<li>
-	  <a class="nav-link" href="{% url 'website:signups' %}">Sign-ups</a>
-	</li>
+      <li class="nav-item {% if request.resolver_match.url_name == 'signups' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'website:signups' %}">Sign-ups</a>
+      </li>
       {% endif %}
       <li class="nav-item">
-	{% if user.is_authenticated %}
-	  <a class="nav-link" href="{% url 'website:logout' %}">Logout</a>
-	{% else %}
-	  <a class="nav-link" href="{% url 'website:login' %}">Login</a>
-	{% endif %}
+      {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'website:logout' %}">Logout</a>
+      {% else %}
+        <a class="nav-link" href="{% url 'website:login' %}">Login</a>
+      {% endif %}
       </li>
     </ul>
     <ul class="navbar-nav mt-2 mt-lg-0 ml-auto">
+      {% if user.is_authenticated %}
+      <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" id="accountDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Logged in as {{request.user.username}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="accountDropdown">
+          <a href="{% url 'website:logout' %}" class="dropdown-item">Logout</a>
+        </div>
+      </li>
+      {% else %}
       <li class="nav-item">
-	<a class="nav-link text-primary" href="https://www.csesoc.unsw.edu.au">Go to CSE</a>
+        <a class="nav-link" href="{% url 'website:login' %}">Login</a>
+      </li>
+
+      {% endif %}
+      <li class="nav-item">
+	      <a class="nav-link external-link text-warning" href="https://www.csesoc.unsw.edu.au">Go to CSE</a>
       </li>
     </ul>
   </div>

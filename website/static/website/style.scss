@@ -1,11 +1,16 @@
 @import 'bootstrap-scss/bootstrap.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
 
 $primary-color: #FFBC37;
-$secondary-color: #8f640d;
+$primary-color-light: #FFD684;
+$secondary-color: #007c70;
 $background-color: #262E40;
-$secondary-color-light: #FFD684;
+$error-color: #ff4949;
+$banner-color: #232c31;
+$dropdown-color: rgb(47, 57, 80);
+$dropdown-highlight-color: rgb(51, 64, 95);
+
 $normal-text-size: 16px;
 $breakpoint-tablet: 768px;
 
@@ -14,25 +19,59 @@ html, body {
     font-size: $normal-text-size;
 }
 
-.event-list-header {
-    color: rgba($color: #ffffff, $alpha: 0.9);
-    margin-left: 0;
-    margin-bottom: 10px;
-    padding-top: 2.5rem;
-    background-color: inherit;
-    
-    @media (min-width: $breakpoint-tablet) {
-        padding-left: 5%;
+.fas::before { // font-awesome icons
+    padding-right: 6px;
+}
+
+.banner, .navbar {
+    background-color: $banner-color;
+}
+
+.navbar {
+    box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
+ }
+
+.dropdown-menu {
+    background-color: $dropdown-color;
+    color: #ddd;
+}
+.dropdown-item {
+    color: #ddd;
+    &:hover, &:focus {
+        background-color: $dropdown-highlight-color;
+        color: #fff;
     }
 }
 
-.event-list-title {
+.external-link {
+    color: $secondary-color;
+    &:hover, &:focus { color: $primary-color; }
+}
+
+.header {
+    color: rgba($color: #ffffff, $alpha: 0.9);
+    margin-left: 0;
+    // margin-bottom: 10px;
+    padding-top: 1.0rem;
+    background-color: inherit;
+
+    @media (min-width: $breakpoint-tablet) {
+        padding-top: 2.5rem;
+    }
+}
+
+.title {
     font-family: 'Roboto', sans-serif;
-    font-size: 80px;
+    font-size: 48px;
     font-weight: 100;
     color: white;
     padding-bottom: 10px;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
+
+    @media (min-width: $breakpoint-tablet) {
+        font-size: 60px;
+        font-weight: 100;
+    }
 
     &:after {
         // Title underline
@@ -43,6 +82,17 @@ html, body {
         height: 2px;
         background: $primary-color;
     }
+}
+
+.event-list-header {
+    @extend .header;
+    @media (min-width: $breakpoint-tablet) {
+        padding-left: 5%;
+    }
+}
+
+.event-list-title {
+    @extend .title;
 }
 
 .event-list {
@@ -112,6 +162,14 @@ html, body {
 .calendar-nworkshops {
     color: rgba($color: #ffffff, $alpha: 0.8);
     display: inline-block;
+
+    // On mobile or smaller
+    @media (max-width: $breakpoint-tablet ){
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        margin-bottom: 0.8em;
+    }
 }
 
 %event-card {
@@ -185,15 +243,29 @@ a, a:visited, a:hover {
 }
 
 .event-button {
-    padding: 6px 12px 6px 12px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0.4rem 1.2rem;
     margin: 12px 0 0px 0;
+    transition-property: all;
     transition-duration: 0.3s;
+    // transition-d
+    border: none;
+    border-radius: 2px;
     background-color: $secondary-color;
     color: white; // TODO remove after merge
-    
-    &:hover, &:active {
-        background-color: $primary-color;
-        color: black;
+    cursor: pointer;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    box-shadow: 0px 5px 6px 1px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+
+    &:hover, &:focus {
+        filter: brightness(130%);
+        transform: translateY(-1px);
+        box-shadow: 0px 5px 12px 2px rgba(0, 0, 0, 0.2);
+        color: white;
+        outline: 0;
     }
 }
 
@@ -208,11 +280,111 @@ a, a:visited, a:hover {
 }
 
 .workshop-detail {
-    color: $secondary-color-light;
+    color: $primary-color-light;
     font-size: 24px;
 }
 
 .event-detail-card {
     @extend %event-card;
     
+}
+
+// used by registration/login.html
+
+.login-container {
+    margin-top: 40px;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
+}
+
+.login-form {
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    padding: 20px 24px;
+    display: inline-block;
+    text-align: left;
+    border-top: 4px solid $primary-color;
+    width: 100%;
+    
+    @media (min-width: $breakpoint-tablet) {
+        width: 600px;
+    }
+
+    .login-notice {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;   
+    }
+
+    .errorlist {
+        color: $error-color;
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+    
+    .field-wrapper {
+        position: relative;
+        margin: 30px 0 12px;
+    }
+
+    .form-text-input {
+        margin-top: 24px;
+        color: white;
+        border: 0;
+        padding: 4px 0;
+        background-color: transparent;
+        width: 100%;
+        padding: 7px 2px auto 0;
+        font-size: 16px;
+
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
+        border-bottom-color: #818181;
+
+        &:focus {
+            outline: 0;
+        }
+
+        &:invalid {
+            box-shadow: none;
+        }
+    }
+
+    input[type=text], input[type=password] {
+        @extend .form-text-input;
+    }
+
+    input[type=password] {
+        letter-spacing: 3px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        margin: 0;
+        color: #f0f0f0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: all 0.3s;
+    }
+    // when corresponding textbox is in focus
+    input:focus ~ label {
+        color: $primary-color;
+    }
+
+    input ~ .form-text-underline, {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: $primary-color;
+        transition: 0.3s;
+    }
+    input:focus ~ .form-text-underline {
+        width: 100%;
+        transition: 0.3s;
+    }
 }

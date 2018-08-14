@@ -5,7 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,100");
-@import url("https://fonts.googleapis.com/css?family=Open+Sans");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600");
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -6786,30 +6786,60 @@ html, body {
   background-color: #262E40;
   font-size: 16px; }
 
-.event-list-header {
+.fas::before {
+  padding-right: 6px; }
+
+.banner, .navbar {
+  background-color: #232c31; }
+
+.navbar {
+  box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2); }
+
+.dropdown-menu {
+  background-color: #2f3950;
+  color: #ddd; }
+
+.dropdown-item {
+  color: #ddd; }
+  .dropdown-item:hover, .dropdown-item:focus {
+    background-color: #33405f;
+    color: #fff; }
+
+.external-link {
+  color: #007c70; }
+  .external-link:hover, .external-link:focus {
+    color: #FFBC37; }
+
+.header, .event-list-header {
   color: rgba(255, 255, 255, 0.9);
   margin-left: 0;
-  margin-bottom: 10px;
-  padding-top: 2.5rem;
+  padding-top: 1.0rem;
   background-color: inherit; }
   @media (min-width: 768px) {
-    .event-list-header {
-      padding-left: 5%; } }
+    .header, .event-list-header {
+      padding-top: 2.5rem; } }
 
-.event-list-title {
+.title, .event-list-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 80px;
+  font-size: 48px;
   font-weight: 100;
   color: white;
-  padding-bottom: 10px;
-  margin-bottom: 20px; }
-  .event-list-title:after {
+  padding-bottom: 10px; }
+  @media (min-width: 768px) {
+    .title, .event-list-title {
+      font-size: 60px;
+      font-weight: 100; } }
+  .title:after, .event-list-title:after {
     content: '';
     display: block;
     margin-top: 12px;
     width: 100px;
     height: 2px;
     background: #FFBC37; }
+
+@media (min-width: 768px) {
+  .event-list-header {
+    padding-left: 5%; } }
 
 .event-list {
   padding: 2.0rem 0 0; }
@@ -6867,6 +6897,12 @@ html, body {
 .calendar-nworkshops {
   color: rgba(255, 255, 255, 0.8);
   display: inline-block; }
+  @media (max-width: 768px) {
+    .calendar-nworkshops {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      margin-bottom: 0.8em; } }
 
 .event-list-card, .event-detail-card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -6924,14 +6960,27 @@ a, a:visited, a:hover {
   display: inline-block; }
 
 .event-button {
-  padding: 6px 12px 6px 12px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0.4rem 1.2rem;
   margin: 12px 0 0px 0;
+  transition-property: all;
   transition-duration: 0.3s;
-  background-color: #8f640d;
-  color: white; }
-  .event-button:hover, .event-button:active {
-    background-color: #FFBC37;
-    color: black; }
+  border: none;
+  border-radius: 2px;
+  background-color: #007c70;
+  color: white;
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 5px 6px 1px rgba(0, 0, 0, 0.2);
+  display: inline-block; }
+  .event-button:hover, .event-button:focus {
+    filter: brightness(130%);
+    transform: translateY(-1px);
+    box-shadow: 0px 5px 12px 2px rgba(0, 0, 0, 0.2);
+    color: white;
+    outline: 0; }
 
 .right {
   float: right; }
@@ -6942,5 +6991,74 @@ a, a:visited, a:hover {
 .workshop-detail {
   color: #FFD684;
   font-size: 24px; }
+
+.login-container {
+  margin-top: 40px;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  width: 100%; }
+
+.login-form {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px 24px;
+  display: inline-block;
+  text-align: left;
+  border-top: 4px solid #FFBC37;
+  width: 100%; }
+  @media (min-width: 768px) {
+    .login-form {
+      width: 600px; } }
+  .login-form .login-notice {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px; }
+  .login-form .errorlist {
+    color: #ff4949;
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 0;
+    font-size: 14px; }
+  .login-form .field-wrapper {
+    position: relative;
+    margin: 30px 0 12px; }
+  .login-form .form-text-input, .login-form input[type=text], .login-form input[type=password] {
+    margin-top: 24px;
+    color: white;
+    border: 0;
+    padding: 4px 0;
+    background-color: transparent;
+    width: 100%;
+    padding: 7px 2px auto 0;
+    font-size: 16px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: #818181; }
+    .login-form .form-text-input:focus, .login-form input[type=text]:focus, .login-form input[type=password]:focus {
+      outline: 0; }
+    .login-form .form-text-input:invalid, .login-form input[type=text]:invalid, .login-form input[type=password]:invalid {
+      box-shadow: none; }
+  .login-form input[type=password] {
+    letter-spacing: 3px; }
+  .login-form label {
+    display: block;
+    font-size: 14px;
+    margin: 0;
+    color: #f0f0f0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.3s; }
+  .login-form input:focus ~ label {
+    color: #FFBC37; }
+  .login-form input ~ .form-text-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #FFBC37;
+    transition: 0.3s; }
+  .login-form input:focus ~ .form-text-underline {
+    width: 100%;
+    transition: 0.3s; }
 
 /*# sourceMappingURL=style.css.map */
