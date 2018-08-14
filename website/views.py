@@ -62,7 +62,7 @@ def event_create(request):
 
 @staff_member_required
 def signups(request):
-    events = Event.objects.all()
+    events = Event.objects.all().order_by('start_date')
     context = {'events': events}
     return render(request, 'website/signups.html', context)
 
