@@ -7062,3 +7062,55 @@ a, a:visited, a:hover {
     transition: 0.3s; }
 
 /*# sourceMappingURL=style.css.map */
+
+
+.signup-event-header {
+    margin-top:15px;
+    font-size:35px;
+}
+
+.signup-event-subheader {
+    font-size: 20px;
+}
+
+.table-container {
+  margin-top:30px;
+}
+
+.signup-event-container {
+  border-top: 4px solid #FFBC37;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-top: 3em;
+}
+
+.signup-event-content {
+  margin: 0 2em 0 2em;
+}
+
+.prettify-table {
+  background-color: rgba(34,34,34,0.4);
+  opacity: 0.7;
+  padding: 0.5em;
+  width:100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)
+}
+
+.prettify-table th, .prettify-table td, .prettify-table thead th, .prettify-table tbody + tbody{
+}
+
+
+
+.prettify-table th, .prettify-table td {
+  padding: 0.75em;
+  vertical-align: top;
+  /*border-bottom: 0.1em solid;*/
+  /*border-color: grey;*/
+  box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.prettify-table th[scope=col] {
+  background-color: #222222;
+  color: #FFBC37;
+}
+
+
