@@ -2,6 +2,7 @@
 **/.sass-cache
 **/.sass-cache/*
 **.css.map
+style.css
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
