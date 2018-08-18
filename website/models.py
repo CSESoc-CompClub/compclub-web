@@ -85,6 +85,11 @@ class Event(models.Model):
     def __str__(self):
         """Return a string representation of an event."""
         return self.name
+    
+    def save(self, *args, **kwargs):
+        """Override save to update slug"""
+        self.slug = slugify(self.name)
+        super(Event, self).save(*args, **kwargs)
 
 
 class Workshop(models.Model):
@@ -116,4 +121,4 @@ class Registration(models.Model):
 
     def __str__(self):
         """Return a string representation of a registration."""
-        return f"event ID: {self.eventId} {self.name}"
+        return f"{self.name}"

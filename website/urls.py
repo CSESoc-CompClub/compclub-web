@@ -1,10 +1,12 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
+from django.conf.urls import handler404, handler500
 from django.views.generic.base import RedirectView
 
 from . import views
 
 app_name = 'website'
+
 
 urlpatterns = [
     path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
@@ -19,4 +21,5 @@ urlpatterns = [
     # TODO add content to homepage
     # path('', views.index, name='index'),
     path('', views.event_index, name='index'),
+    path('events/<slug:slug>-<int:event_id>/Registration',views.registration,name='registration')
 ]

@@ -8,7 +8,6 @@
   <div class="header">
       <h1 class="title">{{ event.name }}</h1>
   </div>
-
   <div class="event-detail-card">
     <div class="event-card-container">
       <h3 class="event-detail">Event Details</h3>
@@ -34,9 +33,9 @@
         {% for workshop in workshops %}
             <tbody>
               <tr class="table-active">
-                <td>{{workshop.name }}</td>
-                <td>{{workshop.time }}</td>
-                <td>{{workshop.location }}</td>
+                <td>{{ workshop.name }}</td>
+                <td>{{ workshop.time }}</td>
+                <td>{{ workshop.location }}</td>
               </tr>
             </tbody>
         {% endfor %}
@@ -44,7 +43,7 @@
       <p>To be confirmed</p>
       {% endif %}
       </table>
-      <button type="button" class="btn btn-outline-warning" type="submit" value="id"><i class="fas fa-rocket"></i> Express interest</button>
+      <a class="btn btn-outline-warning" href="{% url 'website:registration' slug=event.slug event_id=event.pk%}" role="button"><i class="fas fa-rocket"></i> Express interest</a>
     </div>
   </div>
 </div>
