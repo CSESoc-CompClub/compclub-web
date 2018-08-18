@@ -3,87 +3,88 @@
 {% block title %} {{ block.super }} - Signups {% endblock %}
 
 {% block body %}
-  <div class="container">
-    <div class="header">
-          <h1 class="title">Sign-ups</h1>
-    </div>
+<div class="container">
+  <div class="header">
+    <h1 class="title">Sign-ups</h1>
+  </div>
 
-    {% for event in events %}
-      <div class="signup-event-container">
-          <div class="signup-event-content">
-        <div class="signup-event-header">
-            <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">{{ event.name }}</a>
-        </div>
-        <div class="row table-container">
-            <div class="col">
-                <div class="signup-event-subheader"> Volunteers </div>
-                <table class="prettify-table">
-                        <thead>
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First Name</th>
-                            <th scope="col">Last Name</th>
-                            <th scope="col">E-mail</th>
-                            </tr>
-                        </thead>
-
-                    {% for volunteer in event.assigned.all %}
-                    <tr>
-                      <th scope="row">{{ forloop.counter }} </th>
-                      <td>{{ volunteer.user.first_name }} </td>
-                      <td>{{ volunteer.user.last_name }}</td>
-                      <td>
-                        <a href="mailto:{{ volunteer.user.email }}">
-                          {{ volunteer.user.email }}
-                        </a>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-              </table>
-            </div>
-        </div>
-
-
-      <div class="row table-container">
-	<div class="col">
-        <div class="signup-event-subheader"> Students </div>
-	  <table class="table table-borderless prettify-table">
-	    <thead>
-	      <tr>
-		<th scope="col">#</th>
-		<th scope="col">Name</th>
-		<th scope="col">E-mail</th>
-		<th scope="col">Phone Number</th>
-		<th scope="col">Parent E-mail</th>
-		<th scope="col">Parent Number</th>
-	      </tr>
-	    </thead>
-	      {% for registered_user in event.event.all %}
+  {% for event in events %}
+    <div class="signup-event-container">
+      <div class="signup-event-content">
+	<div class="signup-event-header">
+	  <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">{{ event.name }}</a>
+	</div>
+	<div class="row table-container">
+	  <div class="col">
+	    <div class="signup-event-subheader">Volunteers</div>
+	    <table class="prettify-table">
+	      <thead>
 		<tr>
-		  <th scope="row">{{ forloop.counter }}</th>
-		  <td>{{ registered_user.name }}</td>
+		  <th scope="col">#</th>
+		  <th scope="col">First Name</th>
+		  <th scope="col">Last Name</th>
+		  <th scope="col">E-mail</th>
+		</tr>
+	      </thead>
+
+	      <tbody>
+	      {% for volunteer in event.assigned.all %}
+		<tr>
+		  <th scope="row">{{ forloop.counter }} </th>
+		  <td>{{ volunteer.user.first_name }} </td>
+		  <td>{{ volunteer.user.last_name }}</td>
 		  <td>
-		    <a href="mailto:{{ registered_user.email }}">
-		      {{ registered_user.email }}
+		    <a href="mailto:{{ volunteer.user.email }}">
+		      {{ volunteer.user.email }}
 		    </a>
 		  </td>
-		  <td>{{ registered_user.number }}</td>
-		  <td>
-		    <a href="mailto:{{ registered_user.parent_email }}">
-		      {{ registered_user.parent_email }}
-		    </a>
-		  </td>
-		  <td>{{ registered_user.parent_number }}</td>
 		</tr>
 	      {% endfor %}
-	    </tbody>
-	  </table>
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
+
+	<div class="row table-container">
+	  <div class="col">
+	    <div class="signup-event-subheader">Students</div>
+	    <table class="table table-borderless prettify-table">
+	      <thead>
+		<tr>
+		  <th scope="col">#</th>
+		  <th scope="col">Name</th>
+		  <th scope="col">E-mail</th>
+		  <th scope="col">Phone Number</th>
+		  <th scope="col">Parent E-mail</th>
+		  <th scope="col">Parent Number</th>
+		</tr>
+	      </thead>
+	      <tbody>
+		{% for registered_user in event.event.all %}
+		  <tr>
+		    <th scope="row">{{ forloop.counter }}</th>
+		    <td>{{ registered_user.name }}</td>
+		    <td>
+		      <a href="mailto:{{ registered_user.email }}">
+			{{ registered_user.email }}
+		      </a>
+		    </td>
+		    <td>{{ registered_user.number }}</td>
+		    <td>
+		      <a href="mailto:{{ registered_user.parent_email }}">
+			{{ registered_user.parent_email }}
+		      </a>
+		    </td>
+		    <td>{{ registered_user.parent_number }}</td>
+		  </tr>
+		{% endfor %}
+	      </tbody>
+	    </table>
+	  </div>
 	</div>
       </div>
-      </div>
-          </div>
-    {% endfor %}
-  </div>
+    </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
