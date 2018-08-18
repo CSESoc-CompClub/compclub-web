@@ -31,19 +31,6 @@ def event_page(request, event_id, slug):
         return redirect('website:event_page', event_id=event.pk, slug=event.slug)
 
     workshops = Workshop.objects.filter(event=event)
-    template = loader.get_template('website/event.html')
-    context = {
-        'event': event,
-        'workshops': workshops,
-        'location': workshops[0].location,
-    }
-    return HttpResponse(template.render(context, request))
-
-    # redirect to correct url if needed
-    if event.slug != slug:
-        return redirect('website:event_page', event_id=event.pk, slug=event.slug)
-
-    workshops = Workshop.objects.filter(event=event)
     context = {
         'event': event,
         'workshops': workshops,
