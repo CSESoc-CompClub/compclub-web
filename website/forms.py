@@ -4,6 +4,7 @@ from django import forms
 from website.models import Event, Workshop, Registration
 import re
 
+
 class DatePicker(DateInput):
     input_type = 'date'
 
@@ -66,10 +67,11 @@ class WorkshopForm(ModelForm):
         widgets = {
             'time': DateTimePicker(),
         }
-class RegistrationForm(ModelForm):
 
-    def __init__(self,*args,**kwargs):
-        super(RegistrationForm,self).__init__(*args,**kwargs)
+
+class RegistrationForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
         for field in self:
             field.field.widget.attrs['class'] = 'form-control'
 
@@ -78,14 +80,16 @@ class RegistrationForm(ModelForm):
         fields = '__all__'
         widgets = {
             'date_of_birth': DatePicker,
-            'event' : forms.HiddenInput(),
+            'event': forms.HiddenInput(),
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        # print(cleaned_data)
-        number = cleaned_data['number'] 
-        pnumber = cleaned_data['parent_number'] 
-        pattern = "\d{8,}"
-        if((re.search(pattern,number)==None) or (re.search(pattern,pnumber)==None)):
-            raise ValueError("invalid number")
+        number = cleaned_data['number']
+        parent_number = cleaned_data['parent_number']
+        pattern = r'\d{8,}'
+        if (re.search(pattern, number) is None
+                or re.search(pattern, parent_number) is None):
+            raise ValidationError(
+                _('Phone number is invalid. Must be at least 8 characters long.'),
+                code='invalid number')

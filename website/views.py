@@ -57,17 +57,16 @@ def event_page(request, event_id, slug):
 def registration(request, event_id, slug):
     event = get_object_or_404(Event, pk=event_id)
     if request.method == 'POST':
-        registration_form = RegistrationForm(request.POST, prefix='registration_form')
-        if all([registration_form.is_valid()]):
+        registration_form = RegistrationForm(request.POST)
+        if registration_form.is_valid():
             registration_form.save()
             return redirect('website:event_index')
-        else:
-            print('=================== invalid form =====================')
     else:
-        registration_form = RegistrationForm(prefix='registration_form')
+        registration_form = RegistrationForm()
         registration_form.fields['event'].initial = event
-        context = {'registration_form': registration_form, 'event': event}
-        return render(request, 'website/registration_form.html', context)
+
+    context = {'registration_form': registration_form, 'event': event}
+    return render(request, 'website/registration_form.html', context)
 
 
 @staff_member_required
