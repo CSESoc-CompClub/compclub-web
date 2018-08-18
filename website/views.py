@@ -6,11 +6,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.db.models import Count
 from website.forms import EventForm, WorkshopForm, RegistrationForm
-from website.models import Event, Workshop, Registration
+from website.models import Event, Workshop
 
 
 def index(request):
     return render(request, 'website/index.html')
+
 
 def event_index(request):
     # get list of current and future events, and how many workshops they consist of
@@ -56,15 +57,15 @@ def event_page(request, event_id, slug):
 def registration(request, event_id, slug):
     event = get_object_or_404(Event, pk=event_id)
     if request.method == 'POST':
-        registration_form = RegistrationForm(request.POST, prefix='Registration_form')
+        registration_form = RegistrationForm(request.POST, prefix='registration_form')
         if all([registration_form.is_valid()]):
             registration_form.save()
             return redirect('website:event_index')
     else:
         registration_form = RegistrationForm(prefix='Registration_form')
-        registration_form.fields['event'].initial=event
-        context = {'registration_form': registration_form,'event':event}
-        return render(request, 'website/Registration_form.html', context)
+        registration_form.fields['event'].initial = event
+        context = {'registration_form': registration_form, 'event': event}
+        return render(request, 'website/registration_form.html', context)
 
 
 @staff_member_required
@@ -94,4 +95,3 @@ def about(request):
 def user_profile(request):
     template = loader.get_template('website/profile.html')
     return HttpResponse(template.render({}, request))
-
