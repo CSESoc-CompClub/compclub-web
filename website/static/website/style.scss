@@ -1,6 +1,7 @@
 @import 'bootstrap-scss/bootstrap.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
+@import url('https://fonts.googleapis.com/css?family=Cabin:300,400');
 
 $primary-color: #FFBC37;
 $primary-color-light: #FFD684;
@@ -8,7 +9,7 @@ $secondary-color: #007c70;
 $background-color: #262E40;
 $error-color: #ff4949;
 $banner-color: #232c31;
-$dropdown-color: rgb(47, 57, 80);
+$dropdown-color: #2e3c44;
 $dropdown-highlight-color: rgb(51, 64, 95);
 
 $normal-text-size: 16px;
@@ -17,6 +18,7 @@ $breakpoint-tablet: 768px;
 html, body {
     background-color: $background-color;
     font-size: $normal-text-size;
+    @extend .text-white;
 }
 
 .fas::before { // font-awesome icons
@@ -31,9 +33,29 @@ html, body {
     box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
  }
 
+ .navbar-brand img {
+     height: 60px;
+ }
+
+.navbar-items {
+    width: auto;
+    font-family: 'Cabin', sans-serif;
+    @media (min-width: $breakpoint-tablet) {
+        font-weight: 300;
+        font-size: 18px;
+    }
+}
+
+.navbar-nav {
+    li {
+        padding-right: 20px;
+    }
+}
+
 .dropdown-menu {
     background-color: $dropdown-color;
     color: #ddd;
+    box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 .dropdown-item {
     color: #ddd;
@@ -46,6 +68,12 @@ html, body {
 .external-link {
     color: $secondary-color;
     &:hover, &:focus { color: $primary-color; }
+}
+
+%page-container {
+    margin-top: 40px;
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
 }
 
 .header {
@@ -119,6 +147,7 @@ html, body {
 }
 
 .calendar-container {
+    font-family: 'Roboto', sans-serif;
     font-size: 2.5em;
     padding-top: 12px;
     padding-bottom: 2px;
@@ -143,6 +172,7 @@ html, body {
     margin-bottom: 0;
     padding-bottom: 0;
     line-height: 0.6em;
+    font-weight: 400;
 }
 
 .calendar-day {
@@ -161,6 +191,7 @@ html, body {
 
 .calendar-nworkshops {
     color: rgba($color: #ffffff, $alpha: 0.8);
+    font-weight: 400;
     display: inline-block;
 
     // On mobile or smaller
@@ -179,7 +210,6 @@ html, body {
     background-color: rgba($color: #ffffff, $alpha: 0.1);
     margin: 0 0 2.0rem 0;
     display: block;
-    color: white; // TODO REMOVE AFTER MERGE
 }
 
 .event-list-card {
@@ -292,10 +322,8 @@ a, a:visited, a:hover {
 // used by registration/login.html
 
 .login-container {
-    margin-top: 40px;
+    @extend %page-container;
     text-align: center;
-    font-family: 'Open Sans', sans-serif;
-    width: 100%;
 }
 
 .login-form {
@@ -387,4 +415,71 @@ a, a:visited, a:hover {
         width: 100%;
         transition: 0.3s;
     }
+}
+
+.about-container {
+    @extend %page-container;
+}
+
+.about-banner {
+    margin: 24px 0 60px;
+    overflow: hidden;
+    max-height: 630px;
+}
+
+.about-banner-img {
+    width: 100%;
+    height: auto;
+}
+
+.about-body {
+    display: flex;
+    flex-direction: column;
+
+    .about-mission {
+        margin-bottom: 24px;
+        h2 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            color: $primary-color;
+        }
+    }
+    .about-description {
+        h3 {
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #aaa;
+            margin-bottom: 18px;
+        }
+
+        p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+    }
+
+    @media (min-width: $breakpoint-tablet) {
+        // expand into columns
+        flex-direction: row;
+
+        .about-mission {
+            flex: 1 0 0;
+            margin-right: 24px;
+        }
+    
+        .about-description {
+            flex: 2 0 0;
+        }
+    }
+}
+
+.fa-square {
+    color: $primary-color;
+    font-size: 12px;
+    // transform: translateY(4px);
 }

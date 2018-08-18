@@ -1,16 +1,39 @@
 {% extends "website/default.html" %}
+{% load static %}
 
 {% block title %} {{ block.super }} - About Us {% endblock %}
 
-{% block body%}
+{% block content %}
     {{block.super}}
   <!-- block.super calls everything in the inherited file, then adds on after -->
   <!-- About Section -->
   <div class="container">
-    <h2 class="">About Us</h2>
-    <p class=""> CompClub is a subsection of CSESoc devoted to getting high school kids into computing and giving them skills in different areas.
-    We run weekly workshops throughout the semester as well as a series of holiday workshops.
-    </p>
-    <img class="imagen" border="0" src="https://ugc.kn3.net/i/origin/http://i.imgur.com/t655rGH.gif" alt="Ja" title="Ja">
+    <div class="header">
+      <h1 class="title">One Skill. Infinite Opportunities.</h1>
+    </div>
+    <div class="about-container">
+      <div class="about-banner">
+        <img src="{% static 'website/winterworkshop.jpg' %}" alt="CSESoc Winter Workshop, July 2018" class="about-banner-img">
+      </div>
+      <div class="about-body">
+        <div class="about-mission">
+          <h2>Our mission is to inspire and engage high school students to explore the broad field of Computer Science.</h2>
+        </div>
+        <div class="about-description">
+          <h3>About us</h3>
+          <p>
+            CompClub is a high school outreach program of the Computer Science and Engineering Student Society (CSESoc) at UNSW Sydney.
+          </p><p>
+            From robotics to computer games workshops, we hope to spark the interests of those who are just starting their journey into Computer Science whilst also providing depth for those who have excelled beyond the classroom.
+          </p><p>
+            CompClub organises biannual Summer and Winter workshops, taught at UNSW, covering a wide variety of topics in the computing world. We also run standalone and weekly workshops throughout the year at UNSW and participating high schools. 
+          </p><p>
+            We believe that anyone can code, and everyone should have the opportunity to try. Our workshops are mentored by current computing students at the University of New South Wales. 
+          </p><p>
+            Computer Science is a broad topic with fields in Robotics, Security, Computer Graphics, Game design and many more. We hope to show students from all disciplines how a knowledge of computing can help them in the future. <i class="fas fa-square"></i>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}

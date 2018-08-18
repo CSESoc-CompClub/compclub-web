@@ -61,6 +61,8 @@ def registration(request, event_id, slug):
         if all([registration_form.is_valid()]):
             registration_form.save()
             return redirect('website:event_index')
+        else:
+            print('=================== invalid form =====================')
     else:
         registration_form = RegistrationForm(prefix='registration_form')
         registration_form.fields['event'].initial = event
