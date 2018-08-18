@@ -62,7 +62,7 @@ def registration(request, event_id, slug):
             registration_form.save()
             return redirect('website:event_index')
     else:
-        registration_form = RegistrationForm(prefix='Registration_form')
+        registration_form = RegistrationForm(prefix='registration_form')
         registration_form.fields['event'].initial = event
         context = {'registration_form': registration_form, 'event': event}
         return render(request, 'website/registration_form.html', context)
