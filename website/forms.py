@@ -2,7 +2,7 @@ from django.forms import DateInput, DateTimeInput, ModelForm, ValidationError
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from website.models import Event, Workshop, Registration
-
+import re
 
 class DatePicker(DateInput):
     input_type = 'date'
