@@ -60,7 +60,7 @@
 		</tr>
 	      </thead>
 	      <tbody>
-		{% for registered_user in event.event.all %}
+		{% for registered_user in event.registration_set.all %}
 		  <tr>
 		    <th scope="row">{{ forloop.counter }}</th>
 		    <td>{{ registered_user.name }}</td>
