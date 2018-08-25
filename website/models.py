@@ -97,7 +97,8 @@ class Workshop(models.Model):
     event = models.ForeignKey(
         Event, related_name='workshop', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    time = models.DateTimeField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     description = models.TextField(null=True)
     location = models.CharField(max_length=100)
 

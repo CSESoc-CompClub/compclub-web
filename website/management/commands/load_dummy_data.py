@@ -61,7 +61,8 @@ def make_event(name, days_from_now, n_week, workshop_time: time, description,
         workshops.append(Workshop(
             event=event,
             name=f'Workshop #{i+1}',
-            time=local2utc(w_time),
+            start_time = local2utc(w_time),
+            end_time = local2utc(w_time + timedelta(hours=2)),
             location=location
         ))
     for workshop in workshops:
