@@ -26,10 +26,6 @@ class Position(models.Model):
 
 class Volunteer(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    availability = models.ManyToManyField(
-        'Event', related_name="availability", blank=True)
-    assigned_event = models.ManyToManyField(
-        'Event', related_name="assigned", blank=True)
     position = models.ForeignKey(
         Position, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -100,10 +96,42 @@ class Workshop(models.Model):
     time = models.DateTimeField()
     description = models.TextField(null=True)
     location = models.CharField(max_length=100)
+    available = models.ManyToManyField(Volunteer,
+        verbose_name='available volunteers', related_name='workshops_available')
+    assigned = models.ManyToManyField(Volunteer, through='VolunteerAssignment',
+        related_name='workshops_assigned')
 
     def __str__(self):
         """Return a string representation of a workshop."""
         return f"{self.event.name}: {self.name} ({self.time})"
+
+
+class VolunteerAssignment(models.Model):
+    """Model representing an assignment of a Volunteer to a Workshop"""
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE,
+        related_name='assignment')
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE,
+        related_name='assignment')
+    ASSIGNED = 'AS'
+    WAITLIST = 'WL'
+    DECLINED = 'DE'
+    ASSIGN_CHOICES = (
+        (ASSIGNED, 'Assigned'),
+        (WAITLIST, 'Waitlist'),
+        (DECLINED, 'Decline'),
+    )
+    status = models.CharField(max_length=2, choices=ASSIGN_CHOICES)
+
+    def __str__(self):
+        status_msg = self.status
+        if self.status == VolunteerAssignment.ASSIGNED:
+            status_msg = 'assigned to'
+        elif self.status == VolunteerAssignment.WAITLIST:
+            status_msg = 'on waitlist for'
+        elif self.status == VolunteerAssignment.DECLINED:
+            status_msg = 'declined for'
+
+        return f'{self.volunteer} -- {status_msg} -- {self.workshop}'
 
 
 class Registration(models.Model):

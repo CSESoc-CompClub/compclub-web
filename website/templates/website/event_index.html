@@ -7,7 +7,7 @@
   <div class="container">
     <div class="event-list-header">
       <h1 class="event-list-title">Events</h1>
-      {% if user.is_authenticated %}
+      {% if perms.website.add_event %}
         <a class="event-button" href="{% url 'website:event_create' %}"><i class="fas fa-calendar-plus"></i> Create Event</a>
       {% endif %}
     </div>

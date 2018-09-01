@@ -62,7 +62,7 @@ class WorkshopForm(ModelForm):
     class Meta:
         model = Workshop
         fields = '__all__'
-        exclude = ('event', )
+        exclude = ('event', 'available', 'assigned')
         help_texts = {'time': _('Must be in Sydney time')}
         widgets = {
             'time': DateTimePicker(),
