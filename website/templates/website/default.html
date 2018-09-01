@@ -1,0 +1,13 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- navbar -->
+{% include "website/navbar.html" %}
+
+<div class="text-light">
+  {% block body %}
+  {% endblock %}
+</div>
+
+{% endblock %}

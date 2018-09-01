@@ -1,0 +1,532 @@
+@import 'bootstrap-scss/bootstrap.scss';
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
+@import url('https://fonts.googleapis.com/css?family=Cabin:300,400');
+
+$primary-color: #FFBC37;
+$primary-color-light: #FFD684;
+$secondary-color: #007c70;
+$background-color: #262E40;
+$error-color: #ff4949;
+$banner-color: #232c31;
+$dropdown-color: #2e3c44;
+$dropdown-highlight-color: rgb(51, 64, 95);
+
+$normal-text-size: 16px;
+$breakpoint-tablet: 768px;
+
+html, body {
+    background-color: $background-color;
+    font-size: $normal-text-size;
+    @extend .text-white;
+}
+
+.fas::before { // font-awesome icons
+    padding-right: 6px;
+}
+
+.banner, .navbar {
+    background-color: $banner-color;
+}
+
+.navbar {
+    box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
+ }
+
+ .navbar-brand img {
+     height: 60px;
+ }
+
+.navbar-items {
+    width: auto;
+    font-family: 'Cabin', sans-serif;
+    @media (min-width: $breakpoint-tablet) {
+        font-weight: 300;
+        font-size: 18px;
+    }
+}
+
+.navbar-nav {
+    li {
+        padding-right: 20px;
+    }
+}
+
+.dropdown-menu {
+    background-color: $dropdown-color;
+    color: #ddd;
+    box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+.dropdown-item {
+    color: #ddd;
+    &:hover, &:focus {
+        background-color: $dropdown-highlight-color;
+        color: #fff;
+    }
+}
+
+.external-link {
+    color: $secondary-color;
+    &:hover, &:focus { color: $primary-color; }
+}
+
+%page-container {
+    margin-top: 40px;
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
+}
+
+.header {
+    color: rgba($color: #ffffff, $alpha: 0.9);
+    margin-left: 0;
+    // margin-bottom: 10px;
+    padding-top: 1.0rem;
+    background-color: inherit;
+
+    @media (min-width: $breakpoint-tablet) {
+        padding-top: 2.5rem;
+    }
+}
+
+.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 48px;
+    font-weight: 100;
+    color: white;
+    padding-bottom: 10px;
+    // margin-bottom: 20px;
+
+    @media (min-width: $breakpoint-tablet) {
+        font-size: 60px;
+        font-weight: 100;
+    }
+
+    &:after {
+        // Title underline
+        content: '';
+        display: block;
+        margin-top: 12px;
+        width: 100px;
+        height: 2px;
+        background: $primary-color;
+    }
+}
+
+.event-list-header {
+    @extend .header;
+    @media (min-width: $breakpoint-tablet) {
+        padding-left: 5%;
+    }
+}
+
+.event-list-title {
+    @extend .title;
+}
+
+.event-list {
+    padding: 2.0rem 0 0;
+
+    @media (min-width: $breakpoint-tablet) {
+        padding: 2.0rem 0 0 5%;
+    }
+}
+
+.event-holder {
+    width: 100%;
+}
+
+.calendar {
+    position: relative;
+    display: block;
+    color: white;
+
+    @media (min-width: $breakpoint-tablet) {
+        float: left;
+        width: 150px;
+    }
+}
+
+.calendar-container {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5em;
+    padding-top: 12px;
+    padding-bottom: 2px;
+    display: inline-block;
+    text-align: center;
+}
+
+.calendar-from {
+    padding-left: 0;
+    padding-right: 8px;
+}
+
+.calendar-to {
+    padding-left: 8px;
+    padding-right: 8px;
+    @media (min-width: 768px) {
+        float: right;
+    }
+}
+
+.calendar-month {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    line-height: 0.6em;
+    font-weight: 400;
+}
+
+.calendar-day {
+    color: $primary-color;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.calendar-divider {
+    font-size: 1.0em;
+    padding: 30px 0;
+    margin: 0;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.calendar-nworkshops {
+    color: rgba($color: #ffffff, $alpha: 0.8);
+    font-weight: 400;
+    display: inline-block;
+
+    // On mobile or smaller
+    @media (max-width: $breakpoint-tablet ){
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        margin-bottom: 0.8em;
+    }
+}
+
+%event-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-top: 4px solid $primary-color;
+
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    margin: 0 0 2.0rem 0;
+    display: block;
+}
+
+.event-list-card {
+    @extend %event-card;
+    
+    @media (min-width: $breakpoint-tablet) {
+        margin: 0 0 2.0rem 160px;
+    }
+}
+
+a, a:visited, a:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.event-card-container {
+    padding: 24px 24px 12px;
+    font-family: 'Open Sans', sans-serif;
+    display: inline-block;
+    width: 100%;
+}
+
+.event-card-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 16px;
+
+    &:after {
+        // underline
+        content: '';
+        position: absolute;
+        display: block;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: $primary-color;
+    }
+}
+
+.event-card-description {
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.event-card-prereq {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
+.event-card-footer {
+    border-top: 1px solid #a0a0a0;
+    margin: 12px 0 0;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
+
+.event-button {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0.4rem 1.2rem;
+    margin: 12px 0 0px 0;
+    transition-property: all;
+    transition-duration: 0.3s;
+    // transition-d
+    border: none;
+    border-radius: 2px;
+    background-color: $secondary-color;
+    color: white; // TODO remove after merge
+    cursor: pointer;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    box-shadow: 0px 5px 6px 1px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+
+    &:hover, &:focus {
+        filter: brightness(130%);
+        transform: translateY(-1px);
+        box-shadow: 0px 5px 12px 2px rgba(0, 0, 0, 0.2);
+        color: white;
+        outline: 0;
+    }
+}
+
+.right {
+    float: right;
+}
+
+// used by event.html
+
+.event-detail {
+    color: $primary-color;
+}
+
+.workshop-detail {
+    color: $primary-color-light;
+    font-size: 24px;
+}
+
+.event-detail-card {
+    @extend %event-card;
+    
+}
+
+// used by registration/login.html
+
+.login-container {
+    @extend %page-container;
+    text-align: center;
+}
+
+.login-form {
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    padding: 20px 24px;
+    display: inline-block;
+    text-align: left;
+    border-top: 4px solid $primary-color;
+    width: 100%;
+    
+    @media (min-width: $breakpoint-tablet) {
+        width: 600px;
+    }
+
+    .login-notice {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;   
+    }
+
+    .errorlist {
+        color: $error-color;
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+    
+    .field-wrapper {
+        position: relative;
+        margin: 30px 0 12px;
+    }
+
+    .form-text-input {
+        margin-top: 24px;
+        color: white;
+        border: 0;
+        padding: 4px 0;
+        background-color: transparent;
+        width: 100%;
+        padding: 7px 2px auto 0;
+        font-size: 16px;
+
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
+        border-bottom-color: #818181;
+
+        &:focus {
+            outline: 0;
+        }
+
+        &:invalid {
+            box-shadow: none;
+        }
+    }
+
+    input[type=text], input[type=password] {
+        @extend .form-text-input;
+    }
+
+    input[type=password] {
+        letter-spacing: 3px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        margin: 0;
+        color: #f0f0f0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: all 0.3s;
+    }
+    // when corresponding textbox is in focus
+    input:focus ~ label {
+        color: $primary-color;
+    }
+
+    input ~ .form-text-underline, {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: $primary-color;
+        transition: 0.3s;
+    }
+    input:focus ~ .form-text-underline {
+        width: 100%;
+        transition: 0.3s;
+    }
+}
+
+//used for signups
+.signup-event-header {
+    margin-top:15px;
+    font-size:35px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.signup-event-subheader {
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.table-container {
+    margin-top:30px;
+}
+
+.signup-event-container {
+    border-top: 4px solid #FFBC37;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-top: 3em;
+    padding: 0 2em 0 2em;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.signup-event-content {
+  margin: 0 2em 0 2em;
+}
+
+.prettify-table {
+  background-color: rgba(34,34,34,0.4);
+  opacity: 0.7;
+  padding: 0.5em;
+  width:100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)
+}
+
+.prettify-table th, .prettify-table td {
+  padding: 0.75em;
+  vertical-align: top;
+  box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.prettify-table th[scope=col] {
+  background-color: #222222;
+  color: #FFBC37;
+}
+
+.about-container {
+    @extend %page-container;
+}
+
+.about-banner {
+    margin: 24px 0 60px;
+    overflow: hidden;
+    max-height: 630px;
+}
+
+.about-banner-img {
+    width: 100%;
+    height: auto;
+}
+
+.about-body {
+    display: flex;
+    flex-direction: column;
+
+    .about-mission {
+        margin-bottom: 24px;
+        h2 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            color: $primary-color;
+        }
+    }
+    .about-description {
+        h3 {
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #aaa;
+            margin-bottom: 18px;
+        }
+
+        p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+    }
+
+    @media (min-width: $breakpoint-tablet) {
+        // expand into columns
+        flex-direction: row;
+
+        .about-mission {
+            flex: 1 0 0;
+            margin-right: 24px;
+        }
+    
+        .about-description {
+            flex: 2 0 0;
+        }
+    }
+}
+
+.fa-square {
+    color: $primary-color;
+    font-size: 12px;
+    // transform: translateY(4px);
+}

@@ -1,0 +1,52 @@
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} - Event {% endblock %}
+
+{% block content %}
+  {{ block.super }}
+<div class="container">
+  <div class="header">
+      <h1 class="title">{{ event.name }}</h1>
+  </div>
+  <div class="event-detail-card">
+    <div class="event-card-container">
+      <h3 class="event-detail">Event Details</h3>
+      <p>
+        <b>Start date: </b>{{ event.start_date }}<br>
+        <b>Finish date: </b>{{ event.finish_date}}<br>
+        <b>Prerequisites: </b>{{ event.prerequisite }}<br>
+      </p>
+
+      <h3 class="event-detail">Description</h3>
+      <p>{{ event.description }}</p>
+
+      <h3 class="event-detail">Workshop Schedule</h3>
+      <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Workshop Name</th>
+              <th scope="col">Workshop Date</th>
+              <th scope="col">Workshop Time</th>
+              <th scope="col">Workshop Location</th>
+            </tr>
+          </thead>
+      {% if workshops %}
+        {% for workshop in workshops %}
+            <tbody>
+              <tr class="table-active">
+                <td>{{ workshop.name }}</td>
+                <td>{{ workshop.start_time|date:"D d F" }}</td>
+                <td>{{ workshop.start_time|time:"g:i" }} - {{workshop.end_time|time:"g:ia"}}</td>
+                <td>{{ workshop.location }}</td>
+              </tr>
+            </tbody>
+        {% endfor %}
+      {% else %}
+      <p>To be confirmed</p>
+      {% endif %}
+      </table>
+      <a class="btn btn-outline-warning" href="{% url 'website:registration' slug=event.slug event_id=event.pk%}" role="button"><i class="fas fa-rocket"></i> Express interest</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
