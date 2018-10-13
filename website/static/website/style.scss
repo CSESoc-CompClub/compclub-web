@@ -316,7 +316,7 @@ a, a:visited, a:hover {
 
 .event-detail-card {
     @extend %event-card;
-    
+    margin-top: 24px;
 }
 
 // used by registration/login.html
@@ -482,4 +482,38 @@ a, a:visited, a:hover {
     color: $primary-color;
     font-size: 12px;
     // transform: translateY(4px);
+}
+
+.assign-form {
+    
+    table {
+        @media (max-width: $breakpoint-tablet) {
+            display: block;
+            padding-right: 18px;
+            overflow-x: auto;
+        }
+
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    td, th {
+        padding: 12px 12px;
+    }
+
+    tr:nth-child(even) { // every nth row
+        background-color: rgba($color: #f0f0f0, $alpha: 0.1);
+    }
+
+    tr:nth-child(odd) {
+        background-color: rgba($color: #0e0e0e, $alpha: 0.1);
+    }
+
+    thead { // table header row
+        background-color: rgba($color: black, $alpha: 0.3);
+    }
+
+    td, th.label {
+        text-align: center;
+    }
 }

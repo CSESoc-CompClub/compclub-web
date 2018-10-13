@@ -1,8 +1,8 @@
 import datetime
 from django.test import TestCase
 from django.urls import reverse
-from website.forms import EventForm, WorkshopForm
-from website.models import CustomUser
+from website.forms import EventForm, WorkshopForm, VolunteerAssignForm
+from website.models import CustomUser, Workshop, Volunteer, VolunteerAssignment
 from .management.commands.load_dummy_data import make_event
 
 # make_event() arguments for adding test event
@@ -29,13 +29,16 @@ multi_workshop_event_args = {
 }
 
 class EventIndexViewTests(TestCase):
+    def setUp(self):
+        self.skipTest('redirects to homepage')
+
     def test_no_events(self):
         '''if there are no events, an appropriate message is displayed'''
         response = self.client.get(reverse('website:event_index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "There aren't any events at this time")
         self.assertQuerysetEqual(response.context['events_list'], [])
-    
+
     def test_past_event(self):
         '''Past event should not be displayed'''
         past_event_args = dict(singular_event_args)
@@ -46,7 +49,7 @@ class EventIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "There aren't any events at this time")
         self.assertQuerysetEqual(response.context['events_list'], [])
-    
+
     def test_single_event(self):
         '''test event with single workshop'''
         self.skipTest('until utc/local timezone in browser is fixed')
@@ -72,7 +75,7 @@ class EventIndexViewTests(TestCase):
         self.assertContains(response, event.start_date.strftime('%d')) # day
         self.assertContains(response, event.finish_date.strftime('%b'))
         self.assertContains(response, event.finish_date.strftime('%d'))
-    
+
     def test_multiple_events(self):
         event1 = make_event(**multi_workshop_event_args)
         event2 = make_event(**singular_event_args)
@@ -213,3 +216,78 @@ class EventCreateViewTest(TestCase):
         response = self.client.get(reverse('website:event_create'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'website/event_create.html')
+
+
+class VolunteerAssignmentModelTest(TestCase):
+    ''' tests for VolunteerAssignment model '''
+
+    def setUp(self):
+        '''Volunteer assignment'''
+        # create event with 1 workshop
+        self.event = make_event(**singular_event_args)
+        self.workshop = Workshop.objects.filter(event=self.event)[0]
+
+        # create volunteers Alice and Bob
+        user_alice = CustomUser.objects.create_user(
+            username='alice', email='', password='1234')
+        user_bob = CustomUser.objects.create_user(
+            username='bob', email='', password='1234')
+        self.alice = user_alice.volunteer
+        self.bob = user_bob.volunteer
+
+        # both available for workshop
+        self.workshop.available.add(self.alice)
+        self.workshop.available.add(self.bob)
+
+        # only Alice is assigned, Bob is on waitlist
+        VolunteerAssignment.objects.create(
+            workshop=self.workshop,
+            volunteer=self.alice,
+            status=VolunteerAssignment.ASSIGNED
+        )
+        VolunteerAssignment.objects.create(
+            workshop=self.workshop,
+            volunteer=self.bob,
+            status=VolunteerAssignment.WAITLIST
+        )
+
+
+    def test_available(self):
+        '''Check that both Alice and Bob are available for workshop'''
+        self.assertIn(self.alice, self.workshop.available.all())
+        self.assertIn(self.bob, self.workshop.available.all())
+        self.assertEqual(self.alice.workshops_available.first(), self.workshop)
+        self.assertEqual(self.bob.workshops_available.first(), self.workshop)
+
+    def test_assigned(self):
+        '''Check that Alice and Bob are assigned correctly'''
+        self.assertIn(self.alice, self.workshop.assigned.all())
+        self.assertIn(self.bob, self.workshop.assigned.all())
+        self.assertEqual(self.alice.workshops_assigned.first(), self.workshop)
+        self.assertEqual(self.bob.workshops_assigned.first(), self.workshop)
+        self.assertEqual(len(self.workshop.assignment.all()), 2)
+        self.assertEqual(self.alice.assignment.first().status, VolunteerAssignment.ASSIGNED)
+        self.assertEqual(self.bob.assignment.first().status, VolunteerAssignment.WAITLIST)
+
+    def test_form_valid(self):
+        '''Test Assignment form with valid data'''
+        data = {
+            'workshop_id': self.workshop.id,
+            f'vol_{self.alice.id}': VolunteerAssignment.ASSIGNED,
+            f'vol_{self.bob.id}': VolunteerAssignment.WAITLIST
+        }
+        form = VolunteerAssignForm(
+            data,
+            available=self.workshop.available.all(),
+            assignments=self.workshop.assignment.all())
+        self.assertTrue(form.is_valid)
+
+    def test_view(self):
+        '''Test assigning view called correctly'''
+        CustomUser.objects.create_superuser(
+            username='su', email='', password='1234')
+        self.client.login(username='su', password='1234')
+        response = self.client.get(reverse(
+            'website:assign_volunteers', args=[self.event.slug,self.event.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'website/event_assign.html')

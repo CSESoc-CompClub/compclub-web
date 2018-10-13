@@ -1,7 +1,7 @@
-from django.forms import DateInput, DateTimeInput, ModelForm, ValidationError
+from django.forms import DateInput, DateTimeInput, ModelForm, ValidationError, Form
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from website.models import Event, Workshop, Registration
+from website.models import Event, Workshop, Registration, VolunteerAssignment
 import re
 
 
@@ -93,3 +93,48 @@ class RegistrationForm(ModelForm):
             raise ValidationError(
                 _('Phone number is invalid. Must be at least 8 characters long.'),
                 code='invalid number')
+
+class VolunteerAssignForm(Form):
+    '''Form for assigning available volunteers to a workshop'''
+    workshop_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        # Get available volunteers
+        available = kwargs.pop('available')
+        # Get existing VolunteerAssignments for that workshop
+        assignments = kwargs.pop('assignments')
+        super(VolunteerAssignForm, self).__init__(*args, **kwargs)
+
+        # add each available volunteer as a radio ChoiceField
+        for v in available:
+            user = v.user
+            try:
+                # get current assignment for volunteer
+                status = assignments.get(volunteer=v).status
+                self.fields[f'vol_{v.id}'] = forms.ChoiceField(
+                    widget=forms.RadioSelect(),
+                    choices=VolunteerAssignment.ASSIGN_CHOICES,
+                    initial=status,
+                    label=f'{user.first_name} {user.last_name} ({user.email})'
+                )
+            except:
+                self.fields[f'vol_{v.id}'] = forms.ChoiceField(
+                    widget=forms.RadioSelect(),
+                    choices=VolunteerAssignment.ASSIGN_CHOICES,
+                    label=f'{user.first_name} {user.last_name} ({user.email})'
+                )
+
+    # Yields collection of assignments received from the form.
+    def get_assignments(self):
+        for field, value in self.cleaned_data.items():
+            if field.startswith('vol_'):
+                yield (field[4], value)
+
+    # Saves assignment into model
+    def save(self):
+        for vol_id, status in self.get_assignments():
+            VolunteerAssignment.objects.update_or_create(
+                workshop_id=self.cleaned_data['workshop_id'],
+                volunteer_id=vol_id,
+                defaults={'status': status}
+            )

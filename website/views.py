@@ -1,3 +1,4 @@
+from collections import namedtuple
 from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -5,8 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.db.models import Count
-from website.forms import EventForm, WorkshopForm, RegistrationForm
-from website.models import Event, Workshop
+from website.forms import EventForm, WorkshopForm, RegistrationForm, VolunteerAssignForm
+from website.models import Event, Workshop, VolunteerAssignment
 
 
 def index(request):
@@ -86,6 +87,43 @@ def event_create(request):
 
     context = {'event_form': event_form, 'workshop_form': workshop_form}
     return render(request, 'website/event_create.html', context)
+
+
+@staff_member_required
+def event_assign_volunteers(request, event_id, slug):
+    post_form = None
+    if request.method == 'POST' and 'workshop_id' in request.POST:
+        workshop = get_object_or_404(Workshop, pk=request.POST['workshop_id'])
+        post_form = VolunteerAssignForm(
+            request.POST,
+            available=workshop.available.all(),
+            assignments=workshop.assignment.all()
+        )
+        if post_form.is_valid():
+            post_form.save()
+            return redirect('website:assign_volunteers', event_id=event_id, slug=slug)
+        # if form is not valid then display errors on relevant form
+
+    event = get_object_or_404(Event, pk=event_id)
+    workshops = event.workshop.all().order_by('time')
+
+    # Generate forms for each workshop
+    forms = []
+    for w in workshops:
+        if post_form is not None and w.id == post_form.cleaned_data['workshop_id']:
+            forms.append(post_form) # use POSTed form
+        else:
+            forms.append(VolunteerAssignForm(
+                initial={'workshop_id': w.id},
+                available=w.available.all(),
+                assignments=w.assignment.all()
+            ))
+
+    # zip Workshop and corresponding Form into namedtuple
+    WorkshopTuple = namedtuple('WorkshopTuple', ['model', 'form'])
+    tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
+    context = {'event': event, 'workshops': tuples}
+    return render(request, 'website/event_assign.html', context)
 
 
 def about(request):

@@ -25,7 +25,7 @@ class Position(models.Model):
 
 
 class Volunteer(models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name='volunteer')
     position = models.ForeignKey(
         Position, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -101,6 +101,20 @@ class Workshop(models.Model):
     assigned = models.ManyToManyField(Volunteer, through='VolunteerAssignment',
         related_name='workshops_assigned')
 
+    def unassigned(self):
+        """Return a list of available volunteers who are not yet assigned/declined"""
+        return list(self.available.exclude(id__in=self.assigned.all()))
+
+    def withdrawn(self):
+        """ Return a list of volunteers who were assigned or on waitlist
+            but then withdrew their availability
+        """
+        assignments = list(self.assignment
+            .exclude(status=VolunteerAssignment.DECLINED)
+            .exclude(volunteer__in=self.available.all())
+        )
+        return list(map(lambda assign: assign.volunteer, assignments))
+
     def __str__(self):
         """Return a string representation of a workshop."""
         return f"{self.event.name}: {self.name} ({self.time})"
@@ -121,6 +135,9 @@ class VolunteerAssignment(models.Model):
         (DECLINED, 'Decline'),
     )
     status = models.CharField(max_length=2, choices=ASSIGN_CHOICES)
+
+    class Meta:
+        unique_together = ('workshop', 'volunteer')
 
     def __str__(self):
         status_msg = self.status
