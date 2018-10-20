@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin:300,400');
 
 $primary-color: #FFBC37;
-$primary-color-light: #FFD684;
+$primary-color-light: lighten($primary-color, 20%);
 $secondary-color: #007c70;
 $background-color: #262E40;
 $error-color: #ff4949;
@@ -316,11 +316,7 @@ a, a:visited, a:hover {
 
 .event-detail-card {
     @extend %event-card;
-<<<<<<< HEAD
     margin-top: 24px;
-=======
-
->>>>>>> Implemented recurring events
 }
 
 // used by registration/login.html
@@ -496,7 +492,7 @@ a, a:visited, a:hover {
 }
 
 .assign-form {
-    
+
     table {
         @media (max-width: $breakpoint-tablet) {
             display: block;
