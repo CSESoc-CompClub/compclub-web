@@ -1,7 +1,9 @@
-from django.forms import DateInput, DateTimeInput, ModelForm, ValidationError, Form
+from django.db import models
+from django.forms import DateInput, DateTimeInput, Form, ModelForm, TimeInput, ValidationError
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from website.models import Event, Workshop, Registration, VolunteerAssignment
+import datetime
 import re
 
 
@@ -11,6 +13,10 @@ class DatePicker(DateInput):
 
 class DateTimePicker(DateTimeInput):
     input_type = 'datetime-local'
+
+
+class TimePicker(TimeInput):
+    input_type = 'time'
 
 
 class EventForm(ModelForm):
@@ -54,6 +60,8 @@ class EventForm(ModelForm):
 
 
 class WorkshopForm(ModelForm):
+    REPEAT_CHOICES = (('NO', 'None'), ('DL', 'Daily'), ('WK', 'Weekly'))
+    repeat_workshop = forms.ChoiceField(choices=REPEAT_CHOICES)
     def __init__(self, *args, **kwargs):
         super(WorkshopForm, self).__init__(*args, **kwargs)
         for field in self:
@@ -61,15 +69,80 @@ class WorkshopForm(ModelForm):
 
     class Meta:
         model = Workshop
-        fields = '__all__'
-        exclude = ('event', 'available', 'assigned')
+        fields = ('event', 'start_time', 'end_time', 'date', 'name', 'location', 'repeat_workshop')
+        exclude = ()
         help_texts = {'time': _('Must be in Sydney time')}
         widgets = {
-            'time': DateTimePicker(),
+            'event': forms.HiddenInput(),
+            'start_time': TimePicker,
+            'end_time': TimePicker,
+            'date': DatePicker
         }
+
+    def make_recurring_workshops(self, interval):
+        """
+        Create recurring workshops
+        interval: datetime.timedelta object
+        """
+        cleaned_data = self.cleaned_data
+        current_date = cleaned_data.get('date') + interval
+        while current_date <= cleaned_data.get('event').finish_date:
+            Workshop.objects.create(
+                event=cleaned_data.get('event'),
+                name=cleaned_data.get('name'),
+                date=current_date,
+                start_time=cleaned_data.get('start_time'),
+                end_time=cleaned_data.get('end_time'),
+                description=cleaned_data.get('description'),
+                location=cleaned_data.get('location')
+            )
+            current_date += interval
+
+    def clean(self):
+        cleaned_data = super().clean()
+        workshop_date = cleaned_data.get('date')
+        event = cleaned_data.get('event')
+        if event is None:
+            raise ValidationError(
+                _('No event provided'),
+                code='null event')
+
+        if workshop_date is None:
+            raise ValidationError(
+                _('Invalid workshop date entered'),
+                code='invalid date')
+
+        if workshop_date > event.finish_date or workshop_date < event.start_date:
+            raise ValidationError(
+                _('Workshop date cannot be earlier or later than the event dates'),
+                code='invalid date')
+
+        if cleaned_data.get('start_time') is None:
+            raise ValidationError(
+                _('Invalid workshop start time entered'),
+                code='invalid time')
+
+        if cleaned_data.get('end_time') is None:
+            raise ValidationError(
+                _('Invalid workshop start time entered'),
+                code='invalid time')
+
+        if cleaned_data.get('start_time') > cleaned_data.get('end_time'):
+            raise ValidationError(
+                _('Workshop start time cannot be later than the end time'),
+                code='invalid time')
+
+    def save(self):
+        super().save()
+        recurrence = self.cleaned_data['repeat_workshop']
+        if recurrence == 'DL':
+            self.make_recurring_workshops(datetime.timedelta(days=1))
+        elif recurrence == 'WK':
+            self.make_recurring_workshops(datetime.timedelta(days=7))
 
 
 class RegistrationForm(ModelForm):
+
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         for field in self:

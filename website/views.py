@@ -32,25 +32,12 @@ def event_page(request, event_id, slug):
     if event.slug != slug:
         return redirect('website:event_page', event_id=event.pk, slug=event.slug)
 
-    workshops = Workshop.objects.filter(event=event)
+    workshops = Workshop.objects.filter(event=event).order_by('date', 'start_time')
     template = loader.get_template('website/event.html')
     context = {
         'event': event,
         'workshops': workshops,
-        'location': workshops[0].location,
-    }
-    return HttpResponse(template.render(context, request))
-
-    # redirect to correct url if needed
-    if event.slug != slug:
-        return redirect('website:event_page', event_id=event.pk, slug=event.slug)
-
-    workshops = Workshop.objects.filter(event=event)
-    template = loader.get_template('website/event.html')
-    context = {
-        'event': event,
-        'workshops': workshops,
-        'location': workshops[0].location,
+        'location': workshops[0].location if len(workshops) > 0 else "TBA",
     }
     return HttpResponse(template.render(context, request))
 
@@ -74,18 +61,13 @@ def registration(request, event_id, slug):
 def event_create(request):
     if request.method == 'POST':
         event_form = EventForm(request.POST, prefix='event_form')
-        workshop_form = WorkshopForm(request.POST, prefix='workshop_form')
-        if all([event_form.is_valid(), workshop_form.is_valid()]):
-            event = event_form.save()
-            workshop = workshop_form.save(commit=False)
-            workshop.event = event
-            workshop.save()
+        if event_form.is_valid():
+            event_form.save()
             return redirect('website:event_index')
     else:
         event_form = EventForm(prefix='event_form')
-        workshop_form = WorkshopForm(prefix='workshop_form')
 
-    context = {'event_form': event_form, 'workshop_form': workshop_form}
+    context = {'event_form': event_form}
     return render(request, 'website/event_create.html', context)
 
 
@@ -105,7 +87,7 @@ def event_assign_volunteers(request, event_id, slug):
         # if form is not valid then display errors on relevant form
 
     event = get_object_or_404(Event, pk=event_id)
-    workshops = event.workshop.all().order_by('time')
+    workshops = event.workshop.all().order_by('start_time')
 
     # Generate forms for each workshop
     forms = []
@@ -124,6 +106,19 @@ def event_assign_volunteers(request, event_id, slug):
     tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
     context = {'event': event, 'workshops': tuples}
     return render(request, 'website/event_assign.html', context)
+
+def workshop_create(request, event_id, slug):
+    if request.method == 'POST':
+        workshop_form = WorkshopForm(request.POST, prefix='workshop_form')
+        if workshop_form.is_valid():
+            workshop_form.save()
+            return redirect('website:event_page', slug=slug, event_id=event_id)
+    else:
+        workshop_form = WorkshopForm(prefix='workshop_form')
+        workshop_form['event'].initial = get_object_or_404(Event, pk=event_id)
+
+    context = {'workshop_form': workshop_form, 'event': get_object_or_404(Event, pk=event_id)}
+    return render(request, 'website/workshop_create.html', context)
 
 
 def about(request):

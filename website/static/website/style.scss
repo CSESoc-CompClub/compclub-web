@@ -214,7 +214,7 @@ html, body {
 
 .event-list-card {
     @extend %event-card;
-    
+
     @media (min-width: $breakpoint-tablet) {
         margin: 0 0 2.0rem 160px;
     }
@@ -316,7 +316,11 @@ a, a:visited, a:hover {
 
 .event-detail-card {
     @extend %event-card;
+<<<<<<< HEAD
     margin-top: 24px;
+=======
+
+>>>>>>> Implemented recurring events
 }
 
 // used by registration/login.html
@@ -326,22 +330,13 @@ a, a:visited, a:hover {
     text-align: center;
 }
 
-.login-form {
+.base-form {
     background-color: rgba($color: #ffffff, $alpha: 0.1);
     padding: 20px 24px;
     display: inline-block;
     text-align: left;
     border-top: 4px solid $primary-color;
     width: 100%;
-    
-    @media (min-width: $breakpoint-tablet) {
-        width: 600px;
-    }
-
-    .login-notice {
-        font-family: 'Open Sans', sans-serif;
-        font-size: 18px;   
-    }
 
     .errorlist {
         color: $error-color;
@@ -350,7 +345,19 @@ a, a:visited, a:hover {
         margin-bottom: 0;
         font-size: 14px;
     }
-    
+}
+
+.workshop-form {
+    @extend .base-form;
+}
+
+.login-form {
+    @extend .base-form;
+
+    .login-notice {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+    }
     .field-wrapper {
         position: relative;
         margin: 30px 0 12px;
@@ -415,6 +422,10 @@ a, a:visited, a:hover {
         width: 100%;
         transition: 0.3s;
     }
+
+    @media (min-width: $breakpoint-tablet) {
+        width: 600px;
+    }
 }
 
 .about-container {
@@ -471,7 +482,7 @@ a, a:visited, a:hover {
             flex: 1 0 0;
             margin-right: 24px;
         }
-    
+
         .about-description {
             flex: 2 0 0;
         }

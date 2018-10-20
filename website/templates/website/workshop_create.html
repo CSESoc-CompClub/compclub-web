@@ -1,0 +1,22 @@
+{% extends "website/default.html" %}
+{% load widget_mods %}
+
+{% block title %} {{ block.super }} - Create Workshop {% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <h3 class="display-3 mb-3 mt-3">Create workshop</h3>
+      {% include 'website/components/event_table.html' %}
+      <form method="post" class="workshop-form">
+        {% csrf_token %}
+        {{ workshop_form }}
+        <br>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

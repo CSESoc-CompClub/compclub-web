@@ -57,11 +57,14 @@ def make_event(name, days_from_now, n_week, workshop_time: time, description,
 
     # create workshops for each time
     workshops = []
-    for i, w_time in enumerate(workshop_times):
+    for i, start_time in enumerate(workshop_times):
+        finish_time = start_time + timedelta(hours=1)
         workshops.append(Workshop(
             event=event,
             name=f'Workshop #{i+1}',
-            time=local2utc(w_time),
+            date = start_time.date(),
+            start_time=start_time.time(),
+            end_time=finish_time.time(),
             location=location
         ))
     for workshop in workshops:

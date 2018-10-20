@@ -80,7 +80,7 @@ class Event(models.Model):
     def __str__(self):
         """Return a string representation of an event."""
         return self.name
-    
+
     def save(self, *args, **kwargs):
         """Override save to update slug"""
         self.slug = slugify(self.name)
@@ -93,7 +93,9 @@ class Workshop(models.Model):
     event = models.ForeignKey(
         Event, related_name='workshop', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    time = models.DateTimeField()
+    date = models.DateField()
+    start_time = models.TimeField(verbose_name="start time")
+    end_time = models.TimeField(verbose_name="end time")
     description = models.TextField(null=True)
     location = models.CharField(max_length=100)
     available = models.ManyToManyField(Volunteer,
@@ -117,7 +119,7 @@ class Workshop(models.Model):
 
     def __str__(self):
         """Return a string representation of a workshop."""
-        return f"{self.event.name}: {self.name} ({self.time})"
+        return f"{self.event.name}: {self.name} ({self.start_time} to {self.end_time})"
 
 
 class VolunteerAssignment(models.Model):

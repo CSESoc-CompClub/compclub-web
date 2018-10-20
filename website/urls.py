@@ -22,5 +22,6 @@ urlpatterns = [
     # path('', views.index, name='index'),
     path('', views.event_index, name='index'),
     path('events/<slug:slug>-<int:event_id>/registration', views.registration, name='registration'),
-    path('events/<slug:slug>-<int:event_id>/assign-volunteers', views.event_assign_volunteers, name='assign_volunteers')    
+    path('events/<slug:slug>-<int:event_id>/assign-volunteers', views.event_assign_volunteers, name='assign_volunteers'),
+    path('events/<slug:slug>-<int:event_id>/workshop_create', views.workshop_create, name="workshop_create")
 ]

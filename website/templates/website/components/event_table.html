@@ -1,0 +1,20 @@
+<!-- Event table component. Requires Event model object -->
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Event Name</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  {% if event %}
+  <tbody>
+    <tr class="table-active">
+      <td> {{ event.name }}</td>
+      <td> {{ event.start_date }} to {{ event.finish_date }}</td>
+    </tr>
+  </tbody>
+  {% else %}
+  <p>To be confirmed</p>
+  {% endif %}
+</table>

@@ -1,8 +1,9 @@
 import datetime
 from django.test import TestCase
 from django.urls import reverse
+from django.utils.timezone import localtime
 from website.forms import EventForm, WorkshopForm, VolunteerAssignForm
-from website.models import CustomUser, Workshop, Volunteer, VolunteerAssignment
+from website.models import CustomUser, Event, Workshop, Volunteer, VolunteerAssignment
 from .management.commands.load_dummy_data import make_event
 
 # make_event() arguments for adding test event
@@ -34,7 +35,7 @@ class EventIndexViewTests(TestCase):
 
     def test_no_events(self):
         '''if there are no events, an appropriate message is displayed'''
-        response = self.client.get(reverse('website:event_index'))
+        response = self.client.get(reverse('website:index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "There aren't any events at this time")
         self.assertQuerysetEqual(response.context['events_list'], [])
@@ -45,28 +46,30 @@ class EventIndexViewTests(TestCase):
         past_event_args['days_from_now'] = -2
         make_event(**past_event_args)
 
-        response = self.client.get(reverse('website:event_index'))
+        response = self.client.get(reverse('website:index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "There aren't any events at this time")
         self.assertQuerysetEqual(response.context['events_list'], [])
 
     def test_single_event(self):
         '''test event with single workshop'''
-        self.skipTest('until utc/local timezone in browser is fixed')
         event = make_event(**singular_event_args)
-        response = self.client.get(reverse('website:event_index'))
+        response = self.client.get(reverse('website:index'))
+        local_start = localtime(event.start_date)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
         self.assertNotContains(response, ' Workshops') # n Workshops
-        self.assertContains(response, event.start_date.strftime('%b')) # month
-        self.assertContains(response, event.start_date.strftime('%d')) # day
+        self.assertContains(response, local_start.strftime('%b')) # month
+        self.assertContains(response, local_start.strftime('%d')) # day
 
     def test_recurring_event(self):
         '''test event with multiple workshops'''
-        self.skipTest('until utc/local timezone in browser is fixed')
         event = make_event(**multi_workshop_event_args)
-        response = self.client.get(reverse('website:event_index'))
+        response = self.client.get(reverse('website:index'))
+
+        local_start = localtime(event.start_date)
+        local_finish = localtime(event.finish_date)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
@@ -79,7 +82,7 @@ class EventIndexViewTests(TestCase):
     def test_multiple_events(self):
         event1 = make_event(**multi_workshop_event_args)
         event2 = make_event(**singular_event_args)
-        response = self.client.get(reverse('website:event_index'))
+        response = self.client.get(reverse('website:index'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 2)
         self.assertContains(response, event1.name)
@@ -94,7 +97,7 @@ class EventIndexViewTests(TestCase):
         event_args['n_week'] = 3
         event = make_event(**event_args)
 
-        response = self.client.get(reverse('website:event_index'))
+        response = self.client.get(reverse('website:index'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
@@ -161,40 +164,102 @@ class EventFormTest(TestCase):
 
 
 class WorkshopFormTest(TestCase):
+    def setUp(self):
+        form_data = {
+            'name': 'Intro to Python',
+            'start_date': '2018-10-31',
+            'finish_date': '2018-11-08',
+            'owner': '1',
+            'description': 'introduction to Python',
+            'prerequisite': 'Nil',
+            'period': 'period',
+            'slug': 'Intro-to-Python'
+        }
+        self.owner = CustomUser.objects.create_superuser(
+            username='su', email='', password='1234')
+        self.event = EventForm(data=form_data).save()
+
     def test_workshop_create_valid(self):
         form_data = {
+            'event': '1',
             'name': 'workshop name',
-            'time': '2018-10-31 23:59',
-            'description': 'workshop description',
-            'location': 'k17 seminar room'
+            'date': '2018-10-31',
+            'start_time': '22:59',
+            'end_time': '23:59',
+            'location': 'k17 seminar room',
+            'repeat_workshop': 'NO'
         }
         form = WorkshopForm(data=form_data)
         self.assertTrue(form.is_valid())
 
     def test_workshop_create_invalid_name(self):
         form_data = {
-            'name':
-            'long name................................................'
-            '................................................................',
-            'time':
-            '2018-10-31 23:59',
-            'description':
-            'workshop description',
-            'location':
-            'k17 seminar room'
+            'event': '1',
+            'name': 'long name................................................'
+                '................................................................',
+            'date': '2018-10-31',
+            'start_time': '22:59',
+            'end_time': '23:59',
+            'location': 'k17 seminar room',
+            'repeat_workshop': 'NO'
         }
         form = WorkshopForm(data=form_data)
         self.assertFalse(form.is_valid())
 
     def test_workshop_create_invalid_time(self):
         form_data = {
+            'event': '1',
             'name': 'workshop name',
-            'time': '2018-10-32 12:34',
-            'description': 'workshop description',
-            'location': 'k17 seminar room'
+            'date': '2018-10-32',
+            'start_time': '22:59',
+            'end_time': '23:59',
+            'location': 'k17 seminar room',
+            'repeat_workshop': 'NO'
         }
         form = WorkshopForm(data=form_data)
         self.assertFalse(form.is_valid())
+
+    def test_workshop_create_no_recurring(self):
+        form_data = {
+            'event': '1',
+            'name': 'workshop name',
+            'date': '2018-10-31',
+            'start_time': '22:59',
+            'end_time': '23:59',
+            'location': 'k17 seminar room',
+            'repeat_workshop': 'NO'
+        }
+        form = WorkshopForm(data=form_data)
+        form.save()
+        self.assertTrue(len(Workshop.objects.all()) == 1)
+
+    def test_workshop_create_recurring_daily(self):
+        form_data = {
+            'event': '1',
+            'name': 'workshop name',
+            'date': '2018-10-31',
+            'start_time': '22:59',
+            'end_time': '23:59',
+            'location': 'k17 seminar room',
+            'repeat_workshop': 'DL'
+        }
+        form = WorkshopForm(data=form_data)
+        form.save()
+        self.assertTrue(len(Workshop.objects.all()) == 9) # 8 days inclusive between 31/10 and 8/11
+
+    def test_workshop_create_recurring_weekly(self):
+        form_data = {
+            'event': '1',
+            'name': 'workshop name',
+            'date': '2018-11-01',
+            'start_time': '22:59',
+            'end_time': '23:59',
+            'location': 'k17 seminar room',
+            'repeat_workshop': 'WK'
+        }
+        form = WorkshopForm(data=form_data)
+        form.save()
+        self.assertTrue(len(Workshop.objects.all()) == 2)
 
 
 class EventCreateViewTest(TestCase):
