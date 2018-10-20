@@ -1,13 +1,18 @@
 from collections import namedtuple
 from datetime import datetime
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.core.mail import BadHeaderError, send_mass_mail
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
-from django.db.models import Count
-from website.forms import EventForm, WorkshopForm, RegistrationForm, VolunteerAssignForm
-from website.models import Event, Workshop, VolunteerAssignment
+
+from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
+                           WorkshopForm)
+from website.models import Event, Workshop
+from website.utils import generate_status_email
 
 
 def index(request):
@@ -30,9 +35,11 @@ def event_page(request, event_id, slug):
     event = get_object_or_404(Event, pk=event_id)
     # redirect to correct url if needed
     if event.slug != slug:
-        return redirect('website:event_page', event_id=event.pk, slug=event.slug)
+        return redirect(
+            'website:event_page', event_id=event.pk, slug=event.slug)
 
-    workshops = Workshop.objects.filter(event=event).order_by('date', 'start_time')
+    workshops = Workshop.objects.filter(event=event).order_by(
+        'date', 'start_time')
     template = loader.get_template('website/event.html')
     context = {
         'event': event,
@@ -72,6 +79,19 @@ def event_create(request):
 
 
 @staff_member_required
+def volunteer_status_email_preview(request, pk, slug):
+    emails = generate_status_email(pk)
+    if request.method == 'POST':
+        try:
+            send_mass_mail(emails)
+            return redirect('website:event_index')
+        except BadHeaderError:
+            return HttpResponse('Invalid header found')
+    context = {'emails': emails}
+    return render(request, 'website/volunteer_status_email_preview.html',
+                  context)
+
+
 def event_assign_volunteers(request, event_id, slug):
     post_form = None
     if request.method == 'POST' and 'workshop_id' in request.POST:
@@ -79,11 +99,11 @@ def event_assign_volunteers(request, event_id, slug):
         post_form = VolunteerAssignForm(
             request.POST,
             available=workshop.available.all(),
-            assignments=workshop.assignment.all()
-        )
+            assignments=workshop.assignment.all())
         if post_form.is_valid():
             post_form.save()
-            return redirect('website:assign_volunteers', event_id=event_id, slug=slug)
+            return redirect(
+                'website:assign_volunteers', event_id=event_id, slug=slug)
         # if form is not valid then display errors on relevant form
 
     event = get_object_or_404(Event, pk=event_id)
@@ -92,20 +112,22 @@ def event_assign_volunteers(request, event_id, slug):
     # Generate forms for each workshop
     forms = []
     for w in workshops:
-        if post_form is not None and w.id == post_form.cleaned_data['workshop_id']:
-            forms.append(post_form) # use POSTed form
+        if post_form is not None and w.id == post_form.cleaned_data[
+                'workshop_id']:
+            forms.append(post_form)  # use POSTed form
         else:
-            forms.append(VolunteerAssignForm(
-                initial={'workshop_id': w.id},
-                available=w.available.all(),
-                assignments=w.assignment.all()
-            ))
+            forms.append(
+                VolunteerAssignForm(
+                    initial={'workshop_id': w.id},
+                    available=w.available.all(),
+                    assignments=w.assignment.all()))
 
     # zip Workshop and corresponding Form into namedtuple
     WorkshopTuple = namedtuple('WorkshopTuple', ['model', 'form'])
     tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
     context = {'event': event, 'workshops': tuples}
     return render(request, 'website/event_assign.html', context)
+
 
 def workshop_create(request, event_id, slug):
     if request.method == 'POST':
@@ -117,7 +139,10 @@ def workshop_create(request, event_id, slug):
         workshop_form = WorkshopForm(prefix='workshop_form')
         workshop_form['event'].initial = get_object_or_404(Event, pk=event_id)
 
-    context = {'workshop_form': workshop_form, 'event': get_object_or_404(Event, pk=event_id)}
+    context = {
+        'workshop_form': workshop_form,
+        'event': get_object_or_404(Event, pk=event_id)
+    }
     return render(request, 'website/workshop_create.html', context)
 
 

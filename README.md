@@ -47,6 +47,8 @@ The container exposes the server on port 8080.
 You must provide the following environment variables
 
  - `SECRET_KEY`: The secret key used to sign cookies.
+ - `EMAIL_HOST_USER`: User name used to log into the email host.
+ - `EMAIL_HOST_PASSWORD`: Password for Django to log into the email host.
 
 ### Run the container
 

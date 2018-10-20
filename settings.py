@@ -105,3 +105,12 @@ LOGIN_REDIRECT_URL = 'website:index'
 LOGOUT_REDIRECT_URL = 'website:index'
 
 AUTH_USER_MODEL = 'website.CustomUser'
+
+
+# E-mail settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+EMAIL = 'compclub-noreply@csesoc.org.au'

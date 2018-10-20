@@ -1,9 +1,14 @@
 import datetime
+
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import localtime
-from website.forms import EventForm, WorkshopForm, VolunteerAssignForm
-from website.models import CustomUser, Event, Workshop, Volunteer, VolunteerAssignment
+
+from website import models
+from website.forms import EventForm, VolunteerAssignForm, WorkshopForm
+from website.models import CustomUser, VolunteerAssignment, Workshop
+from website.utils import generate_status_email
+
 from .management.commands.load_dummy_data import make_event
 
 # make_event() arguments for adding test event
@@ -11,7 +16,7 @@ singular_event_args = {
     'name': 'Intro to Programming Crash Course',
     'days_from_now': 10,
     'n_week': 1,
-    'workshop_time': datetime.time(10, 0), # 10:00 local time
+    'workshop_time': datetime.time(10, 0),  # 10:00 local time
     'description': 'Have you ever wanted to learn to write computer programs?',
     'prereq': 'No programming experience required',
     'period': '???',
@@ -19,15 +24,24 @@ singular_event_args = {
 }
 
 multi_workshop_event_args = {
-    'name': 'Test: Advanced Web Development',
-    'days_from_now': 28,
-    'n_week': 7,
-    'workshop_time': datetime.time(16, 0),
-    'description': 'Learn how to make full-scale web apps with Django',
-    'prereq': 'Experience in web design (HTML,CSS,JavaScript) and coding in Python',
-    'period': '2 hours',
-    'location': 'UNSW K17 lyre lab'
+    'name':
+    'Test: Advanced Web Development',
+    'days_from_now':
+    28,
+    'n_week':
+    7,
+    'workshop_time':
+    datetime.time(16, 0),
+    'description':
+    'Learn how to make full-scale web apps with Django',
+    'prereq':
+    'Experience in web design (HTML,CSS,JavaScript) and coding in Python',
+    'period':
+    '2 hours',
+    'location':
+    'UNSW K17 lyre lab'
 }
+
 
 class EventIndexViewTests(TestCase):
     def setUp(self):
@@ -73,9 +87,9 @@ class EventIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
-        self.assertContains(response, ' Workshops') # n Workshops
-        self.assertContains(response, event.start_date.strftime('%b')) # month
-        self.assertContains(response, event.start_date.strftime('%d')) # day
+        self.assertContains(response, ' Workshops')  # n Workshops
+        self.assertContains(response, event.start_date.strftime('%b'))  # month
+        self.assertContains(response, event.start_date.strftime('%d'))  # day
         self.assertContains(response, event.finish_date.strftime('%b'))
         self.assertContains(response, event.finish_date.strftime('%d'))
 
@@ -103,11 +117,10 @@ class EventIndexViewTests(TestCase):
         self.assertContains(response, event.name)
 
 
-
-
 class EventFormTest(TestCase):
-    def setUp(self):
-        self.owner = CustomUser.objects.create_superuser(
+    @classmethod
+    def setUp(cls):
+        cls.owner = models.CustomUser.objects.create_superuser(
             username='su', email='', password='1234')
 
     def test_event_create_valid(self):
@@ -263,8 +276,9 @@ class WorkshopFormTest(TestCase):
 
 
 class EventCreateViewTest(TestCase):
-    def setUp(self):
-        self.su = CustomUser.objects.create_superuser(
+    @classmethod
+    def setUpTestData(cls):
+        cls.su = models.CustomUser.objects.create_superuser(
             username='su', email='', password='1234')
 
     def test_call_view_denies_non_staff(self):
