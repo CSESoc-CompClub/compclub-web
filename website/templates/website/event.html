@@ -14,9 +14,14 @@
   <div class="event-detail-card">
     <div class="event-card-container">
       {% if user.is_staff %}
-        <p><a class="event-button"
-          href="{% url 'website:workshop_create' slug=event.slug event_id=event.pk %}">
-            <i class="fas fa-calendar-plus"></i> Create Workshop</a></p>
+        <p>
+          <a class="event-button"
+            href="{% url 'website:workshop_create' slug=event.slug event_id=event.pk %}">
+            <i class="fas fa-calendar-plus"></i> Create Workshop</a>
+          <a class="event-button"
+            href="{% url 'website:volunteer_email_preview' slug=event.slug pk=event.pk %}">
+            <i class="fas fa-envelope-open"></i> Send status email</a>
+        </p>
       {% endif %}
       <h3 class="event-detail">Event Details</h3>
       <p>
