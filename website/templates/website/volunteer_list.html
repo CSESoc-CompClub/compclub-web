@@ -1,0 +1,49 @@
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} -- Volunteer List {% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  <div class="container">
+    <div class="event-list-header">
+      <h1 class="event-list-title">Volunteer List</h1>
+    </div>
+    <div class="event-detail-card">
+      <div class="event-card-container">
+          <table class="table">
+            <caption style="caption-side: top"> {{ event.name }} </caption>
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col"> Volunteer </th>
+                  <th scope="col"> Action </th>
+                </tr>
+              </thead>
+          {% if event %}
+            {% for volunteer in assign_list %}
+                <tbody>
+                  <tr class="table-active">
+                    <td> {{ volunteer }}</td>
+                    <td>
+                      <form method='post' action='{% if action_url %}{{ action_url }}{% endif %}'> {% csrf_token %}
+                        <select name="status">
+                          {% for status in option %}
+                            <option value="status">{{ status }}</option>
+                          {% endfor %}
+                        </select>
+                        {% endfor %}
+                    </td>
+                    <tr>
+                      <!-- To do button css  -->
+                      <button type="submit" class="btn btn-primary" style="float:right">Submit</button>
+                      </form>
+                    </tr>
+                  </tr>
+                </tbody>            
+          {% else %}
+            <p>To be confirmed</p>
+          {% endif %}
+            </table>
+  </div>
+</div>
+</div>
+{% endblock %}

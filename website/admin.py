@@ -36,3 +36,4 @@ class CustomUserAdmin(BaseUserAdmin):
 admin.site.register(Event)
 admin.site.register(Workshop)
 admin.site.register(Registration)
+admin.site.register(Volunteer)
