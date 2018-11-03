@@ -25,7 +25,7 @@ def generate_status_email(event_id,
                           workshop_fmt=STATUS_EMAIL_WORKSHOP_FMT,
                           from_email=settings.EMAIL):
     """
-    Generates workshop assignment status for volunteers.
+    Generate workshop assignment status for volunteers.
 
     Args:
         event_id: id of event to generate email for
@@ -38,6 +38,7 @@ def generate_status_email(event_id,
     Returns:
         list of emails in the following format:
             [(subject, message, from_email, [recipient.email])]
+
     """
     event = get_object_or_404(Event, pk=event_id)
     recipients = Volunteer.objects \

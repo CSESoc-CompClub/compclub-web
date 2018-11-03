@@ -1,10 +1,12 @@
-from django.db import models
-from django.forms import DateInput, DateTimeInput, Form, ModelForm, TimeInput, ValidationError
-from django.utils.translation import gettext_lazy as _
-from django import forms
-from website.models import Event, Workshop, Registration, VolunteerAssignment
 import datetime
 import re
+
+from django import forms
+from django.forms import (DateInput, DateTimeInput, Form, ModelForm, TimeInput,
+                          ValidationError)
+from django.utils.translation import gettext_lazy as _
+
+from website.models import Event, Registration, VolunteerAssignment, Workshop
 
 
 class DatePicker(DateInput):
@@ -62,6 +64,7 @@ class EventForm(ModelForm):
 class WorkshopForm(ModelForm):
     REPEAT_CHOICES = (('NO', 'None'), ('DL', 'Daily'), ('WK', 'Weekly'))
     repeat_workshop = forms.ChoiceField(choices=REPEAT_CHOICES)
+
     def __init__(self, *args, **kwargs):
         super(WorkshopForm, self).__init__(*args, **kwargs)
         for field in self:
@@ -69,7 +72,8 @@ class WorkshopForm(ModelForm):
 
     class Meta:
         model = Workshop
-        fields = ('event', 'start_time', 'end_time', 'date', 'name', 'location', 'repeat_workshop')
+        fields = ('event', 'start_time', 'end_time', 'date', 'name',
+                  'location', 'repeat_workshop')
         exclude = ()
         help_texts = {'time': _('Must be in Sydney time')}
         widgets = {
@@ -94,8 +98,7 @@ class WorkshopForm(ModelForm):
                 start_time=cleaned_data.get('start_time'),
                 end_time=cleaned_data.get('end_time'),
                 description=cleaned_data.get('description'),
-                location=cleaned_data.get('location')
-            )
+                location=cleaned_data.get('location'))
             current_date += interval
 
     def clean(self):
@@ -103,14 +106,11 @@ class WorkshopForm(ModelForm):
         workshop_date = cleaned_data.get('date')
         event = cleaned_data.get('event')
         if event is None:
-            raise ValidationError(
-                _('No event provided'),
-                code='null event')
+            raise ValidationError(_('No event provided'), code='null event')
 
         if workshop_date is None:
             raise ValidationError(
-                _('Invalid workshop date entered'),
-                code='invalid date')
+                _('Invalid workshop date entered'), code='invalid date')
 
         if workshop_date > event.finish_date or workshop_date < event.start_date:
             raise ValidationError(
@@ -119,13 +119,11 @@ class WorkshopForm(ModelForm):
 
         if cleaned_data.get('start_time') is None:
             raise ValidationError(
-                _('Invalid workshop start time entered'),
-                code='invalid time')
+                _('Invalid workshop start time entered'), code='invalid time')
 
         if cleaned_data.get('end_time') is None:
             raise ValidationError(
-                _('Invalid workshop start time entered'),
-                code='invalid time')
+                _('Invalid workshop start time entered'), code='invalid time')
 
         if cleaned_data.get('start_time') > cleaned_data.get('end_time'):
             raise ValidationError(
@@ -142,7 +140,6 @@ class WorkshopForm(ModelForm):
 
 
 class RegistrationForm(ModelForm):
-
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         for field in self:
@@ -167,6 +164,7 @@ class RegistrationForm(ModelForm):
                 _('Phone number is invalid. Must be at least 8 characters long.'),
                 code='invalid number')
 
+
 class VolunteerAssignForm(Form):
     '''Form for assigning available volunteers to a workshop'''
     workshop_id = forms.IntegerField(widget=forms.HiddenInput())
@@ -188,14 +186,12 @@ class VolunteerAssignForm(Form):
                     widget=forms.RadioSelect(),
                     choices=VolunteerAssignment.ASSIGN_CHOICES,
                     initial=status,
-                    label=f'{user.first_name} {user.last_name} ({user.email})'
-                )
-            except:
+                    label=f'{user.first_name} {user.last_name} ({user.email})')
+            except VolunteerAssignment.DoesNotExist:
                 self.fields[f'vol_{v.id}'] = forms.ChoiceField(
                     widget=forms.RadioSelect(),
                     choices=VolunteerAssignment.ASSIGN_CHOICES,
-                    label=f'{user.first_name} {user.last_name} ({user.email})'
-                )
+                    label=f'{user.first_name} {user.last_name} ({user.email})')
 
     # Yields collection of assignments received from the form.
     def get_assignments(self):
@@ -209,5 +205,4 @@ class VolunteerAssignForm(Form):
             VolunteerAssignment.objects.update_or_create(
                 workshop_id=self.cleaned_data['workshop_id'],
                 volunteer_id=vol_id,
-                defaults={'status': status}
-            )
+                defaults={'status': status})

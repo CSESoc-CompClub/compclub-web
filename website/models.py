@@ -25,7 +25,8 @@ class Position(models.Model):
 
 
 class Volunteer(models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name='volunteer')
+    user = models.OneToOneField(
+        get_user_model(), on_delete=models.CASCADE, related_name='volunteer')
     position = models.ForeignKey(
         Position, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -72,17 +73,12 @@ class Event(models.Model):
     period = models.TextField(verbose_name='availability period')
     slug = models.SlugField(default='event', unique=False)  # url name of event
 
-    def save(self, *args, **kwargs):
-        if not self.id:  # if this is a new event
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
     def __str__(self):
         """Return a string representation of an event."""
         return self.name
 
     def save(self, *args, **kwargs):
-        """Override save to update slug"""
+        """Override save to update slug."""
         self.slug = slugify(self.name)
         super(Event, self).save(*args, **kwargs)
 
@@ -98,23 +94,28 @@ class Workshop(models.Model):
     end_time = models.TimeField(verbose_name="end time")
     description = models.TextField(null=True)
     location = models.CharField(max_length=100)
-    available = models.ManyToManyField(Volunteer,
-        verbose_name='available volunteers', related_name='workshops_available')
-    assigned = models.ManyToManyField(Volunteer, through='VolunteerAssignment',
+    available = models.ManyToManyField(
+        Volunteer,
+        verbose_name='available volunteers',
+        related_name='workshops_available')
+    assigned = models.ManyToManyField(
+        Volunteer,
+        through='VolunteerAssignment',
         related_name='workshops_assigned')
 
     def unassigned(self):
-        """Return a list of available volunteers who are not yet assigned/declined"""
+        """Return a list of available volunteers who are not yet assigned/declined."""
         return list(self.available.exclude(id__in=self.assigned.all()))
 
     def withdrawn(self):
-        """ Return a list of volunteers who were assigned or on waitlist
-            but then withdrew their availability
         """
-        assignments = list(self.assignment
-            .exclude(status=VolunteerAssignment.DECLINED)
-            .exclude(volunteer__in=self.available.all())
-        )
+        Return a list of volunteers who were assigned or on waitlist but then
+        withdrew their availability.
+        """
+        assignments = list(
+            self.assignment.exclude(
+                status=VolunteerAssignment.DECLINED).exclude(
+                    volunteer__in=self.available.all()))
         return list(map(lambda assign: assign.volunteer, assignments))
 
     def __str__(self):
@@ -124,10 +125,10 @@ class Workshop(models.Model):
 
 class VolunteerAssignment(models.Model):
     """Model representing an assignment of a Volunteer to a Workshop"""
-    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE,
-        related_name='assignment')
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE,
-        related_name='assignment')
+    workshop = models.ForeignKey(
+        Workshop, on_delete=models.CASCADE, related_name='assignment')
+    volunteer = models.ForeignKey(
+        Volunteer, on_delete=models.CASCADE, related_name='assignment')
     ASSIGNED = 'AS'
     WAITLIST = 'WL'
     DECLINED = 'DE'

@@ -39,7 +39,7 @@ def event_page(request, event_id, slug):
     workshops = Workshop.objects.filter(event=event).order_by(
         'date', 'start_time')
     template = loader.get_template('website/event.html')
-    
+
     # Volunteers can see the "Available" Column after login
     if request.user.is_authenticated:
         request_user = request.user
@@ -47,35 +47,33 @@ def event_page(request, event_id, slug):
         available_list = []
         for workshop in workshops:
             if request_volunteer in workshop.available.all():
-                available_list.append(workshop.id)        
+                available_list.append(workshop.id)
     # After Clicking the button in "Available" Column
         if request.method == "POST":
             workshop_id = request.POST.get("workshop_id")
             selected_workshop = Workshop.objects.get(id=workshop_id)
             if request_volunteer in selected_workshop.available.all():
                 selected_workshop.available.remove(request_volunteer)
-                
             else:
                 selected_workshop.available.add(request_volunteer)
 
-            return redirect('website:event_page',slug=slug,event_id=event_id)  
-  
+            return redirect('website:event_page', slug=slug, event_id=event_id)
+
         context = {
             'event': event,
             'workshops': workshops,
             'location': workshops[0].location if len(workshops) > 0 else "TBA",
-            'available_list':available_list
-        }        
-
+            'available_list': available_list
+        }
         return render(request, 'website/event.html', context)
     else:
         context = {
             'event': event,
             'workshops': workshops,
             'location': workshops[0].location if len(workshops) > 0 else "TBA",
-        }        
-            
+        }
         return HttpResponse(template.render(context, request))
+
 
 def registration(request, event_id, slug):
     event = get_object_or_404(Event, pk=event_id)
@@ -155,6 +153,7 @@ def event_assign_volunteers(request, event_id, slug):
     tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
     context = {'event': event, 'workshops': tuples}
     return render(request, 'website/event_assign.html', context)
+
 
 def workshop_create(request, event_id, slug):
     if request.method == 'POST':
