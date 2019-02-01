@@ -19,6 +19,7 @@ class VolunteerInline(admin.StackedInline):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
+    """Custom user settings and configuration page in the admin panel"""
     inlines = (VolunteerInline, )
 
     add_fieldsets = ((None, {

@@ -1,3 +1,8 @@
+"""Compclub Website Views
+
+Contains functions to render views (i.e. pages) to the user as HTTP responses.
+For more information, see https://docs.djangoproject.com/en/2.1/topics/http/views/
+"""
 from collections import namedtuple
 from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
@@ -7,18 +12,26 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
+
+from smtplib import SMTPSenderRefused
+
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
 from website.models import Event, Workshop, Volunteer
 from website.utils import generate_status_email
 
 
-def index(request):
-    return render(request, 'website/index.html')
-
-
 def event_index(request):
-    # get list of current and future events, and how many workshops they consist of
+    """
+    Render and show events page to the user. Events page shows list of current and future events,
+    and how many workshops they consist of.
+
+    Args:
+        request: HTTP request header contents
+
+    Returns:
+        HTTP response containing events page
+    """
     events = Event.objects \
         .annotate(n_workshops=Count('workshop')) \
         .filter(finish_date__gte=datetime.now()) \
@@ -30,6 +43,18 @@ def event_index(request):
 
 
 def event_page(request, event_id, slug):
+    """
+    Render and show event detail page to the user. Event page shows specific and detailed information
+    about a particular event
+
+    Args:
+        request: HTTP request header contents
+        event_id: the unique ID of the event
+        slug: the human-readable event name in the URL
+
+    Returns:
+        HTTP response containing the event detail page
+    """
     event = get_object_or_404(Event, pk=event_id)
     # redirect to correct url if needed
     if event.slug != slug:
@@ -76,7 +101,24 @@ def event_page(request, event_id, slug):
 
 
 def registration(request, event_id, slug):
+    """
+    Render and show event registration form to the user. The registration form allows students
+    to register interest for a particular event.
+
+    Args:
+        request: HTTP request header contents
+        event_id: the unique ID of the event
+        slug: the human-readable event name in the URL
+
+    Returns:
+        HTTP response containing the registration form for the given event
+    """
     event = get_object_or_404(Event, pk=event_id)
+    # redirect to correct url if needed
+    if event.slug != slug:
+        return redirect(
+            'website:registration', event_id=event.pk, slug=event.slug)
+
     if request.method == 'POST':
         registration_form = RegistrationForm(request.POST)
         if registration_form.is_valid():
@@ -92,6 +134,16 @@ def registration(request, event_id, slug):
 
 @staff_member_required
 def event_create(request):
+    """
+    Render and show an event creation form. The form allows for the creation of new events.
+    Only staff members can access and see this page.
+
+    Args:
+        request: HTTP request header contents
+
+    Returns:
+        HTTP response containing the event creation form
+    """
     if request.method == 'POST':
         event_form = EventForm(request.POST, prefix='event_form')
         if event_form.is_valid():
@@ -105,20 +157,51 @@ def event_create(request):
 
 
 @staff_member_required
-def volunteer_status_email_preview(request, pk, slug):
-    emails = generate_status_email(pk)
+def volunteer_status_email_preview(request, event_id, slug):
+    """
+    Render and show an email preview page, and should be shown after assigning volunteers to
+    workshops in an event. If a POST request is sent, an email will be sent to the listed volunteers
+    whether they are assigned, on a waitlist or declined.
+    Only staff members can access and see this page.
+
+    Args:
+        request: HTTP request header contents
+        event_id: the unique ID (i.e. primary key) of the event being assigned
+        slug: the human-readable event name in the URL
+
+    Returns:
+        HTTP response containing the email preview page
+    """
+    emails = generate_status_email(event_id)
     if request.method == 'POST':
         try:
             send_mass_mail(emails)
             return redirect('website:event_index')
-        except BadHeaderError:
+        except BadHeaderError as e:
+            print(e)
             return HttpResponse('Invalid header found')
+        except SMTPSenderRefused as e:
+            print(e)
+            return HttpResponse('Failed to send email. The host may not have correctly configured the SMTP settings.')
     context = {'emails': emails}
     return render(request, 'website/volunteer_status_email_preview.html',
                   context)
 
-
+@staff_member_required
 def event_assign_volunteers(request, event_id, slug):
+    """
+    Render and show a volunteer assignment page. The page shows a series of forms allowing a staff
+    member to assign volunteers to workshops for a particular event.
+    Only staff members can access and see this page.
+
+    Args:
+        request: HTTP request header contents
+        event_id: the unique ID (i.e. primary key) of the event being assigned
+        slug: the human-readable event name in the URL
+
+    Returns:
+        HTTP response containing the volunteer assignment page
+    """
     post_form = None
     if request.method == 'POST' and 'workshop_id' in request.POST:
         workshop = get_object_or_404(Workshop, pk=request.POST['workshop_id'])
@@ -154,8 +237,21 @@ def event_assign_volunteers(request, event_id, slug):
     context = {'event': event, 'workshops': tuples}
     return render(request, 'website/event_assign.html', context)
 
-
+@staff_member_required
 def workshop_create(request, event_id, slug):
+    """
+    Render and show a workshop creation form page. The page shows a form allowing a staff member to
+    create a new workshop for a particular event.
+    Only staff members can access and see this page.
+
+    Args:
+        request: HTTP request header contents
+        event_id: the ID of the event that we are making a workshop for
+        slug: the human-readable event name in the URL
+
+    Returns:
+        HTTP response containing the workshop creation page
+    """
     if request.method == 'POST':
         workshop_form = WorkshopForm(request.POST, prefix='workshop_form')
         if workshop_form.is_valid():
@@ -173,10 +269,29 @@ def workshop_create(request, event_id, slug):
 
 
 def about(request):
+    """
+    Render and show the about page.
+
+    Args:
+        request: HTTP request header contents
+
+    Returns:
+        HTTP response containing the about page
+    """
     return render(request, 'website/about.html')
 
 
 @login_required
 def user_profile(request):
+    """
+    Render and show the user's profile page. Requires that the user is logged in.
+    NOTE: this is minimally implemented and is currently not used
+
+    Args:
+        request: HTTP request header contents
+
+    Returns:
+        HTTP response containing the user profile page
+    """
     template = loader.get_template('website/profile.html')
     return HttpResponse(template.render({}, request))

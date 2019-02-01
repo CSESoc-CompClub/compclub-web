@@ -19,12 +19,13 @@ class CustomUser(AbstractUser):
 
 
 class Position(models.Model):
-    """Model representing the role of a user."""
+    """Model representing the specific role of a volunteer type user (See Volunteer model)."""
 
     name = models.CharField(verbose_name='position name', max_length=50)
 
 
 class Volunteer(models.Model):
+    """Model representing volunteer type users."""
     user = models.OneToOneField(
         get_user_model(), on_delete=models.CASCADE, related_name='volunteer')
     position = models.ForeignKey(
@@ -92,7 +93,7 @@ class Workshop(models.Model):
     date = models.DateField()
     start_time = models.TimeField(verbose_name="start time")
     end_time = models.TimeField(verbose_name="end time")
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=100)
     available = models.ManyToManyField(
         Volunteer,

@@ -10,18 +10,17 @@ from website.models import Event, Registration, VolunteerAssignment, Workshop
 
 
 class DatePicker(DateInput):
+    """DatePicker Form Field. Used to select a date in a form."""
     input_type = 'date'
 
 
-class DateTimePicker(DateTimeInput):
-    input_type = 'datetime-local'
-
-
 class TimePicker(TimeInput):
+    """TimePicker Form Field. Used to select a time in a form."""
     input_type = 'time'
 
 
 class EventForm(ModelForm):
+    """Event creation form. Creates a new Event model object upon saving."""
     def __init__(self, *args, **kwargs):
         super(EventForm, self).__init__(*args, **kwargs)
         # adding ".form-control" class to all fields so that they are styled by
@@ -47,6 +46,7 @@ class EventForm(ModelForm):
         }
 
     def clean(self):
+        """Clean and validate the form data"""
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
         finish_date = cleaned_data.get('finish_date')
@@ -62,6 +62,7 @@ class EventForm(ModelForm):
 
 
 class WorkshopForm(ModelForm):
+    """Workshop creation form. Creates one or more workshops for a specific event upon saving."""
     REPEAT_CHOICES = (('NO', 'None'), ('DL', 'Daily'), ('WK', 'Weekly'))
     repeat_workshop = forms.ChoiceField(choices=REPEAT_CHOICES)
 
@@ -86,7 +87,8 @@ class WorkshopForm(ModelForm):
     def make_recurring_workshops(self, interval):
         """
         Create recurring workshops
-        interval: datetime.timedelta object
+        Args:
+            interval: datetime.timedelta object. The time interval between each workshop
         """
         cleaned_data = self.cleaned_data
         current_date = cleaned_data.get('date') + interval
@@ -102,6 +104,7 @@ class WorkshopForm(ModelForm):
             current_date += interval
 
     def clean(self):
+        """Clean and validate the form data"""
         cleaned_data = super().clean()
         workshop_date = cleaned_data.get('date')
         event = cleaned_data.get('event')
@@ -131,6 +134,7 @@ class WorkshopForm(ModelForm):
                 code='invalid time')
 
     def save(self):
+        """Create an object model and save it to the database"""
         super().save()
         recurrence = self.cleaned_data['repeat_workshop']
         if recurrence == 'DL':
@@ -140,6 +144,8 @@ class WorkshopForm(ModelForm):
 
 
 class RegistrationForm(ModelForm):
+    """Student event registration form. Creates a new Registration object upon saving."""
+
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         for field in self:
@@ -170,6 +176,14 @@ class VolunteerAssignForm(Form):
     workshop_id = forms.IntegerField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialise the volunteer assignment form
+
+        Args:
+            *args:
+                available: List of available volunteers (Django model object)
+                assignments: List of volunteer assignments (Django model object)
+        """
         # Get available volunteers
         available = kwargs.pop('available')
         # Get existing VolunteerAssignments for that workshop

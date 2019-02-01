@@ -19,7 +19,7 @@
             href="{% url 'website:workshop_create' slug=event.slug event_id=event.pk %}">
             <i class="fas fa-calendar-plus"></i> Create Workshop</a>
           <a class="event-button"
-            href="{% url 'website:volunteer_email_preview' slug=event.slug pk=event.pk %}">
+            href="{% url 'website:volunteer_email_preview' slug=event.slug event_id=event.pk %}">
             <i class="fas fa-envelope-open"></i> Send status email</a>
         </p>
       {% endif %}
