@@ -1,10 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User
-from .models import Volunteer
+
+from website.models import (CustomUser, Event, Registration, Volunteer,
+                            VolunteerAssignment, Workshop)
 
 
-# Register your models here.
+@admin.register(VolunteerAssignment)
+class VolunteerAssignmentAdmin(admin.ModelAdmin):
+    pass
+
+
 class VolunteerInline(admin.StackedInline):
     model = Volunteer
     can_delete = False
@@ -12,8 +17,16 @@ class VolunteerInline(admin.StackedInline):
     fk_name = "user"
 
 
+@admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
+    """Custom user settings and configuration page in the admin panel"""
     inlines = (VolunteerInline, )
+
+    add_fieldsets = ((None, {
+        'classes': ('wide', ),
+        'fields': ('first_name', 'last_name', 'username', 'password1',
+                   'password2', 'email', 'number'),
+    }), )
 
     def get_inline_instances(self, request, obj=None):
         if not obj:
@@ -21,6 +34,6 @@ class CustomUserAdmin(BaseUserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
-admin.site.register(Volunteer)
+admin.site.register(Event)
+admin.site.register(Workshop)
+admin.site.register(Registration)
