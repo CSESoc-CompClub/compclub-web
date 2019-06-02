@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from django.conf.urls import handler404, handler500
 from django.views.generic.base import RedirectView
 
 from . import views
@@ -61,5 +60,3 @@ urlpatterns = [
         views.workshop_create,
         name="workshop_create")
 ]
-
-handler404 = 'views.handler404'
