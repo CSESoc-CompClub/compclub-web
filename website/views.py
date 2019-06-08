@@ -23,8 +23,8 @@ from website.utils import generate_status_email
 
 class EventIndex(View):
     """
-    Render and show events page to the user. Events page shows list of current and future events,
-    and how many workshops they consist of.
+    Render and show events page to the user. Events page shows list of current
+    and future events, and how many workshops they consist of.
 
     Args:
         request: HTTP request header contents
@@ -40,11 +40,10 @@ class EventIndex(View):
         context = {'events_list': events}
         return render(request, 'website/event_index.html', context)
 
-
-def event_page(request, event_id, slug):
+class EventPage(View):
     """
-    Render and show event detail page to the user. Event page shows specific and detailed information
-    about a particular event
+    Render and show event detail page to the user. Event page shows specific
+    and detailed information about a particular event
 
     Args:
         request: HTTP request header contents
@@ -54,49 +53,50 @@ def event_page(request, event_id, slug):
     Returns:
         HTTP response containing the event detail page
     """
-    event = get_object_or_404(Event, pk=event_id)
-    # redirect to correct url if needed
-    if event.slug != slug:
-        return redirect(
-            'website:event_page', event_id=event.pk, slug=event.slug)
+    def get(self, request, event_id, slug):
+        event = get_object_or_404(Event, pk=event_id)
 
-    workshops = Workshop.objects.filter(event=event).order_by(
-        'date', 'start_time')
-    template = loader.get_template('website/event.html')
+        # redirect to page with the right slug
+        if event.slug != slug:
+            return redirect('website:event_page', event_id=event.pk, 
+                slug=event.slug)
 
-    # Volunteers can see the "Available" Column after login
-    if request.user.is_authenticated:
-        request_user = request.user
-        request_volunteer = Volunteer.objects.get(user=request_user)
-        available_list = []
-        for workshop in workshops:
-            if request_volunteer in workshop.available.all():
-                available_list.append(workshop.id)
-    # After Clicking the button in "Available" Column
-        if request.method == "POST":
+        # build context
+        workshops = Workshop.objects.filter(event=event) \
+            .order_by('date', 'start_time')
+        location = workshops[0].location if len(workshops) > 0 else "TBA"
+        context = {
+            'event': event,
+            'workshops': workshops,
+            'location': location,
+        }
+
+        if request.user.is_authenticated:
+            # include list of workshops where user is available in context
+            available_list = self._get_available_workshops(request, workshops)
+            context['available_list'] = available_list
+
+        return render(request, 'website/event.html', context)
+
+    def post(self, request, event_id, slug):
+        if request.user.is_authenticated:
+            volunteer = Volunteer.objects.get(user=request.user)
             workshop_id = request.POST.get("workshop_id")
-            selected_workshop = Workshop.objects.get(id=workshop_id)
-            if request_volunteer in selected_workshop.available.all():
-                selected_workshop.available.remove(request_volunteer)
+            # list of available volunteers for a particular workshop
+            available = Workshop.objects.get(id=workshop_id).available
+
+            if volunteer in available.all():
+                available.remove(volunteer)
             else:
-                selected_workshop.available.add(request_volunteer)
+                available.add(volunteer)
 
             return redirect('website:event_page', slug=slug, event_id=event_id)
 
-        context = {
-            'event': event,
-            'workshops': workshops,
-            'location': workshops[0].location if len(workshops) > 0 else "TBA",
-            'available_list': available_list
-        }
-        return render(request, 'website/event.html', context)
-    else:
-        context = {
-            'event': event,
-            'workshops': workshops,
-            'location': workshops[0].location if len(workshops) > 0 else "TBA",
-        }
-        return HttpResponse(template.render(context, request))
+    def _get_available_workshops(self, request, workshops):
+        volunteer = Volunteer.objects.get(user=request.user)
+
+        return [workshop.id for workshop in workshops \
+            if volunteer in workshop.available.all()]
 
 
 def registration(request, event_id, slug):

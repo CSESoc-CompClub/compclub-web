@@ -36,7 +36,7 @@ urlpatterns = [
         name='event_index'),
     path( # event detail view
         'events/<slug:slug>-<int:event_id>/',
-        views.event_page,
+        views.EventPage.as_view(),
         name='event_page'),
     path('events/create', views.event_create, name='event_create'), # create event view
     path('about/', views.about, name='about'), # about page view
