@@ -42,7 +42,7 @@ urlpatterns = [
     path('about/', views.about, name='about'), # about page view
     # TODO add content to homepage
     # path('', views.index, name='index'),
-    path('', views.event_index, name='index'), # homepage view
+    path('', views.EventIndex.as_view(), name='index'), # homepage view
     path(
         'events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
         views.volunteer_status_email_preview,

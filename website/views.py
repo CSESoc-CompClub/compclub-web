@@ -12,6 +12,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
+from django.views import View
 
 from smtplib import SMTPSenderRefused
 
@@ -20,8 +21,7 @@ from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
 from website.models import Event, Workshop, Volunteer
 from website.utils import generate_status_email
 
-
-def event_index(request):
+class EventIndex(View):
     """
     Render and show events page to the user. Events page shows list of current and future events,
     and how many workshops they consist of.
@@ -32,14 +32,13 @@ def event_index(request):
     Returns:
         HTTP response containing events page
     """
-    events = Event.objects \
-        .annotate(n_workshops=Count('workshop')) \
-        .filter(finish_date__gte=datetime.now()) \
-        .order_by('start_date')
-    context = {
-        'events_list': events,
-    }
-    return render(request, 'website/event_index.html', context)
+    def get(self, request):
+        events = Event.objects \
+            .annotate(n_workshops=Count('workshop')) \
+            .filter(finish_date__gte=datetime.now()) \
+            .order_by('start_date')
+        context = {'events_list': events}
+        return render(request, 'website/event_index.html', context)
 
 
 def event_page(request, event_id, slug):
