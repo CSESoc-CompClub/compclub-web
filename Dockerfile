@@ -3,11 +3,7 @@ FROM python:3
 WORKDIR /app
 VOLUME /data
 
-RUN pip install pipenv
-
-# Install dependencies into their own layer so they are cached between code changes
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
+RUN pip install -r requirements.txt
 
 COPY . .
 
