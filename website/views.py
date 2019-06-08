@@ -267,7 +267,7 @@ def workshop_create(request, event_id, slug):
     return render(request, 'website/workshop_create.html', context)
 
 
-def about(request):
+class About(View):
     """
     Render and show the about page.
 
@@ -277,8 +277,8 @@ def about(request):
     Returns:
         HTTP response containing the about page
     """
-    return render(request, 'website/about.html')
-
+    def get(self, request):
+        return render(request, 'website/about.html')
 
 @login_required
 def user_profile(request):

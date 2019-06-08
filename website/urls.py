@@ -39,7 +39,7 @@ urlpatterns = [
         views.EventPage.as_view(),
         name='event_page'),
     path('events/create', views.event_create, name='event_create'), # create event view
-    path('about/', views.about, name='about'), # about page view
+    path('about/', views.About.as_view(), name='about'), # about page view
     # TODO add content to homepage
     # path('', views.index, name='index'),
     path('', views.EventIndex.as_view(), name='index'), # homepage view
