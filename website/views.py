@@ -126,17 +126,18 @@ class RegistrationPage(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        registration_form = self.get_form()
+
         event = Event.objects.get(id=self.kwargs['event_id'])
+        registration_form = self.get_form()
         registration_form.fields['event'].initial = event
+
         context['registration_form'] = registration_form
         context['event'] = event
 
         return context
 
     def get_success_url(self):
-        return reverse('website:event_page',
-            kwargs=self.kwargs)
+        return reverse('website:event_page', kwargs=self.kwargs)
 
 @staff_member_required
 def event_create(request):
