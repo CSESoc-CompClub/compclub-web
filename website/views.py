@@ -15,6 +15,7 @@ from django.template import loader
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView
+from django.urls import reverse
 
 from smtplib import SMTPSenderRefused
 
@@ -120,6 +121,10 @@ class RegistrationPage(CreateView):
         context['event'] = event
 
         return context
+
+    def get_success_url(self):
+        return reverse('website:event_page',
+            kwargs=self.kwargs)
 
 #class RegistrationPage(View):
 #    """

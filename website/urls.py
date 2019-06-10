@@ -49,7 +49,7 @@ urlpatterns = [
         name='volunteer_email_preview'),
     path(
         'events/<slug:slug>-<int:event_id>/registration', # event regitration view (for students)
-        views.registration,
+        views.RegistrationPage.as_view(),
         name='registration'),
     path(
         'events/<slug:slug>-<int:event_id>/assign-volunteers', # event volunteer assignment page
