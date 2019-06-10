@@ -109,6 +109,18 @@ class EventPage(DetailView):
             return redirect('website:event_page', slug=slug, event_id=event_id)
 
 class RegistrationPage(CreateView):
+    """
+    Render and show event registration form to the user. The registration form allows students
+    to register interest for a particular event.
+
+    Args:
+        request: HTTP request header contents
+        event_id: the unique ID of the event
+        slug: the human-readable event name in the URL
+
+    Returns:
+        HTTP response containing the registration form for the given event
+    """
     form_class = RegistrationForm
     template_name = 'website/registration_form.html'
 
@@ -125,41 +137,6 @@ class RegistrationPage(CreateView):
     def get_success_url(self):
         return reverse('website:event_page',
             kwargs=self.kwargs)
-
-#class RegistrationPage(View):
-#    """
-#    Render and show event registration form to the user. The registration form allows students
-#    to register interest for a particular event.
-#
-#    Args:
-#        request: HTTP request header contents
-#        event_id: the unique ID of the event
-#        slug: the human-readable event name in the URL
-#
-#    Returns:
-#        HTTP response containing the registration form for the given event
-#    """
-#    def get(self, request, event_id, slug):
-#        event = get_object_or_404(Event, pk=event_id)
-#
-#        # redirect to correct url if needed
-#        if event.slug != slug:
-#            return redirect(
-#                'website:registration', event_id=event.pk, slug=event.slug)
-#
-#        registration_form = RegistrationForm()
-#        registration_form.fields['event'].initial = event
-#
-#        context = {'registration_form': registration_form, 'event': event}
-#
-#        return render(request, 'website/registration_form.html', context)
-#
-#    def post(self, request, event_id, slug):
-#        registration_form = RegistrationForm(request.POST)
-#        if registration_form.is_valid():
-#            registration_form.save()
-#
-#            return redirect('website:event_index')
 
 @staff_member_required
 def event_create(request):
