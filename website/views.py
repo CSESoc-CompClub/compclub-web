@@ -136,6 +136,15 @@ class RegistrationPage(CreateView):
 
         return context
 
+    def get(self, request, event_id, slug):
+        # check if url is valid
+        event = get_object_or_404(Event, pk=event_id)
+        if event.slug != slug:
+            return redirect('website:registration', event_id=event.pk, 
+                slug=event.slug)
+
+        return super().get(request, event_id, slug)
+
     def get_success_url(self):
         return reverse('website:event_page', kwargs=self.kwargs)
 
