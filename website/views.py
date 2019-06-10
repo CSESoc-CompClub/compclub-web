@@ -13,13 +13,14 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView
 
 from smtplib import SMTPSenderRefused
 
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
-from website.models import Event, Workshop, Volunteer
+from website.models import Event, Workshop, Volunteer, Registration
 from website.utils import generate_status_email
 
 class EventIndex(ListView):
@@ -38,13 +39,15 @@ class EventIndex(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['events_list'] = Event.objects \
             .annotate(n_workshops=Count('workshop')) \
             .filter(finish_date__gte=datetime.now()) \
             .order_by('start_date')
+
         return context
 
-class EventPage(View):
+class EventPage(DetailView):
     """
     Render and show event detail page to the user. Event page shows specific
     and detailed information about a particular event
@@ -57,36 +60,44 @@ class EventPage(View):
     Returns:
         HTTP response containing the event detail page
     """
-    def get(self, request, event_id, slug):
-        event = get_object_or_404(Event, pk=event_id)
+    model = Event
+    context_object_name = 'event'
+    template_name = 'website/event.html'
 
-        # redirect to page with the right slug
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # add event workshops to context and display first workshop location
+        workshops = Workshop.objects \
+            .filter(event=context['event']) \
+            .order_by('date', 'start_time')
+        location = workshops[0].location if len(workshops) > 0 else "TBA"
+        context['workshops'] = workshops
+        context['location'] = location
+
+        # if authenticated, list workshops where user marked self as available
+        if self.request.user.is_authenticated:
+            user = Volunteer.objects.get(user=self.request.user)
+            context['available_list'] = [workshop.id \
+                for workshop in workshops \
+                if user in workshop.available.all()]
+
+        return context
+
+    def get(self, request, event_id, slug):
+        # check if url is valid
+        event = get_object_or_404(Event, pk=event_id)
         if event.slug != slug:
             return redirect('website:event_page', event_id=event.pk, 
                 slug=event.slug)
 
-        # build context
-        workshops = Workshop.objects.filter(event=event) \
-            .order_by('date', 'start_time')
-        location = workshops[0].location if len(workshops) > 0 else "TBA"
-        context = {
-            'event': event,
-            'workshops': workshops,
-            'location': location,
-        }
-
-        if request.user.is_authenticated:
-            # include list of workshops where user is available in context
-            available_list = self._get_available_workshops(request, workshops)
-            context['available_list'] = available_list
-
-        return render(request, 'website/event.html', context)
+        return super().get(request, event_id, slug)
 
     def post(self, request, event_id, slug):
         if request.user.is_authenticated:
+            # check if user in list of available volunteers for a workshop
             volunteer = Volunteer.objects.get(user=request.user)
             workshop_id = request.POST.get("workshop_id")
-            # list of available volunteers for a particular workshop
             available = Workshop.objects.get(id=workshop_id).available
 
             if volunteer in available.all():
@@ -96,44 +107,54 @@ class EventPage(View):
 
             return redirect('website:event_page', slug=slug, event_id=event_id)
 
-    def _get_available_workshops(self, request, workshops):
-        volunteer = Volunteer.objects.get(user=request.user)
+class RegistrationPage(CreateView):
+    form_class = RegistrationForm
+    template_name = 'website/registration_form.html'
 
-        return [workshop.id for workshop in workshops \
-            if volunteer in workshop.available.all()]
-
-
-def registration(request, event_id, slug):
-    """
-    Render and show event registration form to the user. The registration form allows students
-    to register interest for a particular event.
-
-    Args:
-        request: HTTP request header contents
-        event_id: the unique ID of the event
-        slug: the human-readable event name in the URL
-
-    Returns:
-        HTTP response containing the registration form for the given event
-    """
-    event = get_object_or_404(Event, pk=event_id)
-    # redirect to correct url if needed
-    if event.slug != slug:
-        return redirect(
-            'website:registration', event_id=event.pk, slug=event.slug)
-
-    if request.method == 'POST':
-        registration_form = RegistrationForm(request.POST)
-        if registration_form.is_valid():
-            registration_form.save()
-            return redirect('website:event_index')
-    else:
-        registration_form = RegistrationForm()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        registration_form = self.get_form()
+        event = Event.objects.get(id=self.kwargs['event_id'])
         registration_form.fields['event'].initial = event
+        context['registration_form'] = registration_form
+        context['event'] = event
 
-    context = {'registration_form': registration_form, 'event': event}
-    return render(request, 'website/registration_form.html', context)
+        return context
 
+#class RegistrationPage(View):
+#    """
+#    Render and show event registration form to the user. The registration form allows students
+#    to register interest for a particular event.
+#
+#    Args:
+#        request: HTTP request header contents
+#        event_id: the unique ID of the event
+#        slug: the human-readable event name in the URL
+#
+#    Returns:
+#        HTTP response containing the registration form for the given event
+#    """
+#    def get(self, request, event_id, slug):
+#        event = get_object_or_404(Event, pk=event_id)
+#
+#        # redirect to correct url if needed
+#        if event.slug != slug:
+#            return redirect(
+#                'website:registration', event_id=event.pk, slug=event.slug)
+#
+#        registration_form = RegistrationForm()
+#        registration_form.fields['event'].initial = event
+#
+#        context = {'registration_form': registration_form, 'event': event}
+#
+#        return render(request, 'website/registration_form.html', context)
+#
+#    def post(self, request, event_id, slug):
+#        registration_form = RegistrationForm(request.POST)
+#        if registration_form.is_valid():
+#            registration_form.save()
+#
+#            return redirect('website:event_index')
 
 @staff_member_required
 def event_create(request):
