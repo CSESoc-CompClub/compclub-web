@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.views.generic.base import RedirectView
+from django.contrib.admin.views.decorators import staff_member_required
 
 from . import views
 
@@ -38,10 +39,11 @@ urlpatterns = [
         'events/<slug:slug>-<int:event_id>/',
         views.EventPage.as_view(),
         name='event_page'),
-    path('events/create', views.event_create, name='event_create'), # create event view
+    path('events/create', 
+          staff_member_required(views.EventCreate.as_view()),
+          name='event_create'), # create event view
     path('about/', views.About.as_view(), name='about'), # about page view
     # TODO add content to homepage
-    # path('', views.index, name='index'),
     path('', views.EventIndex.as_view(), name='index'), # homepage view
     path(
         'events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page

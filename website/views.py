@@ -148,8 +148,7 @@ class RegistrationPage(CreateView):
     def get_success_url(self):
         return reverse('website:event_page', kwargs=self.kwargs)
 
-@staff_member_required
-def event_create(request):
+class EventCreate(CreateView):
     """
     Render and show an event creation form. The form allows for the creation of new events.
     Only staff members can access and see this page.
@@ -160,17 +159,11 @@ def event_create(request):
     Returns:
         HTTP response containing the event creation form
     """
-    if request.method == 'POST':
-        event_form = EventForm(request.POST, prefix='event_form')
-        if event_form.is_valid():
-            event_form.save()
-            return redirect('website:event_index')
-    else:
-        event_form = EventForm(prefix='event_form')
+    form_class = EventForm
+    template_name = 'website/event_create.html'
 
-    context = {'event_form': event_form}
-    return render(request, 'website/event_create.html', context)
-
+    def get_success_url(self):
+        return reverse('website:event_page', kwargs=self.kwargs)
 
 @staff_member_required
 def volunteer_status_email_preview(request, event_id, slug):
