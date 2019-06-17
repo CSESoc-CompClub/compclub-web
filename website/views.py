@@ -204,8 +204,8 @@ class VolunteerStatusEmailPreview(View):
             return HttpResponse('Failed to send email. The host may not have \
                                  correctly configured the SMTP settings.')
 
-@staff_member_required
-def event_assign_volunteers(request, event_id, slug):
+
+class EventAssignVolunteers(View):
     """
     Render and show a volunteer assignment page. The page shows a series of forms allowing a staff
     member to assign volunteers to workshops for a particular event.
@@ -219,40 +219,40 @@ def event_assign_volunteers(request, event_id, slug):
     Returns:
         HTTP response containing the volunteer assignment page
     """
-    post_form = None
-    if request.method == 'POST' and 'workshop_id' in request.POST:
-        workshop = get_object_or_404(Workshop, pk=request.POST['workshop_id'])
-        post_form = VolunteerAssignForm(
-            request.POST,
-            available=workshop.available.all(),
-            assignments=workshop.assignment.all())
-        if post_form.is_valid():
-            post_form.save()
-            return redirect(
-                'website:assign_volunteers', event_id=event_id, slug=slug)
-        # if form is not valid then display errors on relevant form
+    template_name = 'website/event_assign.html'
 
-    event = get_object_or_404(Event, pk=event_id)
-    workshops = event.workshop.all().order_by('start_time')
+    def get_context_data(self, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        workshops = event.workshop.all().order_by('start_time')
+        forms = [VolunteerAssignForm(initial={'workshop_id': w.id},
+                                     available=w.available.all(),
+                                     assignments=w.assignment.all()) \
+                for w in workshops]
 
-    # Generate forms for each workshop
-    forms = []
-    for w in workshops:
-        if post_form is not None and w.id == post_form.cleaned_data[
-                'workshop_id']:
-            forms.append(post_form)  # use POSTed form
-        else:
-            forms.append(
-                VolunteerAssignForm(
-                    initial={'workshop_id': w.id},
-                    available=w.available.all(),
-                    assignments=w.assignment.all()))
+        WorkshopTuple = namedtuple('WorkshopTuple', ['model', 'form'])
+        tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
+        context = {'event': event, 'workshops': tuples}
 
-    # zip Workshop and corresponding Form into namedtuple
-    WorkshopTuple = namedtuple('WorkshopTuple', ['model', 'form'])
-    tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
-    context = {'event': event, 'workshops': tuples}
-    return render(request, 'website/event_assign.html', context)
+        return context
+
+    def get(self, request, event_id, slug):
+        context = self.get_context_data(event_id)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, event_id, slug):
+        if 'workshop_id' in request.POST:
+            workshop = get_object_or_404(Workshop, pk=request.POST['workshop_id'])
+
+            post_form = VolunteerAssignForm(request.POST,
+                available=workshop.available.all(),
+                assignments=workshop.assignment.all())
+
+            if post_form.is_valid():
+                post_form.save()
+                return redirect('website:assign_volunteers', 
+                                event_id=event_id, 
+                                slug=slug)
 
 class WorkshopCreate(CreateView):
     """

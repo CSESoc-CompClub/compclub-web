@@ -34,27 +34,26 @@ urlpatterns = [
          views.EventIndex.as_view(), 
          name='index'),
     # TODO: replace once homepage has been filled
-    path('events/', # events view
-        RedirectView.as_view(url='/', permanent=False), # currently, homepage is also events page
+    path('events/', # events view. currently, homepage is also events page
+        RedirectView.as_view(url='/', permanent=False),
         name='event_index'),
     path('events/<slug:slug>-<int:event_id>/', # event detail view
         views.EventPage.as_view(),
         name='event_page'),
     path('events/create', # create event view
           staff_member_required(views.EventCreate.as_view()),
-          name='event_create'), # create event view
+          name='event_create'),
     path('about/', # about page view
          views.About.as_view(), 
          name='about'),
     path('events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
         staff_member_required(views.VolunteerStatusEmailPreview.as_view()),
         name='volunteer_email_preview'),
-    path('events/<slug:slug>-<int:event_id>/registration', # event regitration view (for students)
+    path('events/<slug:slug>-<int:event_id>/registration', # event registration view (for students)
         views.RegistrationPage.as_view(),
         name='registration'),
-    path(
-        'events/<slug:slug>-<int:event_id>/assign-volunteers', # event volunteer assignment page
-        views.event_assign_volunteers,
+    path('events/<slug:slug>-<int:event_id>/assign-volunteers', # event volunteer assignment page
+        staff_member_required(views.EventAssignVolunteers.as_view()),
         name='assign_volunteers'),
     path('events/<slug:slug>-<int:event_id>/workshop_create', # event workshop creation page
         staff_member_required(views.WorkshopCreate.as_view()),
