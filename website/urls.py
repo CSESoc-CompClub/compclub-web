@@ -45,9 +45,8 @@ urlpatterns = [
     path('about/', views.About.as_view(), name='about'), # about page view
     # TODO add content to homepage
     path('', views.EventIndex.as_view(), name='index'), # homepage view
-    path(
-        'events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
-        views.volunteer_status_email_preview,
+    path('events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
+        staff_member_required(views.VolunteerStatusEmailPreview.as_view()),
         name='volunteer_email_preview'),
     path(
         'events/<slug:slug>-<int:event_id>/registration', # event regitration view (for students)
@@ -57,8 +56,7 @@ urlpatterns = [
         'events/<slug:slug>-<int:event_id>/assign-volunteers', # event volunteer assignment page
         views.event_assign_volunteers,
         name='assign_volunteers'),
-    path(
-        'events/<slug:slug>-<int:event_id>/workshop_create', # event workshop creation page
-        views.workshop_create,
+    path('events/<slug:slug>-<int:event_id>/workshop_create', # event workshop creation page
+        staff_member_required(views.WorkshopCreate.as_view()),
         name="workshop_create")
 ]

@@ -165,8 +165,7 @@ class EventCreate(CreateView):
     def get_success_url(self):
         return reverse('website:event_page', kwargs=self.kwargs)
 
-@staff_member_required
-def volunteer_status_email_preview(request, event_id, slug):
+class VolunteerStatusEmailPreview(View):
     """
     Render and show an email preview page, and should be shown after assigning volunteers to
     workshops in an event. If a POST request is sent, an email will be sent to the listed volunteers
@@ -181,8 +180,19 @@ def volunteer_status_email_preview(request, event_id, slug):
     Returns:
         HTTP response containing the email preview page
     """
-    emails = generate_status_email(event_id)
-    if request.method == 'POST':
+    template_name = 'website/volunteer_status_email_preview.html'
+
+    def get_context_data(self, event_id):
+        emails = generate_status_email(event_id)
+        context = {'emails': emails}
+        return context
+
+    def get(self, request, event_id, slug):
+        context = self.get_context_data(event_id)
+        return render(request, self.template_name, context)
+
+    def post(self, request, event_id, slug):
+        emails = self.get_context_data(event_id)['emails']
         try:
             send_mass_mail(emails)
             return redirect('website:event_index')
@@ -191,10 +201,8 @@ def volunteer_status_email_preview(request, event_id, slug):
             return HttpResponse('Invalid header found')
         except SMTPSenderRefused as e:
             print(e)
-            return HttpResponse('Failed to send email. The host may not have correctly configured the SMTP settings.')
-    context = {'emails': emails}
-    return render(request, 'website/volunteer_status_email_preview.html',
-                  context)
+            return HttpResponse('Failed to send email. The host may not have \
+                                 correctly configured the SMTP settings.')
 
 @staff_member_required
 def event_assign_volunteers(request, event_id, slug):
@@ -246,8 +254,7 @@ def event_assign_volunteers(request, event_id, slug):
     context = {'event': event, 'workshops': tuples}
     return render(request, 'website/event_assign.html', context)
 
-@staff_member_required
-def workshop_create(request, event_id, slug):
+class WorkshopCreate(CreateView):
     """
     Render and show a workshop creation form page. The page shows a form allowing a staff member to
     create a new workshop for a particular event.
@@ -261,21 +268,23 @@ def workshop_create(request, event_id, slug):
     Returns:
         HTTP response containing the workshop creation page
     """
-    if request.method == 'POST':
-        workshop_form = WorkshopForm(request.POST, prefix='workshop_form')
-        if workshop_form.is_valid():
-            workshop_form.save()
-            return redirect('website:event_page', slug=slug, event_id=event_id)
-    else:
-        workshop_form = WorkshopForm(prefix='workshop_form')
-        workshop_form['event'].initial = get_object_or_404(Event, pk=event_id)
+    form_class = WorkshopForm
+    template_name = 'website/workshop_create.html'
 
-    context = {
-        'workshop_form': workshop_form,
-        'event': get_object_or_404(Event, pk=event_id)
-    }
-    return render(request, 'website/workshop_create.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        event = Event.objects.get(id=self.kwargs['event_id'])
+        form = self.get_form()
+        form.fields['event'].initial = event
+
+        context['workshop_form'] = form
+        context['event'] = event
+
+        return context
+
+    def get_success_url(self):
+        return reverse('website:event_page', kwargs=self.kwargs)
 
 class About(TemplateView):
     """
