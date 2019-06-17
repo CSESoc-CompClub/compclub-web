@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
 from django.urls import reverse
 
@@ -277,7 +277,7 @@ def workshop_create(request, event_id, slug):
     return render(request, 'website/workshop_create.html', context)
 
 
-class About(View):
+class About(TemplateView):
     """
     Render and show the about page.
 
@@ -287,8 +287,7 @@ class About(View):
     Returns:
         HTTP response containing the about page
     """
-    def get(self, request):
-        return render(request, 'website/about.html')
+    template_name = 'website/about.html'
 
 @login_required
 def user_profile(request):
