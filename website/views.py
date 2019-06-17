@@ -5,13 +5,10 @@ For more information, see https://docs.djangoproject.com/en/2.1/topics/http/view
 """
 from collections import namedtuple
 from datetime import datetime
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, send_mass_mail
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template import loader
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
@@ -298,17 +295,17 @@ class About(TemplateView):
     """
     template_name = 'website/about.html'
 
-@login_required
-def user_profile(request):
-    """
-    Render and show the user's profile page. Requires that the user is logged in.
-    NOTE: this is minimally implemented and is currently not used
-
-    Args:
-        request: HTTP request header contents
-
-    Returns:
-        HTTP response containing the user profile page
-    """
-    template = loader.get_template('website/profile.html')
-    return HttpResponse(template.render({}, request))
+#@login_required
+#def user_profile(request):
+#    """
+#    Render and show the user's profile page. Requires that the user is logged in.
+#    NOTE: this is minimally implemented and is currently not used
+#
+#    Args:
+#        request: HTTP request header contents
+#
+#    Returns:
+#        HTTP response containing the user profile page
+#    """
+#    template = loader.get_template('website/profile.html')
+#    return HttpResponse(template.render({}, request))
