@@ -23,33 +23,33 @@ from . import views
 app_name = 'website' # URL namespace
 
 urlpatterns = [
-    path( # login view
-        'login/',
+    path('login/', # login view
         auth_views.LoginView.as_view(redirect_authenticated_user=True),
         name='login'),
-    path('profile/', views.user_profile, name='profile'), # profile page view (currently not used)
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    # path('events/', views.event_index, name='event_index'),
+    path('logout/',
+         auth_views.LogoutView.as_view(), 
+         name='logout'),
+    # TODO add content to homepage
+    path('', # homepage view
+         views.EventIndex.as_view(), 
+         name='index'),
     # TODO: replace once homepage has been filled
-    path( # events view
-        'events/',
+    path('events/', # events view
         RedirectView.as_view(url='/', permanent=False), # currently, homepage is also events page
         name='event_index'),
-    path( # event detail view
-        'events/<slug:slug>-<int:event_id>/',
+    path('events/<slug:slug>-<int:event_id>/', # event detail view
         views.EventPage.as_view(),
         name='event_page'),
-    path('events/create', 
+    path('events/create', # create event view
           staff_member_required(views.EventCreate.as_view()),
           name='event_create'), # create event view
-    path('about/', views.About.as_view(), name='about'), # about page view
-    # TODO add content to homepage
-    path('', views.EventIndex.as_view(), name='index'), # homepage view
+    path('about/', # about page view
+         views.About.as_view(), 
+         name='about'),
     path('events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
         staff_member_required(views.VolunteerStatusEmailPreview.as_view()),
         name='volunteer_email_preview'),
-    path(
-        'events/<slug:slug>-<int:event_id>/registration', # event regitration view (for students)
+    path('events/<slug:slug>-<int:event_id>/registration', # event regitration view (for students)
         views.RegistrationPage.as_view(),
         name='registration'),
     path(
@@ -59,4 +59,7 @@ urlpatterns = [
     path('events/<slug:slug>-<int:event_id>/workshop_create', # event workshop creation page
         staff_member_required(views.WorkshopCreate.as_view()),
         name="workshop_create")
+    #path('profile/', 
+    #     views.user_profile, 
+    #     name='profile'), # profile page view (currently not used)
 ]
