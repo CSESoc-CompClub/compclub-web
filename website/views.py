@@ -107,8 +107,8 @@ class EventPage(DetailView):
 
 class RegistrationPage(CreateView):
     """
-    Render and show event registration form to the user. The registration form allows students
-    to register interest for a particular event.
+    Render and show event registration form to the user. The registration form
+    allows students to register interest for a particular event.
 
     Args:
         request: HTTP request header contents
@@ -147,8 +147,8 @@ class RegistrationPage(CreateView):
 
 class EventCreate(CreateView):
     """
-    Render and show an event creation form. The form allows for the creation of new events.
-    Only staff members can access and see this page.
+    Render and show an event creation form. The form allows for the creation 
+    of new events. Only staff members can access and see this page.
 
     Args:
         request: HTTP request header contents
@@ -164,10 +164,10 @@ class EventCreate(CreateView):
 
 class VolunteerStatusEmailPreview(View):
     """
-    Render and show an email preview page, and should be shown after assigning volunteers to
-    workshops in an event. If a POST request is sent, an email will be sent to the listed volunteers
-    whether they are assigned, on a waitlist or declined.
-    Only staff members can access and see this page.
+    Render and show an email preview page, and should be shown after assigning
+    volunteers to workshops in an event. If a POST request is sent, an email 
+    will be sent to the listed volunteers whether they are assigned, on a 
+    waitlist or declined. Only staff members can access and see this page.
 
     Args:
         request: HTTP request header contents
@@ -201,12 +201,11 @@ class VolunteerStatusEmailPreview(View):
             return HttpResponse('Failed to send email. The host may not have \
                                  correctly configured the SMTP settings.')
 
-
 class EventAssignVolunteers(View):
     """
-    Render and show a volunteer assignment page. The page shows a series of forms allowing a staff
-    member to assign volunteers to workshops for a particular event.
-    Only staff members can access and see this page.
+    Render and show a volunteer assignment page. The page shows a series of 
+    forms allowing a staff member to assign volunteers to workshops for a 
+    particular event. Only staff members can access and see this page.
 
     Args:
         request: HTTP request header contents
@@ -239,7 +238,8 @@ class EventAssignVolunteers(View):
 
     def post(self, request, event_id, slug):
         if 'workshop_id' in request.POST:
-            workshop = get_object_or_404(Workshop, pk=request.POST['workshop_id'])
+            workshop = get_object_or_404(Workshop, 
+                                         pk=request.POST['workshop_id'])
 
             post_form = VolunteerAssignForm(request.POST,
                 available=workshop.available.all(),
@@ -253,8 +253,8 @@ class EventAssignVolunteers(View):
 
 class WorkshopCreate(CreateView):
     """
-    Render and show a workshop creation form page. The page shows a form allowing a staff member to
-    create a new workshop for a particular event.
+    Render and show a workshop creation form page. The page shows a form 
+    allowing a staff member to create a new workshop for a particular event.
     Only staff members can access and see this page.
 
     Args:
@@ -298,7 +298,8 @@ class About(TemplateView):
 #@login_required
 #def user_profile(request):
 #    """
-#    Render and show the user's profile page. Requires that the user is logged in.
+#    Render and show the user's profile page. Requires that the user is logged 
+#    in.
 #    NOTE: this is minimally implemented and is currently not used
 #
 #    Args:
