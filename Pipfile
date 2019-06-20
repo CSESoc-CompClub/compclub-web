@@ -7,11 +7,11 @@ name = "pypi"
 
 [packages]
 
-django = ">=2.1.6"
+django = ">=2.2.2"
 gunicorn = "*"
 
 
 [dev-packages]
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
