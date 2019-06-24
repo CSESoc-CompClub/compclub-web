@@ -264,6 +264,7 @@ class WorkshopCreate(CreateView):
     """
     form_class = WorkshopForm
     template_name = 'website/workshop_create.html'
+    model = Workshop
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
