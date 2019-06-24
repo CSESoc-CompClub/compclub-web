@@ -44,7 +44,7 @@ urlpatterns = [
           staff_member_required(views.EventCreate.as_view()),
           name='event_create'),
     path('about/', # about page view
-         views.About.as_view(), 
+         views.AboutView.as_view(), 
          name='about'),
     path('events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
         staff_member_required(views.VolunteerStatusEmailPreview.as_view()),

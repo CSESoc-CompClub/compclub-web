@@ -281,7 +281,7 @@ class WorkshopCreate(CreateView):
     def get_success_url(self):
         return reverse('website:event_page', kwargs=self.kwargs)
 
-class About(TemplateView):
+class AboutView(TemplateView):
     """
     Render and show the about page.
 
