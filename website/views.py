@@ -185,10 +185,6 @@ class VolunteerStatusEmailPreview(View):
         context = {'emails': emails}
         return context
 
-    def get(self, request, event_id, slug):
-        context = self.get_context_data(event_id)
-        return render(request, self.template_name, context)
-
     def post(self, request, event_id, slug):
         emails = self.get_context_data(event_id)['emails']
         try:
