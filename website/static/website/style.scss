@@ -1,7 +1,6 @@
 @import 'bootstrap-scss/bootstrap.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
-@import url('https://fonts.googleapis.com/css?family=Cabin:300,400');
 
 $primary-color: #FFBC37;
 $primary-color-light: lighten($primary-color, 20%);
@@ -29,36 +28,16 @@ html, body {
     background-color: $banner-color;
 }
 
-.navbar {
-    box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
-}
-
 .navbar-brand img {
      height: 60px;
-}
-
-.navbar-items {
-    width: auto;
-    font-family: 'Cabin', sans-serif;
-    @media (min-width: $breakpoint-tablet) {
-        font-weight: 300;
-        font-size: 18px;
-    }
-}
-
-.navbar-nav {
-    li {
-        padding-right: 20px;
-    }
 }
 
 .dropdown-menu {
     background-color: $dropdown-color;
     color: #ddd;
-    box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
+
 .dropdown-item {
-    color: #ddd;
     &:hover, &:focus {
         background-color: $dropdown-highlight-color;
         color: #fff;
