@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormView
 from django.urls import reverse
 
 from smtplib import SMTPSenderRefused
@@ -161,7 +161,7 @@ class EventCreate(CreateView):
     template_name = 'website/event_create.html'
 
     def get_success_url(self):
-        return reverse('website:event_page', kwargs=self.kwargs)
+        return reverse('website:event_index', kwargs=self.kwargs)
 
 class VolunteerStatusEmailPreview(View):
     """
