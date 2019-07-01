@@ -6,7 +6,9 @@
 {% block content %}
 {{ block.super }}
 <div class="container">
-  <h3 class="display-3 mb-3 mt-3">Create event</h3>
+  <div id = "title">
+  <h3 class="display-3 mb-3 mt-3" id="title">Create Event</h3>
+  </div>
 
   <form class="event-form" method="post" novalidate>
     {% csrf_token %}
@@ -37,7 +39,7 @@
 
     <div class="form-row">
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         {{ form.start_date.label_tag }}
         {% if form.start_date.errors %}
           {{ form.start_date|add_attrs:"is-invalid" }}
@@ -54,7 +56,7 @@
         </small>
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         {{ form.finish_date.label_tag }}
         {% if form.finish_date.errors %}
           {{ form.finish_date|add_attrs:"is-invalid" }}
@@ -71,7 +73,7 @@
         </small>
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-3">
         <label for="{{ form.owner.id_for_label }}">{{ form.owner.label }}:</label>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -90,6 +92,25 @@
         </div>
         <small class="form-text text-muted">
           {{ form.owner.help_text }}
+        </small>
+      </div>
+
+      <div class="form-group col-md-3">
+        <label for="{{ event_form.event_types.id_for_label }}">{{ event_form.event_types.label }}:</label>
+        <div class="input-group">
+          {% if event_form.event_types.errors %}
+          {{ event_form.event_types|add_attrs:"is-invalid" }}
+          {% for error in event_form.event_types.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+          {% endfor %}
+          {% else %}
+          {{ event_form.event_types }}
+          {% endif %}
+        </div>
+        <small class="form-text text-muted">
+          {{ event_form.event_types.help_text }}
         </small>
       </div>
 
