@@ -63,9 +63,28 @@ class Event(models.Model):
 
     An event can contain multiple workshops (as long as the workshops are
     within the event period.
+
+    Three types of events exist.
+    UNSW info days: No support needed. Students and volunteers can't sign up
+    School_based_events: volunteer support
+    UNSW_events: Volunteers and students support needed
     """
 
     name = models.CharField(max_length=100)
+    type = models.CharField(max_length=20)
+    SCHOOL = 'SE'
+    UNI_INFO = 'UIE'
+    UNI = 'UE'
+
+    EVENT_TYPES = (
+        (SCHOOL, 'School'),
+        (UNI_INFO, 'Uni_Info'),
+        (UNI, 'Uni'),
+    )
+    event_types = models.CharField(max_length = 2,
+                                    choices = EVENT_TYPES,
+                                    default = UNI,
+    )
     start_date = models.DateField()
     finish_date = models.DateField()
     owner = models.ForeignKey(Volunteer, on_delete=models.SET_NULL, null=True)
@@ -73,6 +92,7 @@ class Event(models.Model):
     prerequisite = models.TextField()
     period = models.TextField(verbose_name='availability period')
     slug = models.SlugField(default='event', unique=False)  # url name of event
+
 
     def __str__(self):
         """Return a string representation of an event."""
