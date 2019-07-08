@@ -1,4 +1,4 @@
-# compclub-web
+# compclub-web [![Build Status](https://travis-ci.org/csesoc/compclub-web.svg?branch=master)](https://travis-ci.org/csesoc/compclub-web)
 
 - [Python 3.6+](https://python.org)
 - [pipenv](https://github.com/pypa/pipenv). Pipenv takes care of installing and managing Python dependencies.
