@@ -10,4 +10,7 @@ install:
   - pip install pipenv
   - pipenv install
 
-script: ./manage.py test
+script: 
+  - ./manage.py makemigrations website
+  - ./manage.py migrate
+  - ./manage.py test
