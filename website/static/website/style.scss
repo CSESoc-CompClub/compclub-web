@@ -1,6 +1,8 @@
+$enable-responsive-font-sizes: true;
+$primary: #FFBC37;
+
 @import 'bootstrap-scss/bootstrap.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
 
 $primary-color: #FFBC37;
 $primary-color-light: lighten($primary-color, 20%);
@@ -15,9 +17,9 @@ $normal-text-size: 16px;
 $breakpoint-tablet: 768px;
 
 html, body {
+    @extend .text-white;
     background-color: $background-color;
     font-size: $normal-text-size;
-    @extend .text-white;
 }
 
 .fas::before { // font-awesome icons
@@ -26,10 +28,6 @@ html, body {
 
 .banner, .navbar {
     background-color: $banner-color;
-}
-
-.navbar-brand img {
-     height: 60px;
 }
 
 .dropdown-menu {
@@ -51,121 +49,22 @@ html, body {
 
 %page-container {
     margin-top: 40px;
-    font-family: 'Open Sans', sans-serif;
     width: 100%;
 }
 
-.header {
-    color: rgba($color: #ffffff, $alpha: 0.9);
-    margin-left: 0;
-    // margin-bottom: 10px;
-    padding-top: 1.0rem;
-    background-color: inherit;
-
-    @media (min-width: $breakpoint-tablet) {
-        padding-top: 2.5rem;
-    }
-}
-
-.title {
-    font-family: 'Roboto', sans-serif;
-    font-size: 48px;
-    font-weight: 100;
-    color: white;
-    padding-bottom: 10px;
-    // margin-bottom: 20px;
-
-    @media (min-width: $breakpoint-tablet) {
-        font-size: 60px;
-        font-weight: 100;
-    }
-
+.underline {
     &:after {
-        // Title underline
+        @extend .mt-3;
         content: '';
         display: block;
-        margin-top: 12px;
         width: 100px;
         height: 2px;
         background: $primary-color;
     }
 }
 
-.event-list-header {
-    @extend .header;
-    @media (min-width: $breakpoint-tablet) {
-        padding-left: 5%;
-    }
-}
-
-.event-list-title {
-    @extend .title;
-}
-
-.event-list {
-    padding: 2.0rem 0 0;
-
-    @media (min-width: $breakpoint-tablet) {
-        padding: 2.0rem 0 0 5%;
-    }
-}
-
-.event-holder {
-    width: 100%;
-}
-
-.calendar {
-    position: relative;
-    display: block;
-    color: white;
-
-    @media (min-width: $breakpoint-tablet) {
-        float: left;
-        width: 150px;
-    }
-}
-
 .calendar-container {
-    font-family: 'Roboto', sans-serif;
     font-size: 2.5em;
-    padding-top: 12px;
-    padding-bottom: 2px;
-    display: inline-block;
-    text-align: center;
-}
-
-.calendar-from {
-    padding-left: 0;
-    padding-right: 8px;
-}
-
-.calendar-to {
-    padding-left: 8px;
-    padding-right: 8px;
-    @media (min-width: 768px) {
-        float: right;
-    }
-}
-
-.calendar-month {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    line-height: 0.6em;
-    font-weight: 400;
-}
-
-.calendar-day {
-    color: $primary-color;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.calendar-divider {
-    font-size: 1.0em;
-    padding: 30px 0;
-    margin: 0;
-    display: inline-block;
-    vertical-align: top;
 }
 
 .calendar-nworkshops {
@@ -174,8 +73,7 @@ html, body {
     display: inline-block;
 
     // On mobile or smaller
-    @media (max-width: $breakpoint-tablet ){
-        position: absolute;
+    @media (max-width: $breakpoint-tablet){
         bottom: 0px;
         right: 0px;
         margin-bottom: 0.8em;
@@ -183,7 +81,6 @@ html, body {
 }
 
 %event-card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border-top: 4px solid $primary-color;
 
     background-color: rgba($color: #ffffff, $alpha: 0.1);
@@ -206,13 +103,11 @@ a, a:visited, a:hover {
 
 .event-card-container {
     padding: 24px 24px 12px;
-    font-family: 'Open Sans', sans-serif;
     display: inline-block;
     width: 100%;
 }
 
 .event-card-title {
-    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 300;
     position: relative;
@@ -232,42 +127,16 @@ a, a:visited, a:hover {
     }
 }
 
-.event-card-description {
-    margin: 0;
-    font-weight: 400;
-    line-height: 1.5;
-}
-
-.event-card-prereq {
-    margin-top: 8px;
-    margin-bottom: 0px;
-}
-
-.event-card-footer {
-    border-top: 1px solid #a0a0a0;
-    margin: 12px 0 0;
-    position: relative;
-    width: 100%;
-    display: inline-block;
-}
-
 .event-button {
-    font-family: "Open Sans", sans-serif;
+    @extend .rounded-sm, .shadow;
     font-size: 16px;
     font-weight: 600;
     padding: 0.4rem 1.2rem;
-    margin: 12px 0 0px 0;
     transition-property: all;
     transition-duration: 0.3s;
     // transition-d
-    border: none;
-    border-radius: 2px;
     background-color: $secondary-color;
-    color: white; // TODO remove after merge
-    cursor: pointer;
     text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-    box-shadow: 0px 5px 6px 1px rgba(0, 0, 0, 0.2);
-    display: inline-block;
 
     &:hover, &:focus {
         filter: brightness(130%);
@@ -278,12 +147,7 @@ a, a:visited, a:hover {
     }
 }
 
-.right {
-    float: right;
-}
-
 // used by event.html
-
 .event-detail {
     color: $primary-color;
 }
@@ -330,7 +194,6 @@ a, a:visited, a:hover {
     @extend .base-form;
 
     .login-notice {
-        font-family: 'Open Sans', sans-serif;
         font-size: 18px;
     }
     .field-wrapper {
@@ -425,7 +288,6 @@ a, a:visited, a:hover {
     .about-mission {
         margin-bottom: 24px;
         h2 {
-            font-family: 'Roboto', sans-serif;
             font-weight: 300;
             color: $primary-color;
         }
@@ -434,7 +296,6 @@ a, a:visited, a:hover {
         h3 {
             letter-spacing: 2px;
             text-transform: uppercase;
-            font-family: 'Open Sans', sans-serif;
             font-size: 16px;
             font-weight: 600;
             color: #aaa;
@@ -442,7 +303,6 @@ a, a:visited, a:hover {
         }
 
         p {
-            font-family: 'Roboto', sans-serif;
             font-size: 18px;
             margin-bottom: 18px;
             line-height: 1.5;
