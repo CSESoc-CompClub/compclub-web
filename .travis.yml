@@ -8,9 +8,12 @@ git:
 
 install:
   - pip install pipenv
-  - pipenv install
+  - pipenv install --dev
 
 script: 
+  - pycodestyle $(git ls-files '*.py')
+  - pydocstyle $(git ls-files '*.py')
+  - pyflakes $(git ls-files '*.py')
   - ./manage.py makemigrations website
   - ./manage.py migrate
   - ./manage.py test
