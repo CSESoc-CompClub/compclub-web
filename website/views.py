@@ -1,41 +1,48 @@
-"""Compclub Website Views
+"""
+Compclub website Views.
 
 Contains functions to render views (i.e. pages) to the user as HTTP responses.
-For more information, see https://docs.djangoproject.com/en/2.1/topics/http/views/
+For more information, see
+https://docs.djangoproject.com/en/2.1/topics/http/views/
 """
 from collections import namedtuple
 from datetime import datetime
+from smtplib import SMTPSenderRefused
+
 from django.core.mail import BadHeaderError, send_mass_mail
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView, FormView
 from django.urls import reverse
-
-from smtplib import SMTPSenderRefused
-
+from django.views import View
+from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic.edit import CreateView
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
-from website.models import Event, Workshop, Volunteer, Registration
+from website.models import Event, Registration, Volunteer, Workshop
 from website.utils import generate_status_email
+
 
 class EventIndex(ListView):
     """
-    Render and show events page to the user. Events page shows list of current
-    and future events, and how many workshops they consist of.
+    Render and show events page to the user.
+
+    Events page shows list of current and future events, and how many workshops
+    they consist of.
 
     Args:
         request: HTTP request header contents
 
     Returns:
         HTTP response containing events page
+
     """
+
     model = Event
     template_name = 'website/event_index.html'
 
     def get_context_data(self, **kwargs):
+        """Return future events sorted by start date."""
         context = super().get_context_data(**kwargs)
 
         context['events_list'] = Event.objects \
@@ -45,10 +52,13 @@ class EventIndex(ListView):
 
         return context
 
+
 class EventPage(DetailView):
     """
-    Render and show event detail page to the user. Event page shows specific
-    and detailed information about a particular event
+    Render and show event detail page to the user.
+
+    Event page shows specific and detailed information about a particular
+    event.
 
     Args:
         request: HTTP request header contents
@@ -57,12 +67,14 @@ class EventPage(DetailView):
 
     Returns:
         HTTP response containing the event detail page
+
     """
+
     model = Event
     context_object_name = 'event'
     template_name = 'website/event.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
 
         # add event workshops to context and display first workshop location
@@ -76,22 +88,24 @@ class EventPage(DetailView):
         # if authenticated, list workshops where user marked self as available
         if self.request.user.is_authenticated:
             user = Volunteer.objects.get(user=self.request.user)
-            context['available_list'] = [workshop.id \
-                for workshop in workshops \
-                if user in workshop.available.all()]
+            context['available_list'] = [
+                workshop.id for workshop in workshops
+                if user in workshop.available.all()
+            ]
 
         return context
 
-    def get(self, request, event_id, slug):
+    def get(self, request, event_id, slug):  # noqa: D102
         # check if url is valid
         event = get_object_or_404(Event, pk=event_id)
         if event.slug != slug:
-            return redirect('website:event_page', event_id=event.pk, 
-                slug=event.slug)
+            return redirect('website:event_page',
+                            event_id=event.pk,
+                            slug=event.slug)
 
         return super().get(request, event_id, slug)
 
-    def post(self, request, event_id, slug):
+    def post(self, request, event_id, slug):  # noqa: D102
         if request.user.is_authenticated:
             # check if user in list of available volunteers for a workshop
             volunteer = Volunteer.objects.get(user=request.user)
@@ -105,10 +119,13 @@ class EventPage(DetailView):
 
             return redirect('website:event_page', slug=slug, event_id=event_id)
 
+
 class RegistrationPage(CreateView):
     """
-    Render and show event registration form to the user. The registration form
-    allows students to register interest for a particular event.
+    Render and show event registration form to the user.
+
+    The registration form allows students to register interest for a particular
+    event.
 
     Args:
         request: HTTP request header contents
@@ -117,12 +134,14 @@ class RegistrationPage(CreateView):
 
     Returns:
         HTTP response containing the registration form for the given event
+
     """
+
     form_class = RegistrationForm
     template_name = 'website/registration_form.html'
     model = Registration
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
 
         event = Event.objects.get(id=self.kwargs['event_id'])
@@ -134,41 +153,50 @@ class RegistrationPage(CreateView):
 
         return context
 
-    def get(self, request, event_id, slug):
+    def get(self, request, event_id, slug):  # noqa: D102
         # check if url is valid
         event = get_object_or_404(Event, pk=event_id)
         if event.slug != slug:
-            return redirect('website:registration', event_id=event.pk, 
-                slug=event.slug)
+            return redirect('website:registration',
+                            event_id=event.pk,
+                            slug=event.slug)
 
         return super().get(request, event_id, slug)
 
-    def get_success_url(self):
+    def get_success_url(self):  # noqa: D102
         return reverse('website:event_page', kwargs=self.kwargs)
+
 
 class EventCreate(CreateView):
     """
-    Render and show an event creation form. The form allows for the creation 
-    of new events. Only staff members can access and see this page.
+    Render and show an event creation form.
+
+    The form allows for the creation of new events. Only staff members can
+    access and see this page.
 
     Args:
         request: HTTP request header contents
 
     Returns:
         HTTP response containing the event creation form
+
     """
+
     form_class = EventForm
     template_name = 'website/event_create.html'
 
-    def get_success_url(self):
+    def get_success_url(self):  # noqa: D102
         return reverse('website:event_index', kwargs=self.kwargs)
+
 
 class VolunteerStatusEmailPreview(View):
     """
-    Render and show an email preview page, and should be shown after assigning
-    volunteers to workshops in an event. If a POST request is sent, an email 
-    will be sent to the listed volunteers whether they are assigned, on a 
-    waitlist or declined. Only staff members can access and see this page.
+    Render and show an email preview page.
+
+    This view should be shown after assigning volunteers to workshops in an
+    event. If a POST request is sent, an email will be sent to the listed
+    volunteers whether they are assigned, on a waitlist or declined. Only staff
+    members can access and see this page.
 
     Args:
         request: HTTP request header contents
@@ -177,19 +205,21 @@ class VolunteerStatusEmailPreview(View):
 
     Returns:
         HTTP response containing the email preview page
+
     """
+
     template_name = 'website/volunteer_status_email_preview.html'
 
-    def get_context_data(self, event_id):
+    def get_context_data(self, event_id):  # noqa: D102
         emails = generate_status_email(event_id)
         context = {'emails': emails}
         return context
 
-    def get(self, request, event_id, slug):
+    def get(self, request, event_id, slug):  # noqa: D102
         context = self.get_context_data(event_id)
         return render(request, self.template_name, context)
 
-    def post(self, request, event_id, slug):
+    def post(self, request, event_id, slug):  # noqa: D102
         emails = self.get_context_data(event_id)['emails']
         try:
             send_mass_mail(emails)
@@ -199,14 +229,17 @@ class VolunteerStatusEmailPreview(View):
             return HttpResponse('Invalid header found')
         except SMTPSenderRefused as e:
             print(e)
-            return HttpResponse('Failed to send email. The host may not have \
-                                 correctly configured the SMTP settings.')
+            return HttpResponse('Failed to send email. The host may not have '
+                                'correctly configured the SMTP settings.')
+
 
 class EventAssignVolunteers(View):
     """
-    Render and show a volunteer assignment page. The page shows a series of 
-    forms allowing a staff member to assign volunteers to workshops for a 
-    particular event. Only staff members can access and see this page.
+    Render and show a volunteer assignment page.
+
+    The page shows a series of forms allowing a staff member to assign
+    volunteers to workshops for a particular event. Only staff members can
+    access and see this page.
 
     Args:
         request: HTTP request header contents
@@ -215,16 +248,20 @@ class EventAssignVolunteers(View):
 
     Returns:
         HTTP response containing the volunteer assignment page
+
     """
+
     template_name = 'website/event_assign.html'
 
-    def get_context_data(self, event_id):
+    def get_context_data(self, event_id):  # noqa: D102
         event = get_object_or_404(Event, pk=event_id)
         workshops = event.workshop.all().order_by('start_time')
-        forms = [VolunteerAssignForm(initial={'workshop_id': w.id},
-                                     available=w.available.all(),
-                                     assignments=w.assignment.all()) \
-                for w in workshops]
+        forms = [
+            VolunteerAssignForm(initial={'workshop_id': w.id},
+                                available=w.available.all(),
+                                assignments=w.assignment.all())
+            for w in workshops
+        ]
 
         WorkshopTuple = namedtuple('WorkshopTuple', ['model', 'form'])
         tuples = [WorkshopTuple(w, f) for w, f in zip(workshops, forms)]
@@ -232,31 +269,34 @@ class EventAssignVolunteers(View):
 
         return context
 
-    def get(self, request, event_id, slug):
+    def get(self, request, event_id, slug):  # noqa: D102
         context = self.get_context_data(event_id)
 
         return render(request, self.template_name, context)
 
-    def post(self, request, event_id, slug):
+    def post(self, request, event_id, slug):  # noqa: D102
         if 'workshop_id' in request.POST:
-            workshop = get_object_or_404(Workshop, 
+            workshop = get_object_or_404(Workshop,
                                          pk=request.POST['workshop_id'])
 
-            post_form = VolunteerAssignForm(request.POST,
+            post_form = VolunteerAssignForm(
+                request.POST,
                 available=workshop.available.all(),
                 assignments=workshop.assignment.all())
 
             if post_form.is_valid():
                 post_form.save()
-                return redirect('website:assign_volunteers', 
-                                event_id=event_id, 
+                return redirect('website:assign_volunteers',
+                                event_id=event_id,
                                 slug=slug)
+
 
 class WorkshopCreate(CreateView):
     """
-    Render and show a workshop creation form page. The page shows a form 
-    allowing a staff member to create a new workshop for a particular event.
-    Only staff members can access and see this page.
+    Render and show a workshop creation form page.
+
+    The page shows a form allowing a staff member to create a new workshop for
+    a particular event. Only staff members can access and see this page.
 
     Args:
         request: HTTP request header contents
@@ -265,12 +305,14 @@ class WorkshopCreate(CreateView):
 
     Returns:
         HTTP response containing the workshop creation page
+
     """
+
     form_class = WorkshopForm
     template_name = 'website/workshop_create.html'
     model = Workshop
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
 
         event = Event.objects.get(id=self.kwargs['event_id'])
@@ -282,8 +324,9 @@ class WorkshopCreate(CreateView):
 
         return context
 
-    def get_success_url(self):
+    def get_success_url(self):  # noqa: D102
         return reverse('website:event_page', kwargs=self.kwargs)
+
 
 class AboutView(TemplateView):
     """
@@ -294,13 +337,16 @@ class AboutView(TemplateView):
 
     Returns:
         HTTP response containing the about page
+
     """
+
     template_name = 'website/about.html'
 
-#@login_required
-#def user_profile(request):
+
+# @login_required
+# def user_profile(request):
 #    """
-#    Render and show the user's profile page. Requires that the user is logged 
+#    Render and show the user's profile page. Requires that the user is logged
 #    in.
 #    NOTE: this is minimally implemented and is currently not used
 #
