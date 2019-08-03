@@ -9,6 +9,7 @@ gunicorn = "*"
 
 [dev-packages]
 flake8 = "*"
+flake8-docstrings = "*"
 
 [requires]
 python_version = "3.7"
