@@ -98,6 +98,7 @@ class WorkshopForm(ModelForm):
         Args:
             interval: datetime.timedelta object. The time interval between each
                       workshop
+
         """
         cleaned_data = self.cleaned_data
         current_date = cleaned_data.get('date') + interval
@@ -201,6 +202,7 @@ class VolunteerAssignForm(Form):
             *args:
                 available: List of available volunteers (Django models)
                 assignments: List of volunteer assignments (Django models)
+
         """
         # Get available volunteers
         available = kwargs.pop('available')
