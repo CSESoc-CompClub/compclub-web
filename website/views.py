@@ -64,7 +64,6 @@ class EventPage(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         # add event workshops to context and display first workshop location
         workshops = Workshop.objects \
             .filter(event=context['event']) \
@@ -86,13 +85,14 @@ class EventPage(DetailView):
         # check if url is valid
         event = get_object_or_404(Event, pk=event_id)
         if event.slug != slug:
-            return redirect('website:event_page', event_id=event.pk, 
+            return redirect('website:event_page', event_id=event.pk,
                 slug=event.slug)
 
         return super().get(request, event_id, slug)
 
     def post(self, request, event_id, slug):
-        if request.user.is_authenticated:
+        event = get_object_or_404(Event, pk=event_id)
+        if request.user.is_authenticated and event.hasWorkshops:
             # check if user in list of available volunteers for a workshop
             volunteer = Volunteer.objects.get(user=request.user)
             workshop_id = request.POST.get("workshop_id")
@@ -138,7 +138,7 @@ class RegistrationPage(CreateView):
         # check if url is valid
         event = get_object_or_404(Event, pk=event_id)
         if event.slug != slug:
-            return redirect('website:registration', event_id=event.pk, 
+            return redirect('website:registration', event_id=event.pk,
                 slug=event.slug)
 
         return super().get(request, event_id, slug)
@@ -148,7 +148,7 @@ class RegistrationPage(CreateView):
 
 class EventCreate(CreateView):
     """
-    Render and show an event creation form. The form allows for the creation 
+    Render and show an event creation form. The form allows for the creation
     of new events. Only staff members can access and see this page.
 
     Args:
@@ -166,8 +166,8 @@ class EventCreate(CreateView):
 class VolunteerStatusEmailPreview(View):
     """
     Render and show an email preview page, and should be shown after assigning
-    volunteers to workshops in an event. If a POST request is sent, an email 
-    will be sent to the listed volunteers whether they are assigned, on a 
+    volunteers to workshops in an event. If a POST request is sent, an email
+    will be sent to the listed volunteers whether they are assigned, on a
     waitlist or declined. Only staff members can access and see this page.
 
     Args:
@@ -204,8 +204,8 @@ class VolunteerStatusEmailPreview(View):
 
 class EventAssignVolunteers(View):
     """
-    Render and show a volunteer assignment page. The page shows a series of 
-    forms allowing a staff member to assign volunteers to workshops for a 
+    Render and show a volunteer assignment page. The page shows a series of
+    forms allowing a staff member to assign volunteers to workshops for a
     particular event. Only staff members can access and see this page.
 
     Args:
@@ -239,7 +239,7 @@ class EventAssignVolunteers(View):
 
     def post(self, request, event_id, slug):
         if 'workshop_id' in request.POST:
-            workshop = get_object_or_404(Workshop, 
+            workshop = get_object_or_404(Workshop,
                                          pk=request.POST['workshop_id'])
 
             post_form = VolunteerAssignForm(request.POST,
@@ -248,13 +248,13 @@ class EventAssignVolunteers(View):
 
             if post_form.is_valid():
                 post_form.save()
-                return redirect('website:assign_volunteers', 
-                                event_id=event_id, 
+                return redirect('website:assign_volunteers',
+                                event_id=event_id,
                                 slug=slug)
 
 class WorkshopCreate(CreateView):
     """
-    Render and show a workshop creation form page. The page shows a form 
+    Render and show a workshop creation form page. The page shows a form
     allowing a staff member to create a new workshop for a particular event.
     Only staff members can access and see this page.
 
@@ -300,7 +300,7 @@ class AboutView(TemplateView):
 #@login_required
 #def user_profile(request):
 #    """
-#    Render and show the user's profile page. Requires that the user is logged 
+#    Render and show the user's profile page. Requires that the user is logged
 #    in.
 #    NOTE: this is minimally implemented and is currently not used
 #

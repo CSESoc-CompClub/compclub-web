@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-
+import sys
 
 class CustomUser(AbstractUser):
     """
@@ -71,7 +71,6 @@ class Event(models.Model):
     """
 
     name = models.CharField(max_length=100)
-    type = models.CharField(max_length=20)
     SCHOOL = 'SE'
     UNI_INFO = 'UIE'
     UNI = 'UE'
@@ -81,7 +80,7 @@ class Event(models.Model):
         (UNI_INFO, 'Uni_Info'),
         (UNI, 'Uni'),
     )
-    event_types = models.CharField(max_length = 2,
+    event_types = models.CharField(max_length = 3,
                                     choices = EVENT_TYPES,
                                     default = UNI,
     )
@@ -97,6 +96,15 @@ class Event(models.Model):
     def __str__(self):
         """Return a string representation of an event."""
         return self.name
+
+    def hasWorkshops(self):
+       if self.event_types == self.UNI_INFO:
+           #print(self.event_types)
+           #print(self.UNI_INFO)
+           #sys.stdout.flush()
+           return False
+       else:
+           return True
 
     def save(self, *args, **kwargs):
         """Override save to update slug."""

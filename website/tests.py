@@ -128,6 +128,7 @@ class EventFormTest(TestCase):
             'name': 'Intro to Python',
             'start_date': '2018-01-01',
             'finish_date': '2018-04-30',
+            'event_types': 'UIE',
             'owner': '1',
             'description': 'introduction to Python',
             'prerequisite': 'Nil',
@@ -135,7 +136,10 @@ class EventFormTest(TestCase):
             'slug': 'Intro-to-Python'
         }
         form = EventForm(data=form_data)
+        form.is_valid()
+        print(form.errors)
         self.assertTrue(form.is_valid())
+
 
     def test_event_create_invalid_dates(self):
         form_data = {
@@ -183,6 +187,7 @@ class WorkshopFormTest(TestCase):
             'start_date': '2018-10-31',
             'finish_date': '2018-11-08',
             'owner': '1',
+            'event_types':'UE',
             'description': 'introduction to Python',
             'prerequisite': 'Nil',
             'period': 'period',
