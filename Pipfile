@@ -6,10 +6,13 @@ name = "pypi"
 [packages]
 django = ">=2.2.3"
 gunicorn = "*"
+django-sass-processor = "*"
 
 [dev-packages]
 flake8 = "*"
 flake8-docstrings = "*"
+libsass = "*"
+django-compressor = "*"
 
 [requires]
 python_version = "3.7"
