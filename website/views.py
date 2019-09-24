@@ -18,7 +18,6 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
-
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
 from website.models import Event, Registration, Volunteer, Workshop
@@ -50,8 +49,8 @@ class EventIndex(ListView):
         context = super().get_context_data(**kwargs)
 
         context['events_list'] = Event.objects \
-            .annotate(n_workshops=Count('workshop')) \
             .filter(finish_date__gte=datetime.now()) \
+            .annotate(n_workshops=Count('workshop')) \
             .order_by('start_date')
 
         return context
