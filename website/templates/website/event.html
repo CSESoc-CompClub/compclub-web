@@ -33,7 +33,7 @@
       <h3 class="event-detail">Description</h3>
       <p>{{ event.description }}</p>
 
-      {% if user.is_staff is False %}
+      {% if not user.is_staff %}
       <p>
         <form method="get" action="registration">
           <button class="btn btn-success">Register</button>
