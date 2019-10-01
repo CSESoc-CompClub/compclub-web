@@ -121,11 +121,12 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format':
-            '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            '[{levelname}] {asctime} {module} {process:d} {thread:d} '
+            '{message}',
             'style': '{',
         },
         'simple': {
-            'format': '{levelname} {message}',
+            'format': '[{levelname}] {asctime} {message}',
             'style': '{',
         },
     },
@@ -141,14 +142,14 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+            'formatter': 'simple',
             'filters': ['require_debug_true']
         },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
+            'formatter': 'verbose',
             'filename': os.path.join(BASE_DIR, 'debug.log'),
-            'filters': ['require_debug_false']
         },
     },
     'loggers': {
