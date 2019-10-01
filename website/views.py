@@ -5,6 +5,7 @@ Contains functions to render views (i.e. pages) to the user as HTTP responses.
 For more information, see
 https://docs.djangoproject.com/en/2.1/topics/http/views/
 """
+import logging
 from collections import namedtuple
 from datetime import datetime
 from smtplib import SMTPSenderRefused
@@ -17,10 +18,13 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
+
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
 from website.models import Event, Registration, Volunteer, Workshop
 from website.utils import generate_status_email
+
+logger = logging.getLogger(__name__)
 
 
 class EventIndex(ListView):
@@ -225,10 +229,10 @@ class VolunteerStatusEmailPreview(View):
             send_mass_mail(emails)
             return redirect('website:event_index')
         except BadHeaderError as e:
-            print(e)
+            logger.exception(e)
             return HttpResponse('Invalid header found')
         except SMTPSenderRefused as e:
-            print(e)
+            logger.exception(e)
             return HttpResponse('Failed to send email. The host may not have '
                                 'correctly configured the SMTP settings.')
 
