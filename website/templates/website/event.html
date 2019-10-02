@@ -35,7 +35,9 @@
 
       {% if not user.is_staff %}
       <p>
-        <button class="btn btn-success"><a href="registration">Register</a></button>
+        <a class="event-button" href="{% url 'website:registration' slug=event.slug event_id=event.pk %}">
+          Register
+        </a>
       </p>
       {% endif %}
 
