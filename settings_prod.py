@@ -12,6 +12,11 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 ALLOWED_HOSTS = ["localhost", "compclub.csesoc.unsw.edu.au"]
 
+COMPRESS_OFFLINE = True
+LIBSASS_OUTPUT_STYLE = 'compressed'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATIC_ROOT = '/app/static/'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

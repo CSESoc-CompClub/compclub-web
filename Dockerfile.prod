@@ -2,6 +2,7 @@ FROM python:3.8-slim
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y nginx python3.8-dev && chmod +x run.sh
 RUN pip install pipenv
 
 # Install dependencies into their own layer so they are cached between code changes
@@ -14,7 +15,5 @@ ENV DB_PATH=/data/db.sqlite3
 ENV DJANGO_SETTINGS_MODULE=settings_prod
 
 EXPOSE 8080
-
-RUN apt-get update && apt-get install -y nginx && chmod +x run.sh
 
 ENTRYPOINT ["./run.sh"]
