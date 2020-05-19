@@ -1,0 +1,1 @@
+"""CompClub website project."""

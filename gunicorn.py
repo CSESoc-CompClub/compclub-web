@@ -1,6 +1,4 @@
-"""
-Gunicorn configuration used for production web server.
-"""
+"""Gunicorn configuration used for production web server."""
 
 import multiprocessing
 

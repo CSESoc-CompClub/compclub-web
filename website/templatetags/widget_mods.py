@@ -9,7 +9,7 @@ register = template.Library()
 @register.filter(name='add_attrs')
 def add_attributes(field, css):
     """
-    Modifies form widget attributes.
+    Modify form widget attributes.
 
     For example, if one wants to add a placeholder attributes to
     a TextField
@@ -27,7 +27,7 @@ def add_attributes(field, css):
 
     Mixed usage:
     {{ some_form.some_field|add_attrs:"placeholder:Foo, is-invalid" }}
-    <input name="some_form-some_field" class="is-invalid" placeholder="Foo" type="text">
+    <input name="some_form-some_field" class="is-invalid" placeholder="Foo" type="text">  # noqa: E501
 
     Ref:
         https://gist.github.com/TimFletcher/034e799c19eb763fa859
@@ -38,6 +38,7 @@ def add_attributes(field, css):
 
     Returns:
         field that contains the extra attributes
+
     """
     try:
         attrs = collections.defaultdict(str, field.field.widget.attrs)

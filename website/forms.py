@@ -1,34 +1,37 @@
+"""Django forms for compclub website."""
+
 import datetime
 import re
 
 from django import forms
-from django.forms import (DateInput, DateTimeInput, Form, ModelForm, TimeInput,
-                          ValidationError)
+from django.forms import DateInput, Form, ModelForm, TimeInput, ValidationError
 from django.utils.translation import gettext_lazy as _
-
 from website.models import Event, Registration, VolunteerAssignment, Workshop
 
 
 class DatePicker(DateInput):
     """DatePicker Form Field. Used to select a date in a form."""
+
     input_type = 'date'
 
 
 class TimePicker(TimeInput):
     """TimePicker Form Field. Used to select a time in a form."""
+
     input_type = 'time'
 
 
 class EventForm(ModelForm):
     """Event creation form. Creates a new Event model object upon saving."""
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, *args, **kwargs):  # noqa: D107
         super(EventForm, self).__init__(*args, **kwargs)
         # adding ".form-control" class to all fields so that they are styled by
         # bootstrap.css
         for field in self:
             field.field.widget.attrs['class'] = 'form-control'
 
-    class Meta:
+    class Meta:  # noqa: D106
         model = Event
         fields = '__all__'
         exclude = ('slug', )
@@ -46,32 +49,36 @@ class EventForm(ModelForm):
         }
 
     def clean(self):
-        """Clean and validate the form data"""
+        """Clean and validate the form data."""
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
         finish_date = cleaned_data.get('finish_date')
         if all([start_date, finish_date]) and start_date > finish_date:
-            raise ValidationError(
-                _('Finish date cannot be earlier than start date %(start_date)s > %(finish_date)s'
-                  ),
-                code='invalid date',
-                params={
-                    'start_date': start_date,
-                    'finish_date': finish_date
-                })
+            raise ValidationError(_('Finish date cannot be earlier than start'
+                                    ' date %(start_date)s > %(finish_date)s'),
+                                  code='invalid date',
+                                  params={
+                                      'start_date': start_date,
+                                      'finish_date': finish_date
+                                  })
 
 
 class WorkshopForm(ModelForm):
-    """Workshop creation form. Creates one or more workshops for a specific event upon saving."""
+    """
+    Workshop creation form.
+
+    Creates one or more workshops for a specific event upon saving.
+    """
+
     REPEAT_CHOICES = (('NO', 'None'), ('DL', 'Daily'), ('WK', 'Weekly'))
     repeat_workshop = forms.ChoiceField(choices=REPEAT_CHOICES)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # noqa: D107
         super(WorkshopForm, self).__init__(*args, **kwargs)
         for field in self:
             field.field.widget.attrs['class'] = 'form-control'
 
-    class Meta:
+    class Meta:  # noqa: D106
         model = Workshop
         fields = ('event', 'start_time', 'end_time', 'date', 'name',
                   'location', 'repeat_workshop')
@@ -86,9 +93,12 @@ class WorkshopForm(ModelForm):
 
     def make_recurring_workshops(self, interval):
         """
-        Create recurring workshops
+        Create recurring workshops.
+
         Args:
-            interval: datetime.timedelta object. The time interval between each workshop
+            interval: datetime.timedelta object. The time interval between each
+                      workshop
+
         """
         cleaned_data = self.cleaned_data
         current_date = cleaned_data.get('date') + interval
@@ -104,7 +114,7 @@ class WorkshopForm(ModelForm):
             current_date += interval
 
     def clean(self):
-        """Clean and validate the form data"""
+        """Clean and validate the form data."""
         cleaned_data = super().clean()
         workshop_date = cleaned_data.get('date')
         event = cleaned_data.get('event')
@@ -112,21 +122,23 @@ class WorkshopForm(ModelForm):
             raise ValidationError(_('No event provided'), code='null event')
 
         if workshop_date is None:
-            raise ValidationError(
-                _('Invalid workshop date entered'), code='invalid date')
+            raise ValidationError(_('Invalid workshop date entered'),
+                                  code='invalid date')
 
-        if workshop_date > event.finish_date or workshop_date < event.start_date:
-            raise ValidationError(
-                _('Workshop date cannot be earlier or later than the event dates'),
-                code='invalid date')
+        if (workshop_date > event.finish_date
+                or workshop_date < event.start_date):
+            raise ValidationError(_(
+                'Workshop date cannot be earlier or later than the event dates'
+            ),
+                                  code='invalid date')
 
         if cleaned_data.get('start_time') is None:
-            raise ValidationError(
-                _('Invalid workshop start time entered'), code='invalid time')
+            raise ValidationError(_('Invalid workshop start time entered'),
+                                  code='invalid time')
 
         if cleaned_data.get('end_time') is None:
-            raise ValidationError(
-                _('Invalid workshop start time entered'), code='invalid time')
+            raise ValidationError(_('Invalid workshop start time entered'),
+                                  code='invalid time')
 
         if cleaned_data.get('start_time') > cleaned_data.get('end_time'):
             raise ValidationError(
@@ -134,7 +146,7 @@ class WorkshopForm(ModelForm):
                 code='invalid time')
 
     def save(self):
-        """Create an object model and save it to the database"""
+        """Create an object model and save it to the database."""
         super().save()
         recurrence = self.cleaned_data['repeat_workshop']
         if recurrence == 'DL':
@@ -144,14 +156,18 @@ class WorkshopForm(ModelForm):
 
 
 class RegistrationForm(ModelForm):
-    """Student event registration form. Creates a new Registration object upon saving."""
+    """
+    Student event registration form.
 
-    def __init__(self, *args, **kwargs):
+    Creates a new Registration object upon saving.
+    """
+
+    def __init__(self, *args, **kwargs):  # noqa: D107
         super(RegistrationForm, self).__init__(*args, **kwargs)
         for field in self:
             field.field.widget.attrs['class'] = 'form-control'
 
-    class Meta:
+    class Meta:  # noqa: D106
         model = Registration
         fields = '__all__'
         widgets = {
@@ -160,29 +176,33 @@ class RegistrationForm(ModelForm):
         }
 
     def clean(self):
+        """Check if phone numbers are at least 8 characters long."""
         cleaned_data = super().clean()
         number = cleaned_data['number']
         parent_number = cleaned_data['parent_number']
         pattern = r'\d{8,}'
         if (re.search(pattern, number) is None
                 or re.search(pattern, parent_number) is None):
-            raise ValidationError(
-                _('Phone number is invalid. Must be at least 8 characters long.'),
-                code='invalid number')
+            raise ValidationError(_(
+                'Phone number is invalid. Must be at least 8 characters long.'
+            ),
+                                  code='invalid number')
 
 
 class VolunteerAssignForm(Form):
-    '''Form for assigning available volunteers to a workshop'''
+    """Form for assigning available volunteers to a workshop."""
+
     workshop_id = forms.IntegerField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         """
-        Initialise the volunteer assignment form
+        Initialise the volunteer assignment form.
 
         Args:
             *args:
-                available: List of available volunteers (Django model object)
-                assignments: List of volunteer assignments (Django model object)
+                available: List of available volunteers (Django models)
+                assignments: List of volunteer assignments (Django models)
+
         """
         # Get available volunteers
         available = kwargs.pop('available')
@@ -207,14 +227,14 @@ class VolunteerAssignForm(Form):
                     choices=VolunteerAssignment.ASSIGN_CHOICES,
                     label=f'{user.first_name} {user.last_name} ({user.email})')
 
-    # Yields collection of assignments received from the form.
     def get_assignments(self):
+        """Yield collection of assignments received from the form."""
         for field, value in self.cleaned_data.items():
             if field.startswith('vol_'):
                 yield (field[4], value)
 
-    # Saves assignment into model
     def save(self):
+        """Save assignment into model."""
         for vol_id, status in self.get_assignments():
             VolunteerAssignment.objects.update_or_create(
                 workshop_id=self.cleaned_data['workshop_id'],

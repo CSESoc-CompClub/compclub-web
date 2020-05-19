@@ -1,13 +1,13 @@
+"""Unit tests."""
+
 import datetime
 
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import localtime
-
 from website import models
 from website.forms import EventForm, VolunteerAssignForm, WorkshopForm
 from website.models import CustomUser, VolunteerAssignment, Workshop
-from website.utils import generate_status_email
 
 from .management.commands.load_dummy_data import make_event
 
@@ -24,38 +24,33 @@ singular_event_args = {
 }
 
 multi_workshop_event_args = {
-    'name':
-    'Test: Advanced Web Development',
-    'days_from_now':
-    28,
-    'n_week':
-    7,
-    'workshop_time':
-    datetime.time(16, 0),
-    'description':
-    'Learn how to make full-scale web apps with Django',
+    'name': 'Test: Advanced Web Development',
+    'days_from_now': 28,
+    'n_week': 7,
+    'workshop_time': datetime.time(16, 0),
+    'description': 'Learn how to make full-scale web apps with Django',
     'prereq':
     'Experience in web design (HTML,CSS,JavaScript) and coding in Python',
-    'period':
-    '2 hours',
-    'location':
-    'UNSW K17 lyre lab'
+    'period': '2 hours',
+    'location': 'UNSW K17 lyre lab'
 }
 
 
 class EventIndexViewTests(TestCase):
-    def setUp(self):
+    """Test event view."""
+
+    def setUp(self):  # noqa: D102
         self.skipTest('redirects to homepage')
 
     def test_no_events(self):
-        '''if there are no events, an appropriate message is displayed'''
+        """If there are no events, an appropriate message is displayed."""
         response = self.client.get(reverse('website:index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "There aren't any events at this time")
         self.assertQuerysetEqual(response.context['events_list'], [])
 
     def test_past_event(self):
-        '''Past event should not be displayed'''
+        """Past event should not be displayed."""
         past_event_args = dict(singular_event_args)
         past_event_args['days_from_now'] = -2
         make_event(**past_event_args)
@@ -66,24 +61,22 @@ class EventIndexViewTests(TestCase):
         self.assertQuerysetEqual(response.context['events_list'], [])
 
     def test_single_event(self):
-        '''test event with single workshop'''
+        """Test event with single workshop."""
         event = make_event(**singular_event_args)
         response = self.client.get(reverse('website:index'))
         local_start = localtime(event.start_date)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
-        self.assertNotContains(response, ' Workshops') # n Workshops
-        self.assertContains(response, local_start.strftime('%b')) # month
-        self.assertContains(response, local_start.strftime('%d')) # day
+        self.assertNotContains(response, ' Workshops')  # n Workshops
+        self.assertContains(response, local_start.strftime('%b'))  # month
+        self.assertContains(response, local_start.strftime('%d'))  # day
 
     def test_recurring_event(self):
-        '''test event with multiple workshops'''
+        """Test event with multiple workshops."""
         event = make_event(**multi_workshop_event_args)
         response = self.client.get(reverse('website:index'))
 
-        local_start = localtime(event.start_date)
-        local_finish = localtime(event.finish_date)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
@@ -93,7 +86,7 @@ class EventIndexViewTests(TestCase):
         self.assertContains(response, event.finish_date.strftime('%b'))
         self.assertContains(response, event.finish_date.strftime('%d'))
 
-    def test_multiple_events(self):
+    def test_multiple_events(self):  # noqa: D102
         event1 = make_event(**multi_workshop_event_args)
         event2 = make_event(**singular_event_args)
         response = self.client.get(reverse('website:index'))
@@ -103,9 +96,7 @@ class EventIndexViewTests(TestCase):
         self.assertContains(response, event2.name)
 
     def test_current_recurring_event(self):
-        ''' should show multi-workshop event that has some but not all of its
-            workshops in the past
-        '''
+        """Show multi-workshop event that has some workshops in the past."""
         event_args = dict(multi_workshop_event_args)
         event_args['days_from_now'] = -7
         event_args['n_week'] = 3
@@ -118,12 +109,15 @@ class EventIndexViewTests(TestCase):
 
 
 class EventFormTest(TestCase):
-    @classmethod
-    def setUp(cls):
-        cls.owner = models.CustomUser.objects.create_superuser(
-            username='su', email='', password='1234')
+    """Test event form."""
 
-    def test_event_create_valid(self):
+    @classmethod
+    def setUp(cls):  # noqa: D102
+        cls.owner = models.CustomUser.objects.create_superuser(username='su',
+                                                               email='',
+                                                               password='1234')
+
+    def test_event_create_valid(self):  # noqa: D102
         form_data = {
             'name': 'Intro to Python',
             'start_date': '2018-01-01',
@@ -137,7 +131,7 @@ class EventFormTest(TestCase):
         form = EventForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_event_create_invalid_dates(self):
+    def test_event_create_invalid_dates(self):  # noqa: D102
         form_data = {
             'name': 'Intro to Python',
             'start_date': '2018-04-30',
@@ -151,7 +145,7 @@ class EventFormTest(TestCase):
         form = EventForm(data=form_data)
         self.assertFalse(form.is_valid())
 
-    def test_event_create_invalid_name(self):
+    def test_event_create_invalid_name(self):  # noqa: D102
         form_data = {
             'name':
             'Name that exceeds 100 characters.........................'
@@ -177,7 +171,9 @@ class EventFormTest(TestCase):
 
 
 class WorkshopFormTest(TestCase):
-    def setUp(self):
+    """Test workshop form."""
+
+    def setUp(self):  # noqa: D102
         form_data = {
             'name': 'Intro to Python',
             'start_date': '2018-10-31',
@@ -188,11 +184,12 @@ class WorkshopFormTest(TestCase):
             'period': 'period',
             'slug': 'Intro-to-Python'
         }
-        self.owner = CustomUser.objects.create_superuser(
-            username='su', email='', password='1234')
+        self.owner = CustomUser.objects.create_superuser(username='su',
+                                                         email='',
+                                                         password='1234')
         self.event = EventForm(data=form_data).save()
 
-    def test_workshop_create_valid(self):
+    def test_workshop_create_valid(self):  # noqa: D102
         form_data = {
             'event': '1',
             'name': 'workshop name',
@@ -205,11 +202,11 @@ class WorkshopFormTest(TestCase):
         form = WorkshopForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_workshop_create_invalid_name(self):
+    def test_workshop_create_invalid_name(self):  # noqa: D102
         form_data = {
             'event': '1',
             'name': 'long name................................................'
-                '................................................................',
+            '................................................................',
             'date': '2018-10-31',
             'start_time': '22:59',
             'end_time': '23:59',
@@ -219,7 +216,7 @@ class WorkshopFormTest(TestCase):
         form = WorkshopForm(data=form_data)
         self.assertFalse(form.is_valid())
 
-    def test_workshop_create_invalid_time(self):
+    def test_workshop_create_invalid_time(self):  # noqa: D102
         form_data = {
             'event': '1',
             'name': 'workshop name',
@@ -232,7 +229,7 @@ class WorkshopFormTest(TestCase):
         form = WorkshopForm(data=form_data)
         self.assertFalse(form.is_valid())
 
-    def test_workshop_create_no_recurring(self):
+    def test_workshop_create_no_recurring(self):  # noqa: D102
         form_data = {
             'event': '1',
             'name': 'workshop name',
@@ -246,7 +243,7 @@ class WorkshopFormTest(TestCase):
         form.save()
         self.assertTrue(len(Workshop.objects.all()) == 1)
 
-    def test_workshop_create_recurring_daily(self):
+    def test_workshop_create_recurring_daily(self):  # noqa: D102
         form_data = {
             'event': '1',
             'name': 'workshop name',
@@ -258,9 +255,10 @@ class WorkshopFormTest(TestCase):
         }
         form = WorkshopForm(data=form_data)
         form.save()
-        self.assertTrue(len(Workshop.objects.all()) == 9) # 8 days inclusive between 31/10 and 8/11
+        self.assertTrue(len(Workshop.objects.all()) ==
+                        9)  # 8 days inclusive between 31/10 and 8/11
 
-    def test_workshop_create_recurring_weekly(self):
+    def test_workshop_create_recurring_weekly(self):  # noqa: D102
         form_data = {
             'event': '1',
             'name': 'workshop name',
@@ -276,21 +274,24 @@ class WorkshopFormTest(TestCase):
 
 
 class EventCreateViewTest(TestCase):
+    """Test event create view."""
+
     @classmethod
-    def setUpTestData(cls):
-        cls.su = models.CustomUser.objects.create_superuser(
-            username='su', email='', password='1234')
+    def setUpTestData(cls):  # noqa: D102
+        cls.su = models.CustomUser.objects.create_superuser(username='su',
+                                                            email='',
+                                                            password='1234')
 
-    def test_call_view_denies_non_staff(self):
-        expected_redirect_url = f"{reverse('admin:login')}?next={reverse('website:event_create')}"
-        response = self.client.get(
-            reverse('website:event_create'), follow=True)
+    def test_call_view_denies_non_staff(self):  # noqa: D102
+        expected_redirect_url = f"{reverse('admin:login')}?next={reverse('website:event_create')}"  # noqa: E501
+        response = self.client.get(reverse('website:event_create'),
+                                   follow=True)
         self.assertRedirects(response, expected_redirect_url)
-        response = self.client.post(
-            reverse('website:event_create'), follow=True)
+        response = self.client.post(reverse('website:event_create'),
+                                    follow=True)
         self.assertRedirects(response, expected_redirect_url)
 
-    def test_call_view_loads(self):
+    def test_call_view_loads(self):  # noqa: D102
         self.client.login(username='su', password='1234')
         response = self.client.get(reverse('website:event_create'))
         self.assertEqual(response.status_code, 200)
@@ -298,19 +299,21 @@ class EventCreateViewTest(TestCase):
 
 
 class VolunteerAssignmentModelTest(TestCase):
-    ''' tests for VolunteerAssignment model '''
+    """Test for VolunteerAssignment model."""
 
     def setUp(self):
-        '''Volunteer assignment'''
+        """Volunteer assignment."""
         # create event with 1 workshop
         self.event = make_event(**singular_event_args)
         self.workshop = Workshop.objects.filter(event=self.event)[0]
 
         # create volunteers Alice and Bob
-        user_alice = CustomUser.objects.create_user(
-            username='alice', email='', password='1234')
-        user_bob = CustomUser.objects.create_user(
-            username='bob', email='', password='1234')
+        user_alice = CustomUser.objects.create_user(username='alice',
+                                                    email='',
+                                                    password='1234')
+        user_bob = CustomUser.objects.create_user(username='bob',
+                                                  email='',
+                                                  password='1234')
         self.alice = user_alice.volunteer
         self.bob = user_bob.volunteer
 
@@ -319,54 +322,52 @@ class VolunteerAssignmentModelTest(TestCase):
         self.workshop.available.add(self.bob)
 
         # only Alice is assigned, Bob is on waitlist
-        VolunteerAssignment.objects.create(
-            workshop=self.workshop,
-            volunteer=self.alice,
-            status=VolunteerAssignment.ASSIGNED
-        )
-        VolunteerAssignment.objects.create(
-            workshop=self.workshop,
-            volunteer=self.bob,
-            status=VolunteerAssignment.WAITLIST
-        )
-
+        VolunteerAssignment.objects.create(workshop=self.workshop,
+                                           volunteer=self.alice,
+                                           status=VolunteerAssignment.ASSIGNED)
+        VolunteerAssignment.objects.create(workshop=self.workshop,
+                                           volunteer=self.bob,
+                                           status=VolunteerAssignment.WAITLIST)
 
     def test_available(self):
-        '''Check that both Alice and Bob are available for workshop'''
+        """Check that both Alice and Bob are available for workshop."""
         self.assertIn(self.alice, self.workshop.available.all())
         self.assertIn(self.bob, self.workshop.available.all())
         self.assertEqual(self.alice.workshops_available.first(), self.workshop)
         self.assertEqual(self.bob.workshops_available.first(), self.workshop)
 
     def test_assigned(self):
-        '''Check that Alice and Bob are assigned correctly'''
+        """Check that Alice and Bob are assigned correctly."""
         self.assertIn(self.alice, self.workshop.assigned.all())
         self.assertIn(self.bob, self.workshop.assigned.all())
         self.assertEqual(self.alice.workshops_assigned.first(), self.workshop)
         self.assertEqual(self.bob.workshops_assigned.first(), self.workshop)
         self.assertEqual(len(self.workshop.assignment.all()), 2)
-        self.assertEqual(self.alice.assignment.first().status, VolunteerAssignment.ASSIGNED)
-        self.assertEqual(self.bob.assignment.first().status, VolunteerAssignment.WAITLIST)
+        self.assertEqual(self.alice.assignment.first().status,
+                         VolunteerAssignment.ASSIGNED)
+        self.assertEqual(self.bob.assignment.first().status,
+                         VolunteerAssignment.WAITLIST)
 
     def test_form_valid(self):
-        '''Test Assignment form with valid data'''
+        """Test Assignment form with valid data."""
         data = {
             'workshop_id': self.workshop.id,
             f'vol_{self.alice.id}': VolunteerAssignment.ASSIGNED,
             f'vol_{self.bob.id}': VolunteerAssignment.WAITLIST
         }
-        form = VolunteerAssignForm(
-            data,
-            available=self.workshop.available.all(),
-            assignments=self.workshop.assignment.all())
+        form = VolunteerAssignForm(data,
+                                   available=self.workshop.available.all(),
+                                   assignments=self.workshop.assignment.all())
         self.assertTrue(form.is_valid)
 
     def test_view(self):
-        '''Test assigning view called correctly'''
-        CustomUser.objects.create_superuser(
-            username='su', email='', password='1234')
+        """Test assigning view called correctly."""
+        CustomUser.objects.create_superuser(username='su',
+                                            email='',
+                                            password='1234')
         self.client.login(username='su', password='1234')
-        response = self.client.get(reverse(
-            'website:assign_volunteers', args=[self.event.slug,self.event.id]))
+        response = self.client.get(
+            reverse('website:assign_volunteers',
+                    args=[self.event.slug, self.event.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'website/event_assign.html')
