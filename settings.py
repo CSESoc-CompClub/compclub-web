@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-from django.conf.global_settings import STATICFILES_FINDERS
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -104,59 +102,9 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-SASS_PROCESSOR_ROOT = STATIC_ROOT
-STATICFILES_FINDERS.append('sass_processor.finders.CssFinder')
 
-# Logging
+STATIC_ROOT = '/app/static/'
 
-DEFAULT_LOGGING = {
-    'handlers': ['console', 'file'],
-    'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-    'propagate': True,
-}
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format':
-            '[{levelname}] {asctime} {module} {process:d} {thread:d} '
-            '{message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '[{levelname}] {asctime} {message}',
-            'style': '{',
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'filters': ['require_debug_true']
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'formatter': 'verbose',
-            'filename': os.path.join(BASE_DIR, 'debug.log'),
-        },
-    },
-    'loggers': {
-        'website': DEFAULT_LOGGING,
-        'django': DEFAULT_LOGGING
-    },
-}
 
 LOGIN_REDIRECT_URL = 'website:index'
 LOGOUT_REDIRECT_URL = 'website:index'
