@@ -2,7 +2,6 @@
 
 - [Python 3.6+](https://python.org)
 - [pipenv](https://github.com/pypa/pipenv). Pipenv takes care of installing and managing Python dependencies.
-- [npm](https://www.npmjs.com/get-npm). Node Package Manager (npm) manages your JavaScript dependencies.
 
 ## Development
 
@@ -11,19 +10,10 @@
 ```sh
 pipenv install
 ```
-```sh
-npm install -g sass
-```
 
 ### Initialize Database
 ```sh
 pipenv run python manage.py migrate
-```
-
-### Compile your CSS
-```sh
-cd website/static/website
-sass style.scss style.css --style compressed
 ```
 
 ### Run the server

@@ -1,7 +1,8 @@
+"""Utility functions."""
+
+from django.conf import settings
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
-from django.conf import settings
-
 from website.models import Event, Volunteer, Workshop
 
 STATUS_EMAIL_SUBJECT = "Your Assignment For Event \"{event}\""
@@ -62,10 +63,9 @@ def generate_status_email(event_id,
                 start_time=assignment.workshop.start_time,
                 end_time=assignment.workshop.end_time,
                 status=assignment.get_status_display())
-        formatted_message = base.format(
-            recipient=recipient.user.first_name,
-            event=event.name,
-            body=workshop_msg)
+        formatted_message = base.format(recipient=recipient.user.first_name,
+                                        event=event.name,
+                                        body=workshop_msg)
         data_tuple = (subject, formatted_message, from_email,
                       [recipient.user.email])
         emails.append(data_tuple)

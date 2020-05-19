@@ -1,4 +1,5 @@
-"""Compclub Website URL Configuration
+"""
+Compclub Website URL configuration.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -12,51 +13,49 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+
 """
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.views.generic.base import RedirectView
 
 from . import views
 
-app_name = 'website' # URL namespace
+app_name = 'website'  # URL namespace
 
 urlpatterns = [
-    path( # login view
-        'login/',
-        auth_views.LoginView.as_view(redirect_authenticated_user=True),
-        name='login'),
-    path('profile/', views.user_profile, name='profile'), # profile page view (currently not used)
+    path('login/',
+         auth_views.LoginView.as_view(redirect_authenticated_user=True),
+         name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    # path('events/', views.event_index, name='event_index'),
-    # TODO: replace once homepage has been filled
-    path( # events view
-        'events/',
-        RedirectView.as_view(url='/', permanent=False), # currently, homepage is also events page
-        name='event_index'),
-    path( # event detail view
-        'events/<slug:slug>-<int:event_id>/',
-        views.event_page,
-        name='event_page'),
-    path('events/create', views.event_create, name='event_create'), # create event view
-    path('about/', views.about, name='about'), # about page view
     # TODO add content to homepage
-    # path('', views.index, name='index'),
-    path('', views.event_index, name='index'), # homepage view
+    path('', views.EventIndex.as_view(), name='index'),
+    # TODO: replace once homepage has been filled
     path(
-        'events/<slug:slug>-<int:event_id>/status-email-preview', # email preview page
-        views.volunteer_status_email_preview,
-        name='volunteer_email_preview'),
-    path(
-        'events/<slug:slug>-<int:event_id>/registration', # event regitration view (for students)
-        views.registration,
-        name='registration'),
-    path(
-        'events/<slug:slug>-<int:event_id>/assign-volunteers', # event volunteer assignment page
-        views.event_assign_volunteers,
-        name='assign_volunteers'),
-    path(
-        'events/<slug:slug>-<int:event_id>/workshop_create', # event workshop creation page
-        views.workshop_create,
-        name="workshop_create")
+        'events/',  # events view. currently, homepage is also events page
+        RedirectView.as_view(url='/', permanent=False),
+        name='event_index'),
+    path('events/<slug:slug>-<int:event_id>/',
+         views.EventPage.as_view(),
+         name='event_page'),
+    path('events/create',
+         staff_member_required(views.EventCreate.as_view()),
+         name='event_create'),
+    path('about/', views.AboutView.as_view(), name='about'),
+    path('events/<slug:slug>-<int:event_id>/status-email-preview',
+         staff_member_required(views.VolunteerStatusEmailPreview.as_view()),
+         name='volunteer_email_preview'),
+    path('events/<slug:slug>-<int:event_id>/registration',
+         views.RegistrationPage.as_view(),
+         name='registration'),
+    path('events/<slug:slug>-<int:event_id>/assign-volunteers',
+         staff_member_required(views.EventAssignVolunteers.as_view()),
+         name='assign_volunteers'),
+    path('events/<slug:slug>-<int:event_id>/workshop_create',
+         staff_member_required(views.WorkshopCreate.as_view()),
+         name="workshop_create")
+    # path('profile/',
+    #     views.user_profile,
+    #     name='profile'), # profile page view (currently not used)
 ]

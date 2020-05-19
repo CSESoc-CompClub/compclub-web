@@ -1,3 +1,5 @@
+"""WSGI deployment configurations."""
+
 from __future__ import unicode_literals
 from django.core.wsgi import get_wsgi_application
 import os
