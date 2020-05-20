@@ -57,3 +57,5 @@ docker build -t csesoc/compclub-web .
 # Push the container
 docker push csesoc/compclub-web
 ```
+
+The container will execute `run.sh` to begin serving files.
