@@ -7,10 +7,14 @@ set -euo pipefail
 python manage.py migrate --no-input --run-syncdb
 
 # roll up static files
-python manage.py collectstatic --no-input
+python manage.py collectstatic --clear --no-input
 
 # Compress and compile the stylesheets
 python manage.py compress --force
+
+# Clean up
+find ./static -name "*.scss" -type f -delete
+find ./static -type d -empty -delete
 
 # Run gunicorn
 gunicorn -c gunicorn.py wsgi:application &

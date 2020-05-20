@@ -14,8 +14,8 @@ ALLOWED_HOSTS = ["localhost", "compclub.csesoc.unsw.edu.au"]
 
 COMPRESS_OFFLINE = True
 LIBSASS_OUTPUT_STYLE = 'compressed'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-STATIC_ROOT = '/app/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'  # noqa: E501
+STATIC_ROOT = '/app/static'
 
 LOGGING = {
     'version': 1,
