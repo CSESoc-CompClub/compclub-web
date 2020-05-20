@@ -7,12 +7,12 @@ name = "pypi"
 django = ">=2.2.3"
 gunicorn = "*"
 django-sass-processor = "*"
+django-libsass = "*"
+django-compressor = "*"
 
 [dev-packages]
 flake8 = "*"
 flake8-docstrings = "*"
-libsass = "*"
-django-compressor = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

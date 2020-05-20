@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 {% load sass_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +19,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/fontawesome.css" integrity="sha384-HbmWTHay9psM8qyzEKPc8odH4DsOuzdejtnr+OFtDmOcIVnhgReQ4GZBH7uwcjf6" crossorigin="anonymous">
     <!-- jquery confirm CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
-    <link rel="stylesheet" href="{% sass_src 'website/style.scss' %}" type="text/css">
+    {% compress css %}
+      <link type="text/x-scss" rel="stylesheet" href="{% static 'style.scss' %}">
+    {% endcompress %}
   </head>
 
   <body>

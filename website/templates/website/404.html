@@ -1,6 +1,8 @@
 {% extends "website/default.html" %}
 
 {% block title %} {{ block.super }} - Page Not Found {% endblock %}
+{% block content %}
+{{ block.super }}
 <div class="row">
   <div class="col text-center">
     <h1 class='my-5'>A Server Error Occur</h1>
