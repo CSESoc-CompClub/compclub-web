@@ -1,5 +1,175 @@
 {% extends "website/default.html" %}
+{% load static %}
 
 {% block content %}
-  {{ block.super }}
+{{ block.super }}
+<p></p>
+<section id="home" class="container">
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+        <img src="{% static 'website/index/IMG_0122-cover.jpg' %}" alt="cover photo 1" class="img-fluid">
+      </div>
+      <div class="col-8">
+        <div class="row h-50 align-items-end">
+            <h1>EXPLORE THE POSSIBILITIES</h1>
+            <h3>CSESoc CompClub provides a variety of free workshops on campus and at high schools!</h3>
+        </div>
+        <div class="row h-50">
+          <div class="col-6">
+            <img src="{% static 'website/index/IMG_0101.jpg' %}" alt="cover photo 2" class="img-fluid"> 
+          </div>
+          <div class="col-6">
+            <img src="{% static 'website/index/a-3.png' %}" alt="cover photo 3" class="img-fluid">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>    
+</section>
+<br></br>
+
+<section id="about" class="container content-section text-center">
+  <div class="row">
+    <div class="col">
+      <br/><br/>
+      <h1>About Us</h1>
+      <br/>
+        <p>CompClub is a portfolio under the student run UNSW organisation CSESoc that promotes computing to high school students throughout the year. By running a variety of freeworkshops throughout the year, we aim to create a fun, collaborative environment for students to develop their interests and hone their programming skills along like-minded students.</p>
+      <br/>
+    </div>
+  </div>
+</section>
+<br></br>
+
+
+<section id="workshops" class="container content-section text-center">
+  <h1>Workshops</h1>
+  <br></br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+        <img src="{% static 'website/index/gamedev.png' %}" alt="Gamedev image" class="img-fluid">
+      </div>
+      <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Introduction to Game Development</h2>
+        <!-- need to change game name! Don't get copy righted pleasee-->
+        <div class="lead">This workshop allows students to unleash their full creative imaginations as we explore how to make our very own versions of games like "Snappy Bird" and “RecBot” </div>
+        <button type="button"><a href="../online_workshops/gamedev/"> Click here to learn!</a></button>
+      </div>
+    </div>
+  </div>
+  <br></br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Introduction to Web Development</h2>
+        <div class="lead">Students will uncover the true colours of a website behind its pages, pictures and links, as we guide you through all the nooks, crannies and secrets of web design. </div>
+        <button type="button"><a href="../online_workshops/webdev"> Click here to learn!</a></button>
+      </div>
+      
+      <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+          <img src="{% static 'website/index/webdev.png' %}" alt="Webdev image" class="img-fluid">
+      </div>
+    </div>
+  </div>
+  <br></br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+        <img src="{% static 'website/index/ai.png' %}" alt="AI image" class="img-fluid">
+      </div>
+
+      <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Introduction to the World of AI</h2>
+        <div class="lead">This workshop allows students to --some good descriptive desciptions-- “RecBot” </div>
+        <button type="button"><a href="../online_workshops/ai"> Click here to learn!</a></button>
+      </div>
+    </div>
+  </div> 
+  <br></br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-sm-6">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Introduction to Cyber Security</h2>
+        <div class="lead">This workshop introduces students to a variety of different ciphers that are used in modern day programs to enhance security. </div>
+        <button type="button"><a href="../online_workshops/security"> Click here to learn!</a></button>
+      </div>
+          
+      <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+        <img src="{% static 'website/index/security.png' %}" alt="Security image" class="img-fluid">
+        <img class="img-responsive" src="../img/online/security.png" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+<br></br>
+<br></br>
+
+<section id="initiatives" class="container content-section">
+  <h1 class="text-center">Past Initiatives</h1>
+  <br></br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+        <img src="{% static 'website/index/IMG_0122.jpg' %}" alt="Codespace workshop img" class="img-fluid">
+      </div>
+      <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+          <img src="{% static 'website/index/codespace.png' %}" alt="codespace logo" style="width:50px; height:50px">
+          <h2 class="section-heading">Code Space Workshop</h2>
+          <div><p>January 2020 | University of New South Wales</p></div>
+          <div class="lead"><p>We hosted 60 high school students across Sydney for a 5 day workshop covering topics including game development, microbits and virtual reality.</p></div>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="container">
+    <div class="row">
+        <div class="col-lg-5 col-sm-6">
+            <img src="{% static 'website/index/orbit.png' %}" alt="orbit regional roadtrip logo" style="width:61px; height:50px">
+            <h2 class="section-heading">Orb:it Regional Roadtrip</h2>
+            <div><p>September 2019 | Orange & Dubbo NSW</p></div>
+            <div class="lead"><p>A group of 14 volunteers traveled 263km to teach programming to 5 regional schools</p></div>
+        </div>
+        <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+            <img src="{% static 'website/index/a-3.png' %}" alt="Regional Roadtrip img" class="img-fluid">
+        </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+        <img src="{% static 'website/index/3.jpg' %}" alt="Summer Spy School img" class="img-fluid">
+      </div>
+        <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+            <img src="{% static 'website/index/spy.png' %}" alt="summer spy school logo" style="width:50px; height:50px">
+            <h2 class="section-heading">Summer Spy School</h2>
+            <div><p>January 2019 | University of New South Wales</p></div>
+            <div class="lead"><p>We hosted 38 high school students across Sydney for a 5 day workshop covering topics including game development, microbits and web development.</p></div>
+        </div>
+      </div>
+  </div>
+</section>
+<br>
+
+<p></p>
+
+{% include "website/footer.html" %}
+
 {% endblock %}
