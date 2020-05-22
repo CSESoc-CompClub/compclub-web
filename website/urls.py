@@ -18,7 +18,6 @@ Including another URLconf
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from django.views.generic.base import RedirectView
 
 from . import views
 
@@ -31,7 +30,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', views.Index.as_view(), name='index'),
     path(
-        'events/', 
+        'events/',
         views.EventIndex.as_view(),
         name='event_index'),
     path('events/<slug:slug>-<int:event_id>/',

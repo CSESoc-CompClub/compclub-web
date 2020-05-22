@@ -25,11 +25,12 @@ from website.utils import generate_status_email
 
 logger = logging.getLogger(__name__)
 
+
 class Index(ListView):
     """
      Renders the home page to the user.
 
-     Home page shows all the basic information of the website such as About Us, Workshops, Initiatives and Contact
+     Home page shows all the basic information of the website
 
      Args:
          request: HTTP request header contents
@@ -37,12 +38,12 @@ class Index(ListView):
      Returns:
          HTTP response containing home page
 
-     """
+    """
 
     model = Event
     template_name = 'website/index.html'
 
- 
+
 class EventIndex(ListView):
     """
     Render and show events page to the user.
