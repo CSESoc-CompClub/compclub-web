@@ -1,7 +1,9 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg">
   <div class="navbar-header">
-    <a href="{% url 'website:index' %}" class="navbar-brand" href="#home"><img src="{% static 'website/compclub.png' %}" alt="CSESoc CompClub" class="img-responsive"></a>
+    <a href="{% url 'website:index' %}" class="navbar-brand" href="#home">
+      <img src="{% static 'website/index/compclub-logo.png' %}" alt="CSESoc CompClub" class="img-responsive" style="margin:5%">
+    </a>
   </div>
   <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

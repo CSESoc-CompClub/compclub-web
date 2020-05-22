@@ -9,16 +9,16 @@
       <h1 class="title">{{ event.name }}</h1>
   </div>
   {% if perms.website.change_event %}
-    <a href="{% url 'website:assign_volunteers' slug=event.slug event_id=event.pk %}" class="event-button"><i class="fas fa-users"></i> Available Volunteers</a>
+    <a href="{% url 'website:assign_volunteers' slug=event.slug event_id=event.pk %}" class="event-button" style="color:white"><i class="fas fa-users"></i> Available Volunteers</a>
   {% endif %}
   <div class="event-detail-card">
     <div class="event-card-container">
       {% if user.is_staff %}
         <p>
-          <a class="event-button"
+          <a class="event-button" style="color:white;"
             href="{% url 'website:workshop_create' slug=event.slug event_id=event.pk %}">
             <i class="fas fa-calendar-plus"></i> Create Workshop</a>
-          <a class="event-button"
+          <a class="event-button" style="color:white"
             href="{% url 'website:volunteer_email_preview' slug=event.slug event_id=event.pk %}">
             <i class="fas fa-envelope-open"></i> Send status email</a>
         </p>
@@ -43,7 +43,7 @@
 
       <h3 class="event-detail">Workshop Schedule</h3>
       <table class="table">
-          <thead class="thead-dark">
+          <thead class="thead">
             <tr>
               <th scope="col">Workshop Name</th>
               <th scope="col">Workshop Time</th>
