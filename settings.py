@@ -120,7 +120,7 @@ COMPRESS_PRECOMPILERS = (
 
 COMPRESS_OUTPUT_DIR = "compiled"
 
-LOGIN_REDIRECT_URL = 'website:index'
+LOGIN_REDIRECT_URL = 'website:event_index'
 LOGOUT_REDIRECT_URL = 'website:index'
 
 AUTH_USER_MODEL = 'website.CustomUser'
