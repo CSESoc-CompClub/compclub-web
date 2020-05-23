@@ -28,15 +28,15 @@ logger = logging.getLogger(__name__)
 
 class Index(ListView):
     """
-     Renders the home page to the user.
+    Renders the home page to the user.
 
-     Home page shows all the basic information of the website
+    Home page shows all the basic information of the website
 
-     Args:
-         request: HTTP request header contents
+    Args:
+        request: HTTP request header contents
 
-     Returns:
-         HTTP response containing home page
+    Returns:
+        HTTP response containing home page
 
     """
 

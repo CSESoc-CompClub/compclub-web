@@ -2,6 +2,9 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
 @import url('https://fonts.googleapis.com/css?family=Cabin:300,400');
+@import url('https://fonts.googleapis.com/css2?family=Signika&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 
 $primary-color: #FFBC37;
 $primary-color-light: lighten($primary-color, 20%);
@@ -16,6 +19,7 @@ $normal-text-size: 16px;
 $breakpoint-tablet: 768px;
 
 html, body {
+    font-family: 'Ubuntu', sans-serif;
     background-color: $background-color;
     font-size: $normal-text-size;
 }
@@ -132,6 +136,21 @@ html, body {
 
 .event-holder {
     width: 100%;
+}
+
+.index-date {
+    color: #B1B1B1;
+}
+
+.va {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.index-title {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: 600;
+    color: black;
 }
 
 .calendar {
