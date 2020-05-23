@@ -104,10 +104,6 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "website/static/website")
-]
-
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -119,6 +115,13 @@ COMPRESS_PRECOMPILERS = (
 )
 
 COMPRESS_OUTPUT_DIR = "compiled"
+COMPRESS_FILTERS = {
+    'css': ['compressor.filters.css_default.CssAbsoluteFilter',
+            'compressor.filters.cssmin.rCSSMinFilter'
+            ],
+    'js': ['compressor.filters.jsmin.JSMinFilter']
+}
+
 
 LOGIN_REDIRECT_URL = 'website:index'
 LOGOUT_REDIRECT_URL = 'website:index'
