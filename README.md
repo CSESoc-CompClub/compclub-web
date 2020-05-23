@@ -28,7 +28,7 @@ This will start a development server with automatic reloading on code changes
 The app is built using Docker. The container has the following attributes:
 
 ### Volumes:
- - `/data`: Data volume for the app. Contains sqlite db.
+ - `/data`: You must bind-mount `/data` to the backed-up local container path
 
 ### Ports:
 The container exposes the server on port 8080.
