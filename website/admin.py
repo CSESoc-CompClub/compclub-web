@@ -7,7 +7,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.db import models
 
 from website.models import (CustomUser, Download, Event, NoEmbed, Registration,
-                            RichText, Volunteer, VolunteerAssignment, Workshop)
+                            RichText, Volunteer, VolunteerAssignment, Workshop,
+                            LightBox)
 
 
 @admin.register(VolunteerAssignment)
@@ -83,16 +84,9 @@ class EventAdmin(ContentEditor):
     inlines = [
         RichTextInline,
         ContentEditorInline.create(model=Download),
-        ContentEditorInline.create(model=NoEmbed)
+        ContentEditorInline.create(model=NoEmbed),
+        ContentEditorInline.create(model=LightBox)
     ]
-
-    class Media:
-        """Provides font awesome to the field."""
-
-        js = (
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/regular.min.js',  # noqa: E501
-            'website/js/content-editor-plugins/plugin_buttons.js',
-        )
 
 
 admin.site.register(Workshop)

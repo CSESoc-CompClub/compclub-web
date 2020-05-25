@@ -14,7 +14,7 @@ def render_download(element):
     return format_html(
         """
         <br/>
-        <a class="btn btn-primary" href="{}" role="button">
+        <a class="btn btn-primary download-button" href="{}" role="button">
             <i class="fa fa-download"></i> Download {}
         </a>
         """,
@@ -38,4 +38,18 @@ def render_noembed(element):
         str.format("""
         <figure class="embed-container">{}<figcaption>{}</figcaption></figure>
         """, noembed_html, element.caption)
+    )
+
+
+def render_lightbox(element):
+    """Render an image with a lightbox."""
+    return mark_safe(
+        str.format("""
+        <a data-fslightbox href="{0}">
+            <figure class="embed-container">
+                <img style="max-width: 60%; display: flex; align-self: center;" src="{0}" alt="{1}">
+            <figcaption>{1}</figcaption>
+            </figure>
+        </a>
+        """, element.file.url, element.caption)  # noqa: E501
     )

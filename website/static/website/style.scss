@@ -48,7 +48,7 @@ code {
     justify-content: center;
     flex-direction: column;
     width: 100%;
-    margin: 10% 0;
+    margin: 7% 0;
     min-height: 200px;
     align-items: center;
 
@@ -57,6 +57,11 @@ code {
         padding-top: 10px;
         color: #555555;
     }
+}
+
+.download-button {
+    margin: 2% 0;
+    color: #fff !important;
 }
 
 .navbar-brand img {

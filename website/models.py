@@ -8,6 +8,7 @@ from django.utils.text import slugify
 
 from content_editor.models import Region, create_plugin_base
 from ckeditor.fields import RichTextField
+from website.plugins import compressors
 
 
 class CustomUser(AbstractUser):
@@ -133,6 +134,24 @@ class NoEmbed(EventPlugin):
     class Meta:   # noqa: D106
         verbose_name = 'embed'
         verbose_name_plural = 'embeds'
+
+
+class LightBox(EventPlugin):
+    """Represents a LightBox field."""
+
+    file = models.ImageField(upload_to='uploads/%Y/%m/',
+                             max_length=150)
+    caption = models.CharField(
+        max_length=150,
+        help_text="Alternate text for the image.")
+
+    class Meta:   # noqa: D106
+        verbose_name = 'image'
+        verbose_name_plural = 'images'
+
+    def save(self, *args, **kwargs):  # noqa: D102
+        self.file = compressors.compress_image(self.file)
+        super().save(*args, **kwargs)
 
 
 class Workshop(models.Model):

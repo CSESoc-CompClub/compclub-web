@@ -25,7 +25,7 @@ from website.plugins import cms
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
 from website.models import (
-    Download, Event, Registration, RichText, Workshop, NoEmbed)
+    Download, Event, Registration, RichText, Workshop, NoEmbed, LightBox)
 from website.utils import generate_status_email
 
 logger = logging.getLogger(__name__)
@@ -112,7 +112,8 @@ class EventPage(DetailView):
                             event_id=event.pk,
                             slug=event.slug)
 
-        contents = contents_for_item(event, [RichText, Download, NoEmbed])
+        contents = contents_for_item(
+            event, [RichText, Download, NoEmbed, LightBox])
         return render(request, self.template_name, {
             "event": event,
             "content": {
@@ -131,6 +132,8 @@ class EventPage(DetailView):
                 yield cms.render_download(element)
             elif isinstance(element, NoEmbed):
                 yield cms.render_noembed(element)
+            elif isinstance(element, LightBox):
+                yield cms.render_lightbox(element)
 
 
 class RegistrationPage(CreateView):
