@@ -10,6 +10,8 @@ django-sass-processor = "*"
 django-libsass = "*"
 django-compressor = "*"
 django-content-editor = "*"
+django-ckeditor = "*"
+requests = "*"
 
 [dev-packages]
 flake8 = "*"
