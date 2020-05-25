@@ -14,13 +14,14 @@ def render_download(element):
     return format_html(
         """
         <br/>
-        <a class="btn btn-primary download-button" href="{}" role="button">
+        <a class="btn btn-primary download-button"
+           href="{}" role="button" download>
             <i class="fa fa-download"></i> Download {}
         </a>
         """,
         element.file.url,
         element.name,
-    )
+    )  # noqa: E501
 
 
 def render_noembed(element):
