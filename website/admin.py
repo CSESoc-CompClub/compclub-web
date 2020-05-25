@@ -1,9 +1,13 @@
 """Django admin panel."""
 
+from content_editor.admin import ContentEditor, ContentEditorInline
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from website.models import (CustomUser, Event, Registration, Volunteer,
-                            VolunteerAssignment, Workshop)
+from django.db import models
+
+from website.models import (CustomUser, Download, Event, NoEmbed, Registration,
+                            RichText, Volunteer, VolunteerAssignment, Workshop)
 
 
 @admin.register(VolunteerAssignment)
@@ -38,6 +42,58 @@ class CustomUserAdmin(BaseUserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-admin.site.register(Event)
+class RichTextarea(forms.Textarea):
+    """Rich text area entry from django-content-editor."""
+
+    def __init__(self, attrs=None):
+        """
+        Provide instance of rich text area.
+
+        Provide class so that the code in plugin_ckeditor knows which text
+        areas  should be enhanced with a rich text control.
+        """
+        default_attrs = {'class': 'richtext'}
+        if attrs:
+            default_attrs.update(attrs)
+        super(RichTextarea, self).__init__(default_attrs)
+
+
+class RichTextInline(ContentEditorInline):
+    """Rich text inline field from django-content-editor."""
+
+    model = RichText
+    formfield_overrides = {
+        models.TextField: {'widget': RichTextarea},
+    }
+    regions = ['main']  # We only want rich texts in "main" region.
+
+    class Media:
+        """Provides CKEditor to the fields."""
+
+        js = (
+            'https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.12.1/ckeditor.js',  # noqa: E501
+            'website/js/content-editor-plugins/plugin_ckeditor.js',
+        )
+
+
+@admin.register(Event)
+class EventAdmin(ContentEditor):
+    """Provides a pretty interface for editing content using django-content-editor."""  # noqa: E501
+
+    inlines = [
+        RichTextInline,
+        ContentEditorInline.create(model=Download),
+        ContentEditorInline.create(model=NoEmbed)
+    ]
+
+    class Media:
+        """Provides font awesome to the field."""
+
+        js = (
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/regular.min.js',  # noqa: E501
+            'website/js/content-editor-plugins/plugin_buttons.js',
+        )
+
+
 admin.site.register(Workshop)
 admin.site.register(Registration)
