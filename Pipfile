@@ -9,6 +9,10 @@ gunicorn = "*"
 django-sass-processor = "*"
 django-libsass = "*"
 django-compressor = "*"
+django-content-editor = "*"
+django-ckeditor = "*"
+requests = "*"
+pillow = "*"
 
 [dev-packages]
 flake8 = "*"

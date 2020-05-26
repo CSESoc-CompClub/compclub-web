@@ -17,6 +17,8 @@ LIBSASS_OUTPUT_STYLE = 'compressed'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'  # noqa: E501
 STATIC_ROOT = '/app/static'
 
+MEDIA_ROOT = '/data/user-media'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

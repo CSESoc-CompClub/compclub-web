@@ -1,15 +1,5 @@
 <html>
-  <a href="{% url 'website:logout' %}">Logout</a>
-  <h3>{{ request.user.username }}</h3>
+<a href="{% url 'website:logout' %}">Logout</a>
+<h3>{{ request.user.username }}</h3>
 
-  <ul>
-  {% for event in request.user.volunteer.assigned_event.all %}
-    <li>{{ event.name }} ({{ event.start_date }} - {{ event.finish_date }})</li>
-    <ol>
-    {% for workshop in event.workshop.all %}
-      <li>{{ workshop.name }} - {{ event.description }}</li>
-    {% endfor %}
-    </ol>
-  {% endfor %}
-  </ul>
 </html>

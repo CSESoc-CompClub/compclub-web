@@ -17,9 +17,6 @@ singular_event_args = {
     'days_from_now': 10,
     'n_week': 1,
     'workshop_time': datetime.time(10, 0),  # 10:00 local time
-    'description': 'Have you ever wanted to learn to write computer programs?',
-    'prereq': 'No programming experience required',
-    'period': '???',
     'location': 'UNSW k17 oud lab',
 }
 
@@ -28,10 +25,6 @@ multi_workshop_event_args = {
     'days_from_now': 28,
     'n_week': 7,
     'workshop_time': datetime.time(16, 0),
-    'description': 'Learn how to make full-scale web apps with Django',
-    'prereq':
-    'Experience in web design (HTML,CSS,JavaScript) and coding in Python',
-    'period': '2 hours',
     'location': 'UNSW K17 lyre lab'
 }
 
@@ -123,9 +116,6 @@ class EventFormTest(TestCase):
             'start_date': '2018-01-01',
             'finish_date': '2018-04-30',
             'owner': '1',
-            'description': 'introduction to Python',
-            'prerequisite': 'Nil',
-            'period': 'period',
             'slug': 'Intro-to-Python'
         }
         form = EventForm(data=form_data)
@@ -137,9 +127,6 @@ class EventFormTest(TestCase):
             'start_date': '2018-04-30',
             'finish_date': '2018-04-29',
             'owner': '1',
-            'description': 'introduction to Python',
-            'prerequisite': 'Nil',
-            'period': 'period',
             'slug': 'Intro-to-Python'
         }
         form = EventForm(data=form_data)
@@ -156,12 +143,6 @@ class EventFormTest(TestCase):
             '2018-04-29',
             'owner':
             '1',
-            'description':
-            'introduction to Python',
-            'prerequisite':
-            'Php :)',
-            'period':
-            'period',
             'slug':
             'Name-that-exceeds-100-characters.........................'
             '................................................................',
@@ -179,9 +160,6 @@ class WorkshopFormTest(TestCase):
             'start_date': '2018-10-31',
             'finish_date': '2018-11-08',
             'owner': '1',
-            'description': 'introduction to Python',
-            'prerequisite': 'Nil',
-            'period': 'period',
             'slug': 'Intro-to-Python'
         }
         self.owner = CustomUser.objects.create_superuser(username='su',

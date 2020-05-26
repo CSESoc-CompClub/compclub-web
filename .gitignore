@@ -1,9 +1,12 @@
+# Media
+user-media/
+
 # SASS
 **/.sass-cache
 **/.sass-cache/*
 **.css.map
 style.css
-static/
+/static/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -10,17 +10,22 @@ from collections import namedtuple
 from datetime import datetime
 from smtplib import SMTPSenderRefused
 
+from content_editor.contents import contents_for_item
 from django.core.mail import BadHeaderError, send_mass_mail
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.html import mark_safe
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
+
+from website.plugins import cms
 from website.forms import (EventForm, RegistrationForm, VolunteerAssignForm,
                            WorkshopForm)
-from website.models import Event, Registration, Volunteer, Workshop
+from website.models import (
+    Download, Event, Registration, RichText, Workshop, NoEmbed, LightBox)
 from website.utils import generate_status_email
 
 logger = logging.getLogger(__name__)
@@ -97,23 +102,6 @@ class EventPage(DetailView):
 
     def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
-
-        # add event workshops to context and display first workshop location
-        workshops = Workshop.objects \
-            .filter(event=context['event']) \
-            .order_by('date', 'start_time')
-        location = workshops[0].location if len(workshops) > 0 else "TBA"
-        context['workshops'] = workshops
-        context['location'] = location
-
-        # if authenticated, list workshops where user marked self as available
-        if self.request.user.is_authenticated:
-            user = Volunteer.objects.get(user=self.request.user)
-            context['available_list'] = [
-                workshop.id for workshop in workshops
-                if user in workshop.available.all()
-            ]
-
         return context
 
     def get(self, request, event_id, slug):  # noqa: D102
@@ -124,21 +112,28 @@ class EventPage(DetailView):
                             event_id=event.pk,
                             slug=event.slug)
 
-        return super().get(request, event_id, slug)
+        contents = contents_for_item(
+            event, [RichText, Download, NoEmbed, LightBox])
+        return render(request, self.template_name, {
+            "event": event,
+            "content": {
+                region.key: mark_safe(
+                    "".join(self._render_elements(contents[region.key])))
+                for region in event.regions
+            },
+        })
 
-    def post(self, request, event_id, slug):  # noqa: D102
-        if request.user.is_authenticated:
-            # check if user in list of available volunteers for a workshop
-            volunteer = Volunteer.objects.get(user=request.user)
-            workshop_id = request.POST.get("workshop_id")
-            available = Workshop.objects.get(id=workshop_id).available
-
-            if volunteer in available.all():
-                available.remove(volunteer)
-            else:
-                available.add(volunteer)
-
-            return redirect('website:event_page', slug=slug, event_id=event_id)
+    def _render_elements(self, elements):
+        """Render django-content-editor elements."""
+        for element in elements:
+            if isinstance(element, RichText):
+                yield cms.render_rich_text(element)
+            elif isinstance(element, Download):
+                yield cms.render_download(element)
+            elif isinstance(element, NoEmbed):
+                yield cms.render_noembed(element)
+            elif isinstance(element, LightBox):
+                yield cms.render_lightbox(element)
 
 
 class RegistrationPage(CreateView):

@@ -3,6 +3,8 @@ set -euo pipefail
 
 # Entrypoint for production
 
+# You may need to run python manage.py makemigrations manually to update the database first
+
 # Create database
 python manage.py migrate --no-input --run-syncdb
 

@@ -14,8 +14,7 @@ def local2utc(local_datetime: datetime) -> datetime:
     return LOCAL_TZ.localize(local_datetime).astimezone(pytz.utc)
 
 
-def make_event(name, days_from_now, n_week, workshop_time: time, description,
-               prereq, period, location):
+def make_event(name, days_from_now, n_week, workshop_time: time, location):
     """
     Create event and associated weekly-occuring workshops.
 
@@ -24,9 +23,6 @@ def make_event(name, days_from_now, n_week, workshop_time: time, description,
         days_from_now: the days between today and the first workshop
         n_week: the number of weeks the event will run for
         workshop_time: the local time of the start of each workshop
-        description: event description
-        prereq: description of event prerequisites
-        period: the event period
         location: the location of each workshop
 
     Returns:
@@ -53,10 +49,7 @@ def make_event(name, days_from_now, n_week, workshop_time: time, description,
 
     event = Event(name=name,
                   start_date=local2utc(start_dt),
-                  finish_date=local2utc(finish_dt),
-                  description=description,
-                  prerequisite=prereq,
-                  period=period)
+                  finish_date=local2utc(finish_dt))
     event.save()
 
     # create workshops for each time

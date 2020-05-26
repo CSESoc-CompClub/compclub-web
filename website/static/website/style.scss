@@ -32,8 +32,36 @@ html, body {
     background-color: $banner-color;
 }
 
-.navbar {
-    // box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
+code {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: rgb(51, 51, 51);
+    padding: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    font-size: 100%;
+    border-radius: 1px;
+    width: auto;
+}
+
+.embed-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    margin: 7% 0;
+    min-height: 200px;
+    align-items: center;
+
+    > figcaption {
+        font-size: 16px;
+        padding-top: 10px;
+        color: #555555;
+    }
+}
+
+.download-button {
+    margin: 2% 0;
+    color: #fff !important;
 }
 
 .navbar-brand img {
@@ -427,7 +455,7 @@ a, a:visited, a:hover {
         color: $primary-color;
     }
 
-    input ~ .form-text-underline, {
+    input ~ .form-text-underline {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -436,6 +464,7 @@ a, a:visited, a:hover {
         background-color: $primary-color;
         transition: 0.3s;
     }
+
     input:focus ~ .form-text-underline {
         width: 100%;
         transition: 0.3s;
