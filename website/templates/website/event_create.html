@@ -22,16 +22,16 @@
     <div class="form-group">
       {{ form.name.label_tag }}
       {% if form.name.errors %}
-        {% comment %}With the custom filter "add_attr" we can put extra css
-        classes to this form field{% endcomment %}
-        {{ form.name|add_attrs:"placeholder:Event title, is-invalid" }}
-        {% for error in form.name.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
+      {% comment %}With the custom filter "add_attr" we can put extra css
+      classes to this form field{% endcomment %}
+      {{ form.name|add_attrs:"placeholder:Event title, is-invalid" }}
+      {% for error in form.name.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
       {% else %}
-        {{ form.name|add_attrs:"placeholder:Event title" }}
+      {{ form.name|add_attrs:"placeholder:Event title" }}
       {% endif %}
     </div>
 
@@ -40,14 +40,14 @@
       <div class="form-group col-md-4">
         {{ form.start_date.label_tag }}
         {% if form.start_date.errors %}
-          {{ form.start_date|add_attrs:"is-invalid" }}
-          {% for error in form.start_date.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
+        {{ form.start_date|add_attrs:"is-invalid" }}
+        {% for error in form.start_date.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
         {% else %}
-          {{ form.start_date }}
+        {{ form.start_date }}
         {% endif %}
         <small class="form-text text-muted">
           {{ form.start_date.help_text }}
@@ -57,14 +57,14 @@
       <div class="form-group col-md-4">
         {{ form.finish_date.label_tag }}
         {% if form.finish_date.errors %}
-          {{ form.finish_date|add_attrs:"is-invalid" }}
-          {% for error in form.finish_date.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
+        {{ form.finish_date|add_attrs:"is-invalid" }}
+        {% for error in form.finish_date.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
         {% else %}
-          {{ form.finish_date }}
+        {{ form.finish_date }}
         {% endif %}
         <small class="form-text text-muted">
           {{ form.finish_date.help_text }}
@@ -106,34 +106,6 @@
       {% endfor %}
       {% else %}
       {{ form.description }}
-      {% endif %}
-    </div>
-
-    <div class="form-group">
-      {{ form.prerequisite.label_tag }}
-      {% if form.prerequisite.errors %}
-      {{ form.prerequisite|add_attrs:"placeholder:Assumed knowledge,rows:3, cols:10, is-invalid" }}
-      {% for error in form.prerequisite.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
-      {% else %}
-      {{ form.prerequisite|add_attrs:"placeholder:Assumed knowledge,rows:3, cols:10" }}
-      {% endif %}
-    </div>
-
-    <div class="form-group">
-      {{ form.period.label_tag }}
-      {% if form.period.errors %}
-      {{ form.period|add_attrs:"rows:3, cols:10, is-invalid" }}
-      {% for error in form.period.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
-      {% else %}
-      {{ form.period|add_attrs:"rows:3, cols:10" }}
       {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Create</button>

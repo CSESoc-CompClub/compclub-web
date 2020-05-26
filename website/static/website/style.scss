@@ -2,23 +2,26 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,100');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
 @import url('https://fonts.googleapis.com/css?family=Cabin:300,400');
+@import url('https://fonts.googleapis.com/css2?family=Signika&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 
 $primary-color: #FFBC37;
 $primary-color-light: lighten($primary-color, 20%);
 $secondary-color: #007c70;
-$background-color: #262E40;
+$background-color: #ffffff;
 $error-color: #ff4949;
-$banner-color: #232c31;
-$dropdown-color: #2e3c44;
-$dropdown-highlight-color: rgb(51, 64, 95);
+$banner-color: #ffffff;
+$dropdown-color: #ffffff;
+$dropdown-highlight-color: #f7f4f4;
 
 $normal-text-size: 16px;
 $breakpoint-tablet: 768px;
 
 html, body {
+    font-family: 'Ubuntu', sans-serif;
     background-color: $background-color;
     font-size: $normal-text-size;
-    @extend .text-white;
 }
 
 .fas::before { // font-awesome icons
@@ -29,12 +32,40 @@ html, body {
     background-color: $banner-color;
 }
 
-.navbar {
-    box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
+code {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: rgb(51, 51, 51);
+    padding: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    font-size: 100%;
+    border-radius: 1px;
+    width: auto;
+}
+
+.embed-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    margin: 7% 0;
+    min-height: 200px;
+    align-items: center;
+
+    > figcaption {
+        font-size: 16px;
+        padding-top: 10px;
+        color: #555555;
+    }
+}
+
+.download-button {
+    margin: 2% 0;
+    color: #fff !important;
 }
 
 .navbar-brand img {
-     height: 60px;
+     height: 50px;
 }
 
 .navbar-items {
@@ -54,14 +85,14 @@ html, body {
 
 .dropdown-menu {
     background-color: $dropdown-color;
-    color: #ddd;
+    color: #000;
     box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 .dropdown-item {
-    color: #ddd;
+    color: #000;
     &:hover, &:focus {
         background-color: $dropdown-highlight-color;
-        color: #fff;
+        color: #000;
     }
 }
 
@@ -77,7 +108,7 @@ html, body {
 }
 
 .header {
-    color: rgba($color: #ffffff, $alpha: 0.9);
+    color: rgba($color: black, $alpha: 0.9);
     margin-left: 0;
     // margin-bottom: 10px;
     padding-top: 1.0rem;
@@ -92,8 +123,8 @@ html, body {
     font-family: 'Roboto', sans-serif;
     font-size: 48px;
     font-weight: 100;
-    color: white;
     padding-bottom: 10px;
+    color: black;
     // margin-bottom: 20px;
 
     @media (min-width: $breakpoint-tablet) {
@@ -135,10 +166,25 @@ html, body {
     width: 100%;
 }
 
+.index-date {
+    color: #B1B1B1;
+}
+
+.va {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.index-title {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: 600;
+    color: black;
+}
+
 .calendar {
     position: relative;
     display: block;
-    color: white;
+    color: black;
 
     @media (min-width: $breakpoint-tablet) {
         float: left;
@@ -225,6 +271,7 @@ a, a:visited, a:hover {
     color: inherit;
 }
 
+
 .event-card-container {
     padding: 24px 24px 12px;
     font-family: 'Open Sans', sans-serif;
@@ -236,6 +283,7 @@ a, a:visited, a:hover {
     font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 300;
+    color: black;
     position: relative;
     padding-bottom: 20px;
     margin-bottom: 16px;
@@ -256,10 +304,12 @@ a, a:visited, a:hover {
 .event-card-description {
     margin: 0;
     font-weight: 400;
+    color: black;
     line-height: 1.5;
 }
 
 .event-card-prereq {
+    color: black;
     margin-top: 8px;
     margin-bottom: 0px;
 }
@@ -353,6 +403,7 @@ a, a:visited, a:hover {
     .login-notice {
         font-family: 'Open Sans', sans-serif;
         font-size: 18px;
+        color: black;
     }
     .field-wrapper {
         position: relative;
@@ -361,7 +412,6 @@ a, a:visited, a:hover {
 
     .form-text-input {
         margin-top: 24px;
-        color: white;
         border: 0;
         padding: 4px 0;
         background-color: transparent;
@@ -394,7 +444,7 @@ a, a:visited, a:hover {
         display: block;
         font-size: 14px;
         margin: 0;
-        color: #f0f0f0;
+        color: black;
         position: absolute;
         top: 0;
         left: 0;
@@ -405,7 +455,7 @@ a, a:visited, a:hover {
         color: $primary-color;
     }
 
-    input ~ .form-text-underline, {
+    input ~ .form-text-underline {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -414,6 +464,7 @@ a, a:visited, a:hover {
         background-color: $primary-color;
         transition: 0.3s;
     }
+
     input:focus ~ .form-text-underline {
         width: 100%;
         transition: 0.3s;

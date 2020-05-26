@@ -60,7 +60,7 @@ class EventForm(ModelForm):
                                   params={
                                       'start_date': start_date,
                                       'finish_date': finish_date
-                                  })
+            })
 
 
 class WorkshopForm(ModelForm):
@@ -109,7 +109,6 @@ class WorkshopForm(ModelForm):
                 date=current_date,
                 start_time=cleaned_data.get('start_time'),
                 end_time=cleaned_data.get('end_time'),
-                description=cleaned_data.get('description'),
                 location=cleaned_data.get('location'))
             current_date += interval
 
@@ -130,7 +129,7 @@ class WorkshopForm(ModelForm):
             raise ValidationError(_(
                 'Workshop date cannot be earlier or later than the event dates'
             ),
-                                  code='invalid date')
+                code='invalid date')
 
         if cleaned_data.get('start_time') is None:
             raise ValidationError(_('Invalid workshop start time entered'),
@@ -186,7 +185,7 @@ class RegistrationForm(ModelForm):
             raise ValidationError(_(
                 'Phone number is invalid. Must be at least 8 characters long.'
             ),
-                                  code='invalid number')
+                code='invalid number')
 
 
 class VolunteerAssignForm(Form):

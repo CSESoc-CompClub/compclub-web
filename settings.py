@@ -22,6 +22,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'ckeditor',
+    'content_editor',
     'sass_processor',
     'compressor',
     'website.apps.WebsiteConfig',
@@ -103,6 +105,11 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'user-media')
+
+MEDIA_URL = '/user-media/'
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -123,7 +130,7 @@ COMPRESS_FILTERS = {
 }
 
 
-LOGIN_REDIRECT_URL = 'website:index'
+LOGIN_REDIRECT_URL = 'website:event_index'
 LOGOUT_REDIRECT_URL = 'website:index'
 
 AUTH_USER_MODEL = 'website.CustomUser'

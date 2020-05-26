@@ -1,93 +1,13 @@
 {% extends "website/default.html" %}
 
-{% block title %} {{ block.super }} - Event {% endblock %}
+{% block title %} {{ block.super }} - Workshop {% endblock %}
 
 {% block content %}
-  {{ block.super }}
+{{ block.super }}
 <div class="container">
   <div class="header">
-      <h1 class="title">{{ event.name }}</h1>
+    <h1 class="title">{{ event.name }}</h1>
   </div>
-  {% if perms.website.change_event %}
-    <a href="{% url 'website:assign_volunteers' slug=event.slug event_id=event.pk %}" class="event-button"><i class="fas fa-users"></i> Available Volunteers</a>
-  {% endif %}
-  <div class="event-detail-card">
-    <div class="event-card-container">
-      {% if user.is_staff %}
-        <p>
-          <a class="event-button"
-            href="{% url 'website:workshop_create' slug=event.slug event_id=event.pk %}">
-            <i class="fas fa-calendar-plus"></i> Create Workshop</a>
-          <a class="event-button"
-            href="{% url 'website:volunteer_email_preview' slug=event.slug event_id=event.pk %}">
-            <i class="fas fa-envelope-open"></i> Send status email</a>
-        </p>
-      {% endif %}
-      <h3 class="event-detail">Event Details</h3>
-      <p>
-        <b>Start date: </b>{{ event.start_date }}<br>
-        <b>Finish date: </b>{{ event.finish_date}}<br>
-        <b>Prerequisites: </b>{{ event.prerequisite }}<br>
-      </p>
-
-      <h3 class="event-detail">Description</h3>
-      <p>{{ event.description }}</p>
-
-      {% if not user.is_staff %}
-      <p>
-        <a class="event-button" href="{% url 'website:registration' slug=event.slug event_id=event.pk %}">
-          Register
-        </a>
-      </p>
-      {% endif %}
-
-      <h3 class="event-detail">Workshop Schedule</h3>
-      <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">Workshop Name</th>
-              <th scope="col">Workshop Time</th>
-              <th scope="col">Workshop Date</th>
-              <th scope="col">Workshop Location</th>
-              {% if request.user.is_authenticated %}
-              <th scope="col">Available</th>
-              {% endif %}
-            </tr>
-          </thead>
-      {% if workshops %}
-        {% for workshop in workshops %}
-            <tbody>
-              <tr class="table-active">
-                <td>{{ workshop.name }}</td>
-                <td>{{ workshop.start_time }} - {{ workshop.end_time }}</td>
-                <td>{{ workshop.date }}</td>
-                <td>{{ workshop.location }}</td>
-                {% if request.user.is_authenticated %}
-                <form method="POST"> {% csrf_token %}
-                  <input id="id_workshop_id" name="workshop_id" value="{{ workshop.id }}" type="hidden">
-                  <input id="id_username" name= "username" value="{{ request.user }}" type="hidden">
-                  <div class="round">
-                    <td>
-                  {% if available_list %}
-                    {% if workshop.id not in available_list %}
-                      <button class="btn btn-success" type="submit">Confirm</button></td>
-                    {% elif workshop.id in available_list %}
-                      <button class="btn btn-danger" type="submit">Cancel</button></td>
-                    {% endif %}
-                  {% else %}
-                    <button class="btn btn-success" type="submit">Confirm</button></td>  
-                  {% endif %}                        
-                  </div>
-                </form>  
-                {% endif %}
-              </tr>
-            </tbody>
-        {% endfor %}
-      {% else %}
-      <p>To be confirmed</p>
-      {% endif %}
-      </table>
-    </div>
-  </div>
+  <p>{{ content.main }}</p>
 </div>
 {% endblock %}
