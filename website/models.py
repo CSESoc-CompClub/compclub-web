@@ -55,15 +55,21 @@ def create_or_update_volunteer(sender, instance, created, **kwargs):
     instance.volunteer.save()
 
 
+class School(models.Model):
+    """Model representing a school."""
+
+    name = models.CharField(verbose_name='school name', max_length=50)
+
+    def __str__(self):
+        """Return a string representation of a school."""
+        return self.name
+
+
 class Student(models.Model):
-    """Model representing a student."""
+    """Model representing a school."""
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    number = models.CharField(verbose_name='phone number', max_length=15)
-    date_of_birth = models.DateField()
-    parent_email = models.EmailField()
-    parent_number = models.CharField(verbose_name='parent\'s phone number',
-                                     max_length=15)
+    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """Return a string representation of a student."""
