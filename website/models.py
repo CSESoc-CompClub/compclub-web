@@ -22,7 +22,6 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=200, blank=False)
     last_name = models.CharField(max_length=200, blank=False)
     email = models.EmailField(blank=False)
-    number = models.CharField(verbose_name="phone number", max_length=15)
 
 
 class Position(models.Model):
@@ -58,7 +57,22 @@ def create_or_update_volunteer(sender, instance, created, **kwargs):
 class School(models.Model):
     """Model representing a school."""
 
+    REGION_CHOICES = (
+        ('AU_QLD', 'Queensland'),
+        ('AU_NSW', 'New South Wales'),
+        ('AU_SA', 'South Australia'),
+        ('AU_NT', 'Northern Territory'),
+        ('AU_VIC', 'Victoria'),
+        ('AU_WA', 'Western Australia'),
+        ('AU_TAS', 'Tasmania'),
+        ('OT_NUL', 'Other - Unknown')
+    )
+
     name = models.CharField(verbose_name='school name', max_length=50)
+    region = models.CharField(verbose_name='wider govermental region',
+                              max_length=6,
+                              choices=REGION_CHOICES,
+                              default="OT_NUL")
 
     def __str__(self):
         """Return a string representation of a school."""

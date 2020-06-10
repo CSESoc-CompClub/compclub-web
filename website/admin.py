@@ -8,7 +8,7 @@ from django.db import models
 
 from website.models import (CustomUser, Download, Event, NoEmbed, Registration,
                             RichText, Volunteer, VolunteerAssignment, Workshop,
-                            LightBox)
+                            LightBox, Student, School)
 
 
 @admin.register(VolunteerAssignment)
@@ -34,7 +34,7 @@ class CustomUserAdmin(BaseUserAdmin):
     add_fieldsets = ((None, {
         'classes': ('wide', ),
         'fields': ('first_name', 'last_name', 'username', 'password1',
-                   'password2', 'email', 'number'),
+                   'password2', 'email'),
     }), )
 
     def get_inline_instances(self, request, obj=None):  # noqa: D102
@@ -91,3 +91,5 @@ class EventAdmin(ContentEditor):
 
 admin.site.register(Workshop)
 admin.site.register(Registration)
+admin.site.register(Student)
+admin.site.register(School)
