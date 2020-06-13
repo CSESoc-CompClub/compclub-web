@@ -15,13 +15,12 @@ class CustomUser(AbstractUser):
     """
     Extension of Django user model.
 
-    Makes email, first and last name fields compulsory. Adds phone number
-    field.
+    Makes email, first and last name fields compulsory.
     """
 
     first_name = models.CharField(max_length=200, blank=False)
     last_name = models.CharField(max_length=200, blank=False)
-    email = models.EmailField(blank=False)
+    email = models.EmailField(blank=False, unique=True)
 
 
 class Position(models.Model):
@@ -80,9 +79,9 @@ class School(models.Model):
 
 
 class Student(models.Model):
-    """Model representing a school."""
+    """Model representing a Student."""
 
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

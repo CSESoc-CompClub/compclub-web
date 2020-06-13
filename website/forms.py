@@ -4,9 +4,12 @@ import datetime
 import re
 
 from django import forms
-from django.forms import DateInput, Form, ModelForm, TimeInput, ValidationError
+from django.forms import (DateInput, Form, ModelForm, TimeInput,
+                          ValidationError)
 from django.utils.translation import gettext_lazy as _
-from website.models import Event, Registration, VolunteerAssignment, Workshop
+
+from website.models import (CustomUser, Event, Registration, Student,
+                            VolunteerAssignment, Workshop)
 
 
 class DatePicker(DateInput):
@@ -152,6 +155,65 @@ class WorkshopForm(ModelForm):
             self.make_recurring_workshops(datetime.timedelta(days=1))
         elif recurrence == 'WK':
             self.make_recurring_workshops(datetime.timedelta(days=7))
+
+
+class CreateUserForm(ModelForm):
+    """Create a new user."""
+
+    error_messages = {
+        'password_mismatch': _("The two password fields didn't match."),
+    }
+
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput,
+        help_text=_("Enter the same password as above."))
+
+    class Meta:  # noqa: D106
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email', 'username', 'password']
+        widgets = {
+            'password': forms.PasswordInput
+        }
+        help_texts = {
+            'email': 'An email that you will regularly check.',
+            'username': 'The name you will sign in with.'}
+
+    def clean_password2(self):
+        """Validate passwords match."""
+        password1 = self.cleaned_data.get("password")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
+
+    def save(self, commit=True):
+        """Save a new user."""
+        user = super(CreateUserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
+
+class CreateStudentForm(ModelForm):
+    """Create a student model."""
+
+    class Meta:  # noqa: D106
+        model = Student
+        exclude = ('user',)
+
+        widgets = {
+            'school': forms.Select(
+                attrs={
+                    'class': 'selectpicker form-control',
+                    'data-live-search': 'true',
+                    'data-size': '5'}
+            ),
+        }
 
 
 class RegistrationForm(ModelForm):

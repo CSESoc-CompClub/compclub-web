@@ -14,6 +14,7 @@ $error-color: #ff4949;
 $banner-color: #ffffff;
 $dropdown-color: #ffffff;
 $dropdown-highlight-color: #f7f4f4;
+$secondary-font-color: #7e7e7e;
 
 $normal-text-size: 16px;
 $breakpoint-tablet: 768px;
@@ -432,7 +433,7 @@ a, a:visited, a:hover {
         }
     }
 
-    input[type=text], input[type=password] {
+    input[type=text], input[type=password], input[type=email] {
         @extend .form-text-input;
     }
 
@@ -453,6 +454,10 @@ a, a:visited, a:hover {
     // when corresponding textbox is in focus
     input:focus ~ label {
         color: $primary-color;
+    }
+
+    .help {
+        color: $secondary-font-color;
     }
 
     input ~ .form-text-underline {
