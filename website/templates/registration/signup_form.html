@@ -9,7 +9,7 @@
   </div>
   <div class="login-container">
     <form class="login-form" method="post">
-      <p class="login-notice">Sign up to CompClub as a student!</p>
+      <p class="login-notice">Sign up to CompClub to access all our workshops!</p>
         {% csrf_token %}
         <fieldset>
           {% comment %} {{ user_form.as_p }} {% endcomment %}
@@ -38,8 +38,10 @@
 
           {% for field in student_form.visible_fields %}
           <div class="field-wrapper">
-            {{ field }}
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <div style="padding-top: 5%;">
+              {{ field }}
+            </div>
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
           </div>
           {% if field.help_text %}
             <p class="help">{{ field.help_text|safe }}</p>

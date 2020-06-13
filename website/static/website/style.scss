@@ -157,6 +157,7 @@ code {
 
 .event-list {
     padding: 2.0rem 0 0;
+    color:black;
 
     @media (min-width: $breakpoint-tablet) {
         padding: 2.0rem 0 0 5%;
@@ -317,6 +318,7 @@ a, a:visited, a:hover {
 
 .event-card-footer {
     border-top: 1px solid #a0a0a0;
+    color: white;
     margin: 12px 0 0;
     position: relative;
     width: 100%;
@@ -458,6 +460,7 @@ a, a:visited, a:hover {
 
     .help {
         color: $secondary-font-color;
+        font-size: 14px;
     }
 
     input ~ .form-text-underline {

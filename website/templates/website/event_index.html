@@ -12,6 +12,7 @@
       Event</a>
     {% endif %}
   </div>
+  {% if user.is_authenticated %}
   <div class="event-list">
     {% if events_list %}
     {% for event in events_list %}
@@ -55,6 +56,11 @@
     <h2>There aren't any events at this time</h2>
     <p>Stay tuned for future events!</p>
   </div>
+  {% endif %}
+  {% else %} 
+  <div class="event-list">
+    <h3>Please login/sign up to gain access to our winter workshops.</h3>
+  </div> 
   {% endif %}
 </div>
 {% endblock %}
