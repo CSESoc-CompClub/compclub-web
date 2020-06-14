@@ -166,15 +166,28 @@ class CreateUserForm(ModelForm):
 
     password2 = forms.CharField(
         label=_("Password confirmation"),
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
         help_text=_("Enter the same password as above."))
 
     class Meta:  # noqa: D106
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'username', 'password']
         widgets = {
-            'password': forms.PasswordInput
-        }
+            'first_name': forms.TextInput(
+                attrs={
+                    'autocomplete': 'given-name'}),
+            'last_name': forms.TextInput(
+                attrs={
+                    'autocomplete': 'family-name'}),
+            'username': forms.TextInput(
+                attrs={
+                    'autocomplete': 'username'}),
+            'email': forms.EmailInput(
+                attrs={
+                    'autocomplete': 'email'}),
+            'password': forms.PasswordInput(
+                attrs={
+                    'autocomplete': 'new-password'})}
         help_texts = {
             'email': 'An email that you will regularly check.',
             'username': 'The name you will sign in with.'}
@@ -219,6 +232,21 @@ class CreateStudentForm(ModelForm):
                     'data-size': '5'}
             ),
         }
+
+        labels = {
+            'email_consent': (
+                'I agree to be sent email related to CompClub ' +
+                'using my provided email.')
+        }
+
+    def clean_email_consent(self):
+        """Require email consent."""
+        email_consent = self.cleaned_data.get("email_consent")
+        if not email_consent:
+            raise forms.ValidationError(
+                'You must agree to receive emails from CompClub.')
+
+        return email_consent
 
 
 class RegistrationForm(ModelForm):

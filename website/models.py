@@ -2,8 +2,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
 from django.utils.text import slugify
 
 from content_editor.models import Region, create_plugin_base
@@ -45,12 +45,12 @@ class Volunteer(models.Model):
         return f"{self.user.username} ({self.user.first_name} {self.user.last_name})"  # noqa: E501
 
 
-@receiver(post_save, sender=get_user_model())
-def create_or_update_volunteer(sender, instance, created, **kwargs):
-    """Post save hook after user/volunteer is saved."""
-    if created:
-        Volunteer.objects.create(user=instance)
-    instance.volunteer.save()
+# @receiver(post_save, sender=get_user_model())
+# def create_or_update_volunteer(sender, instance, created, **kwargs):
+#     """Post save hook after user/volunteer is saved."""
+#     if created:
+#         Volunteer.objects.create(user=instance)
+#     instance.volunteer.save()
 
 
 class School(models.Model):
@@ -83,10 +83,14 @@ class Student(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
+    email_consent = models.BooleanField(default=False)
 
     def __str__(self):
         """Return a string representation of a student."""
-        return self.user.first_name
+        return (
+            f"{self.user.first_name} {self.user.last_name}" +
+            f" ({self.user.username})"
+        )
 
 
 class Event(models.Model):

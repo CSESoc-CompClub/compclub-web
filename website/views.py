@@ -20,6 +20,7 @@ from django.utils.html import mark_safe
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
+from django.contrib.auth import authenticate, login
 
 from website.forms import (CreateStudentForm, CreateUserForm, EventForm,
                            RegistrationForm, VolunteerAssignForm, WorkshopForm)
@@ -170,7 +171,6 @@ class SignUpPage(CreateView):
     def post(self, request, *args, **kwargs):
         """Handle both form requests."""
         ctx = {}
-
         user_form = CreateUserForm(data=request.POST)
         student_form = CreateStudentForm(data=request.POST)
 
@@ -179,9 +179,11 @@ class SignUpPage(CreateView):
             student = student_form.save(commit=False)
             student.user = user
             student.save()
-        else:
-            ctx["user_form"] = CreateUserForm(request.POST)
-            ctx["student_form"] = CreateStudentForm(request.POST)
+            login(request, user)
+            return redirect('website:event_index')
+
+        ctx["user_form"] = CreateUserForm(request.POST)
+        ctx["student_form"] = CreateStudentForm(request.POST)
 
         return render(
             request,
