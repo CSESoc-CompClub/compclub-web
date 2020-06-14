@@ -206,6 +206,11 @@ class CreateStudentForm(ModelForm):
         model = Student
         exclude = ('user',)
 
+        help_texts = {
+            'school': (
+                'If you are home schooled put Home School. ' +
+                'If your school isn\'t in the list put Other.')}
+
         widgets = {
             'school': forms.Select(
                 attrs={
