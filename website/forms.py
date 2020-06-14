@@ -200,9 +200,16 @@ class CreateUserForm(ModelForm):
         help_texts = {
             'email': 'An email that you will regularly check.',
             'username': 'The name you will sign in with.'}
-        validators = {
-            'password': validate_password
-        }
+
+    def clean_password(self):
+        """Validate password."""
+        password1 = self.cleaned_data.get("password")
+        try:
+            validate_password(password1, self.instance)
+        except forms.ValidationError as error:
+            self.add_error('password', error)
+
+        return password1
 
     def clean_password2(self):
         """Validate passwords match."""
