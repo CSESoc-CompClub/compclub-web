@@ -11,7 +11,10 @@ from datetime import datetime
 from smtplib import SMTPSenderRefused
 
 from content_editor.contents import contents_for_item
+from django.contrib.auth import login
+from django.contrib.auth.models import Group
 from django.core.mail import BadHeaderError, send_mass_mail
+from django.db import transaction
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -20,7 +23,6 @@ from django.utils.html import mark_safe
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
-from django.contrib.auth import authenticate, login
 
 from website.forms import (CreateStudentForm, CreateUserForm, EventForm,
                            RegistrationForm, VolunteerAssignForm, WorkshopForm)
@@ -174,13 +176,23 @@ class SignUpPage(CreateView):
         user_form = CreateUserForm(data=request.POST)
         student_form = CreateStudentForm(data=request.POST)
 
-        if user_form.is_valid() and student_form.is_valid():
-            user = user_form.save()
-            student = student_form.save(commit=False)
-            student.user = user
-            student.save()
-            login(request, user)
-            return redirect('website:event_index')
+        with transaction.atomic():
+            if user_form.is_valid() and student_form.is_valid():
+                # Create user
+                user = user_form.save()
+
+                student_group, _existed = Group.objects.get_or_create(
+                    name="default_student")
+                user.groups.add(student_group)
+
+                # Create student
+                student = student_form.save(commit=False)
+                student.user = user
+                student.save()
+
+                # Sign in and redirect
+                login(request, user)
+                return redirect('website:event_index')
 
         ctx["user_form"] = CreateUserForm(request.POST)
         ctx["student_form"] = CreateStudentForm(request.POST)

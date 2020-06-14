@@ -11,6 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from website.models import (CustomUser, Event, Registration, Student,
                             VolunteerAssignment, Workshop)
 
+from django.contrib.auth.password_validation import validate_password
+
 
 class DatePicker(DateInput):
     """DatePicker Form Field. Used to select a date in a form."""
@@ -160,6 +162,13 @@ class WorkshopForm(ModelForm):
 class CreateUserForm(ModelForm):
     """Create a new user."""
 
+    def __init__(self, *args, **kwargs):  # noqa: D107
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        # adding ".form-control" class to all fields so that they are styled by
+        # bootstrap.css
+        for field in self:
+            field.field.widget.attrs['class'] = 'form-control'
+
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
     }
@@ -191,6 +200,9 @@ class CreateUserForm(ModelForm):
         help_texts = {
             'email': 'An email that you will regularly check.',
             'username': 'The name you will sign in with.'}
+        validators = {
+            'password': validate_password
+        }
 
     def clean_password2(self):
         """Validate passwords match."""
@@ -214,6 +226,16 @@ class CreateUserForm(ModelForm):
 
 class CreateStudentForm(ModelForm):
     """Create a student model."""
+
+    def __init__(self, *args, **kwargs):  # noqa: D107
+        super(CreateStudentForm, self).__init__(*args, **kwargs)
+        # adding ".form-control" class to all fields so that they are styled by
+        # bootstrap.css
+        for field in self:
+            if field.field.widget.attrs.get('class', None):
+                field.field.widget.attrs['class'] += ' form-control'
+            else:
+                field.field.widget.attrs['class'] = 'form-control'
 
     class Meta:  # noqa: D106
         model = Student
