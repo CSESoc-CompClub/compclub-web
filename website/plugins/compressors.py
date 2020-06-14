@@ -8,12 +8,11 @@ from django.core.files import File
 def compress_image(image, return_bytes=False):
     """Convert and compress an image."""
     pillow_image = Image.open(image)
-    pillow_image.thumbnail((1000, 1000), Image.ANTIALIAS)
     image_bytes_io = BytesIO()
+    pillow_image.thumbnail((1000, 1000), Image.ANTIALIAS)
 
     if pillow_image.format == "PNG":
-        pillow_image = pillow_image.quantize(method=2)
-        pillow_image.save(image_bytes_io, 'PNG')
+        pillow_image.save(image_bytes_io, 'PNG', optimize=True)
     else:
         pillow_image.save(image_bytes_io, 'JPEG', quality=85)
 
