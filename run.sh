@@ -9,7 +9,7 @@ set -euo pipefail
 python manage.py migrate --no-input --run-syncdb
 
 # Clear old static folder
-rm -r ./static
+rm -r ./static || true
 mkdir -p static
 
 # roll up static files
