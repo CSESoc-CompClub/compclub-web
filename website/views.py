@@ -53,6 +53,17 @@ class Index(ListView):
     model = Event
     template_name = 'website/index.html'
 
+    def get_context_data(self, **kwargs):
+        """Return current/future events sorted by start date."""
+        context = super().get_context_data(**kwargs)
+
+        context['events_list'] = Event.objects.filter(
+            highlighted_event=True,
+            finish_date__gte=datetime.now()
+        ) .order_by('start_date')
+
+        return context
+
 
 class EventIndex(ListView):
     """

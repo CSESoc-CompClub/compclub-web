@@ -44,52 +44,7 @@
   </div>
 </section>
 
-<section id="workshops" class="container" style="padding-top: 3rem;">
-  <h1 class="index-title" style="text-align: center;">WORKSHOPS</h1>
-
-  <div class="container">
-    <!-- Game Dev -->
-    <div class="row py-4">
-      <div class="col-12 col-lg-6 col-xl-6">
-        <img src="{% static 'website/index/gamedev.png' %}" alt="Gamedev image" class="img-fluid" style="background: linear-gradient(123.24deg, #BD54C7 -0.1%, #25028E 72.24%); border-radius: 2%;">
-      </div>
-      <div class="col-12 col-lg-6 col-xl-5 offset-xl-1">
-        <hr class="section-heading-spacer">
-        <h2 class="index-title">Introduction to Game Development</h2>
-        <div class="lead">This workshop allows students to unleash their full creative imaginations as we explore how to make our very own versions of games like "Snappy Bird" and “RecBot” </div>
-        <button type="button" class="event-button"><a href="../online_workshops/gamedev/"> Click here to learn!</a></button>
-      </div>
-    </div>
-
-    <!-- Web Dev -->
-    <div class="row py-4">
-      <div class="col-12 col-lg-6 col-xl-6 offset-xl-1 order-0 order-lg-1 order-xl-1">
-          <img src="{% static 'website/index/webdev.png' %}" alt="Webdev image" class="img-fluid" style="background: linear-gradient(123.24deg, #BD54C7 -0.1%, #25028E 72.24%); border-radius: 2%;">
-      </div>
-      <div class="col-12 col-lg-6 col-xl-5 text-lg-right text-xl-right order-1 order-lg-0 order-xl-0">
-        <hr class="section-heading-spacer">
-        <div class="clearfix"></div>
-        <h2 class="index-title">Introduction to Web Development</h2>
-        <div class="lead">Students will uncover the true colours of a website behind its pages, pictures and links, as we guide you through all the nooks, crannies and secrets of web design. </div>
-        <button type="button" class="event-button"><a href="../online_workshops/webdev"> Click here to learn!</a></button>
-      </div>
-    </div>
-
-
-    <!-- Cyber Security -->
-    <div class="row py-4">
-      <div class="col-12 col-lg-6 col-xl-6">
-        <img src="{% static 'website/index/gamedev.png' %}" alt="Gamedev image" class="img-fluid" style="background: linear-gradient(123.24deg, #BD54C7 -0.1%, #25028E 72.24%); border-radius: 2%;">
-      </div>
-      <div class="col-12 col-lg-6 col-xl-5 offset-xl-1">
-        <hr class="section-heading-spacer">
-        <h2 class="index-title">Introduction to Cyber Security</h2>
-        <div class="lead">This workshop introduces students to a variety of different ciphers that are used in modern day programs to enhance security. </div>
-        <button type="button" class="event-button"><a href="../online_workshops/security"> Click here to learn!</a></button>
-      </div>
-    </div>
-  </div>
-</section>
+{% include 'website/components/highlighted_events.html' %}
 
 <section id="initiatives" class="container" style="padding-top: 3rem;">
   <h1 class="index-title text-center">PAST INITIATIVES</h1>

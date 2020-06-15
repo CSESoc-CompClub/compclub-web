@@ -1,0 +1,32 @@
+
+{% load static %}
+
+<!-- Highlighted events. Requires Event model object -->
+<section id="workshops" class="container" style="padding-top: 3rem;">
+  <h1 class="index-title" style="text-align: center;">WORKSHOPS</h1>
+  
+  <div class="container">
+    {% if events_list %}
+      {% for event in events_list %}
+      <div class="row py-4">
+        <div class="col-12 col-lg-6 col-xl-6 {% cycle 'order-0' 'order-0 order-lg-1 order-xl-1 offset-lg-1 offset-xl-1' %}">
+          <img src="{{ event.display_image.url }}" alt="Gamedev image" class="img-fluid" style="background: linear-gradient(123.24deg, #BD54C7 -0.1%, #25028E 72.24%); border-radius: 2%;">
+        </div>
+        <div class="col-12 col-lg-6 col-xl-5 {% cycle 'order-1 order-lg-1 order-xl-1 offset-lg-1 offset-xl-1' 'order-1 order-lg-0 order-xl-0 text-lg-right text-xl-right' %}">
+          <hr class="section-heading-spacer">
+          <h2 class="index-title">{{ event.name }}</h2>
+          <div class="lead">{{ event.description }}</div>
+          <a href="{% url 'website:event_page' slug='event' event_id=event.id %}"> <button type="button" role="link" class="event-button">Click here to learn!</button></a>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>Looks like there aren't any highlighted workshops right now. You can check the <a href="{% url 'website:event_index' %}">events calendar</a> or sign up below to stay updated with our events.</p>
+      <form class="input-group">
+        <input type="text" class="form-control form-control-sm" placeholder="Email Address" aria-label="Email address">
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-dark my-0" type="button">Subscribe</button>
+        </div>
+      </form>
+    {% endif %}
+</section>
