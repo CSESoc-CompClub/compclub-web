@@ -186,6 +186,13 @@ code {
 
 .navbar-light .navbar-nav .nav-link {
     color: $secondary-font-color;
+    @include media-breakpoint-down(md) {
+        padding: 5px;
+    }
+}
+
+.navbar-toggler-icon {
+    background-image: url('/static/toggler.svg') !important;
 }
 
 .va {
