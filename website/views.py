@@ -23,6 +23,8 @@ from django.utils.html import mark_safe
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import Http404
 
 from website.forms import (CreateStudentForm, CreateUserForm, EventForm,
                            RegistrationForm, VolunteerAssignForm, WorkshopForm)
@@ -82,7 +84,7 @@ class EventIndex(ListView):
         return context
 
 
-class EventPage(DetailView):
+class EventPage(PermissionRequiredMixin, DetailView):
     """
     Render and show event detail page to the user.
 
@@ -102,6 +104,7 @@ class EventPage(DetailView):
     model = Event
     context_object_name = 'event'
     template_name = 'website/event.html'
+    permission_required = ("website.event.can_view")
 
     def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
@@ -137,6 +140,11 @@ class EventPage(DetailView):
                 yield cms.render_noembed(element)
             elif isinstance(element, LightBox):
                 yield cms.render_lightbox(element)
+
+    def handle_no_permission(self):
+        """Redirect if no permissions to view page."""
+        raise Http404(
+            "Event does not exist or you don't have permissions to view the event.")  # noqa: E501
 
 
 class SignUpPage(CreateView):

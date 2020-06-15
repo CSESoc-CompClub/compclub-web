@@ -31,6 +31,11 @@ html, body {
 
 .banner, .navbar {
     background-color: $banner-color;
+
+    a, a:visited, a:hover {
+        text-decoration: none;
+        color: inherit;
+    }
 }
 
 code {
@@ -268,9 +273,11 @@ code {
     }
 }
 
-a, a:visited, a:hover {
-    text-decoration: none;
-    color: inherit;
+
+
+a {
+    color: $secondary-color;
+    &:hover, &:focus { color: $primary-color; }
 }
 
 
@@ -349,6 +356,11 @@ a, a:visited, a:hover {
         box-shadow: 0px 5px 12px 2px rgba(0, 0, 0, 0.2);
         color: white;
         outline: 0;
+    }
+
+    a, a:visited, a:hover {
+        text-decoration: none;
+        color: inherit;
     }
 }
 
