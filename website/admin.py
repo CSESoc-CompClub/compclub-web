@@ -7,34 +7,34 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.db import models
 
 from website.models import (CustomUser, Download, Event, NoEmbed, Registration,
-                            RichText, Volunteer, VolunteerAssignment, Workshop,
-                            LightBox)
+                            RichText, Workshop,
+                            LightBox, Student, School)
 
 
-@admin.register(VolunteerAssignment)
-class VolunteerAssignmentAdmin(admin.ModelAdmin):  # noqa: D101
-    pass
+# @admin.register(VolunteerAssignment)
+# class VolunteerAssignmentAdmin(admin.ModelAdmin):  # noqa: D101
+#     pass
 
 
-class VolunteerInline(admin.StackedInline):
-    """Show volunteer admin form with the user form."""
+# class VolunteerInline(admin.StackedInline):
+#     """Show volunteer admin form with the user form."""
 
-    model = Volunteer
-    can_delete = False
-    verbose_name_plural = "volunteer"
-    fk_name = "user"
+#     model = Volunteer
+#     can_delete = False
+#     verbose_name_plural = "volunteer"
+#     fk_name = "user"
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
     """Custom user settings and configuration page in the admin panel."""
 
-    inlines = (VolunteerInline, )
+    # inlines = (VolunteerInline, )
 
     add_fieldsets = ((None, {
         'classes': ('wide', ),
         'fields': ('first_name', 'last_name', 'username', 'password1',
-                   'password2', 'email', 'number'),
+                   'password2', 'email'),
     }), )
 
     def get_inline_instances(self, request, obj=None):  # noqa: D102
@@ -91,3 +91,5 @@ class EventAdmin(ContentEditor):
 
 admin.site.register(Workshop)
 admin.site.register(Registration)
+admin.site.register(Student)
+admin.site.register(School)

@@ -1,0 +1,12 @@
+{% extends "website/default.html" %}
+
+{% block title %} {{ block.super }} - Page Not Found {% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="row">
+  <div class="col text-center">
+    <h1 class='my-5'>That page doesn't exist or you don't have access to it yet.</h1>
+    <p>You can try <a href="{% url 'website:login' %}">logging in</a>/<a href="{% url 'website:signup' %}">signing up</a> if you aren't already.</p>
+  </div>
+</div>
+{% endblock %}

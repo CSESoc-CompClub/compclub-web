@@ -8,11 +8,19 @@ set -euo pipefail
 # Create database
 python manage.py migrate --no-input --run-syncdb
 
+# Clear old static folder
+rm -r ./static || true
+mkdir -p static
+
 # roll up static files
 python manage.py collectstatic --clear --no-input
 
 # Compress and compile the stylesheets
 python manage.py compress --force
+
+# Compress the images
+python manage.py compress_images ./static/website
+
 
 # Clean up
 find ./static -name "*.scss" -type f -delete

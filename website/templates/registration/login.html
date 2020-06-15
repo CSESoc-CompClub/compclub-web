@@ -18,8 +18,8 @@
           {% endfor %}
           {% for field in form.visible_fields %}
           <div class="field-wrapper">
-            {{ field }}
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
             <span class="form-text-underline"></span>
           </div>
           {% if field.help_text %}

@@ -1,5 +1,5 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-light navbar-expand-lg">
   <div class="navbar-header">
     <a href="{% url 'website:index' %}" class="navbar-brand" href="#home">
       <img src="{% static 'website/index/compclub-logo.png' %}" alt="CSESoc CompClub" class="img-responsive"
@@ -57,6 +57,9 @@
       {% else %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'website:login' %}">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'website:signup' %}">Sign Up</a>
       </li>
 
       {% endif %}

@@ -5,9 +5,6 @@ import datetime
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import localtime
-from website import models
-from website.forms import EventForm, VolunteerAssignForm, WorkshopForm
-from website.models import CustomUser, VolunteerAssignment, Workshop
 
 from .management.commands.load_dummy_data import make_event
 
@@ -100,252 +97,252 @@ class EventIndexViewTests(TestCase):
         self.assertEqual(len(response.context['events_list']), 1)
         self.assertContains(response, event.name)
 
+# NOTE: Disable these tests until Events are frozen
+# class EventFormTest(TestCase):
+#     """Test event form."""
 
-class EventFormTest(TestCase):
-    """Test event form."""
+#     @classmethod
+#     def setUp(cls):  # noqa: D102
+#         cls.owner = models.CustomUser.objects.create_superuser(username='su',
+#                                                                email='',
+#                                                                password='1234')
 
-    @classmethod
-    def setUp(cls):  # noqa: D102
-        cls.owner = models.CustomUser.objects.create_superuser(username='su',
-                                                               email='',
-                                                               password='1234')
+#     def test_event_create_valid(self):  # noqa: D102
+#         form_data = {
+#             'name': 'Intro to Python',
+#             'start_date': '2018-01-01',
+#             'finish_date': '2018-04-30',
+#             'owner': '1',
+#             'slug': 'Intro-to-Python'
+#         }
+#         form = EventForm(data=form_data)
+#         self.assertTrue(form.is_valid())
 
-    def test_event_create_valid(self):  # noqa: D102
-        form_data = {
-            'name': 'Intro to Python',
-            'start_date': '2018-01-01',
-            'finish_date': '2018-04-30',
-            'owner': '1',
-            'slug': 'Intro-to-Python'
-        }
-        form = EventForm(data=form_data)
-        self.assertTrue(form.is_valid())
+#     def test_event_create_invalid_dates(self):  # noqa: D102
+#         form_data = {
+#             'name': 'Intro to Python',
+#             'start_date': '2018-04-30',
+#             'finish_date': '2018-04-29',
+#             'owner': '1',
+#             'slug': 'Intro-to-Python'
+#         }
+#         form = EventForm(data=form_data)
+#         self.assertFalse(form.is_valid())
 
-    def test_event_create_invalid_dates(self):  # noqa: D102
-        form_data = {
-            'name': 'Intro to Python',
-            'start_date': '2018-04-30',
-            'finish_date': '2018-04-29',
-            'owner': '1',
-            'slug': 'Intro-to-Python'
-        }
-        form = EventForm(data=form_data)
-        self.assertFalse(form.is_valid())
+#     def test_event_create_invalid_name(self):  # noqa: D102
+#         form_data = {
+#             'name':
+#             'Name that exceeds 100 characters.........................'
+#             '................................................................',
+#             'start_date':
+#             '2018-04-30',
+#             'finish_date':
+#             '2018-04-29',
+#             'owner':
+#             '1',
+#             'slug':
+#             'Name-that-exceeds-100-characters.........................'
+#             '................................................................',
+#         }
+#         form = EventForm(data=form_data)
+#         self.assertFalse(form.is_valid())
 
-    def test_event_create_invalid_name(self):  # noqa: D102
-        form_data = {
-            'name':
-            'Name that exceeds 100 characters.........................'
-            '................................................................',
-            'start_date':
-            '2018-04-30',
-            'finish_date':
-            '2018-04-29',
-            'owner':
-            '1',
-            'slug':
-            'Name-that-exceeds-100-characters.........................'
-            '................................................................',
-        }
-        form = EventForm(data=form_data)
-        self.assertFalse(form.is_valid())
+# NOTE: Disable these tests until Workshops are re-enabled
+# class WorkshopFormTest(TestCase):
+#     """Test workshop form."""
 
+#     def setUp(self):  # noqa: D102
+#         form_data = {
+#             'name': 'Intro to Python',
+#             'start_date': '2018-10-31',
+#             'finish_date': '2018-11-08',
+#             'owner': '1',
+#             'slug': 'Intro-to-Python'
+#         }
+#         self.owner = CustomUser.objects.create_superuser(username='su',
+#                                                          email='',
+#                                                          password='1234')
+#         self.event = EventForm(data=form_data).save()
 
-class WorkshopFormTest(TestCase):
-    """Test workshop form."""
+#     def test_workshop_create_valid(self):  # noqa: D102
+#         form_data = {
+#             'event': '1',
+#             'name': 'workshop name',
+#             'date': '2018-10-31',
+#             'start_time': '22:59',
+#             'end_time': '23:59',
+#             'location': 'k17 seminar room',
+#             'repeat_workshop': 'NO'
+#         }
+#         form = WorkshopForm(data=form_data)
+#         self.assertTrue(form.is_valid())
 
-    def setUp(self):  # noqa: D102
-        form_data = {
-            'name': 'Intro to Python',
-            'start_date': '2018-10-31',
-            'finish_date': '2018-11-08',
-            'owner': '1',
-            'slug': 'Intro-to-Python'
-        }
-        self.owner = CustomUser.objects.create_superuser(username='su',
-                                                         email='',
-                                                         password='1234')
-        self.event = EventForm(data=form_data).save()
+#     def test_workshop_create_invalid_name(self):  # noqa: D102
+#         form_data = {
+#             'event': '1',
+#             'name': 'long name..............................................'
+#             '................................................................',
+#             'date': '2018-10-31',
+#             'start_time': '22:59',
+#             'end_time': '23:59',
+#             'location': 'k17 seminar room',
+#             'repeat_workshop': 'NO'
+#         }
+#         form = WorkshopForm(data=form_data)
+#         self.assertFalse(form.is_valid())
 
-    def test_workshop_create_valid(self):  # noqa: D102
-        form_data = {
-            'event': '1',
-            'name': 'workshop name',
-            'date': '2018-10-31',
-            'start_time': '22:59',
-            'end_time': '23:59',
-            'location': 'k17 seminar room',
-            'repeat_workshop': 'NO'
-        }
-        form = WorkshopForm(data=form_data)
-        self.assertTrue(form.is_valid())
+#     def test_workshop_create_invalid_time(self):  # noqa: D102
+#         form_data = {
+#             'event': '1',
+#             'name': 'workshop name',
+#             'date': '2018-10-32',
+#             'start_time': '22:59',
+#             'end_time': '23:59',
+#             'location': 'k17 seminar room',
+#             'repeat_workshop': 'NO'
+#         }
+#         form = WorkshopForm(data=form_data)
+#         self.assertFalse(form.is_valid())
 
-    def test_workshop_create_invalid_name(self):  # noqa: D102
-        form_data = {
-            'event': '1',
-            'name': 'long name................................................'
-            '................................................................',
-            'date': '2018-10-31',
-            'start_time': '22:59',
-            'end_time': '23:59',
-            'location': 'k17 seminar room',
-            'repeat_workshop': 'NO'
-        }
-        form = WorkshopForm(data=form_data)
-        self.assertFalse(form.is_valid())
+#     def test_workshop_create_no_recurring(self):  # noqa: D102
+#         form_data = {
+#             'event': '1',
+#             'name': 'workshop name',
+#             'date': '2018-10-31',
+#             'start_time': '22:59',
+#             'end_time': '23:59',
+#             'location': 'k17 seminar room',
+#             'repeat_workshop': 'NO'
+#         }
+#         form = WorkshopForm(data=form_data)
+#         form.save()
+#         self.assertTrue(len(Workshop.objects.all()) == 1)
 
-    def test_workshop_create_invalid_time(self):  # noqa: D102
-        form_data = {
-            'event': '1',
-            'name': 'workshop name',
-            'date': '2018-10-32',
-            'start_time': '22:59',
-            'end_time': '23:59',
-            'location': 'k17 seminar room',
-            'repeat_workshop': 'NO'
-        }
-        form = WorkshopForm(data=form_data)
-        self.assertFalse(form.is_valid())
+#     def test_workshop_create_recurring_daily(self):  # noqa: D102
+#         form_data = {
+#             'event': '1',
+#             'name': 'workshop name',
+#             'date': '2018-10-31',
+#             'start_time': '22:59',
+#             'end_time': '23:59',
+#             'location': 'k17 seminar room',
+#             'repeat_workshop': 'DL'
+#         }
+#         form = WorkshopForm(data=form_data)
+#         form.save()
+#         self.assertTrue(len(Workshop.objects.all()) ==
+#                         9)  # 8 days inclusive between 31/10 and 8/11
 
-    def test_workshop_create_no_recurring(self):  # noqa: D102
-        form_data = {
-            'event': '1',
-            'name': 'workshop name',
-            'date': '2018-10-31',
-            'start_time': '22:59',
-            'end_time': '23:59',
-            'location': 'k17 seminar room',
-            'repeat_workshop': 'NO'
-        }
-        form = WorkshopForm(data=form_data)
-        form.save()
-        self.assertTrue(len(Workshop.objects.all()) == 1)
-
-    def test_workshop_create_recurring_daily(self):  # noqa: D102
-        form_data = {
-            'event': '1',
-            'name': 'workshop name',
-            'date': '2018-10-31',
-            'start_time': '22:59',
-            'end_time': '23:59',
-            'location': 'k17 seminar room',
-            'repeat_workshop': 'DL'
-        }
-        form = WorkshopForm(data=form_data)
-        form.save()
-        self.assertTrue(len(Workshop.objects.all()) ==
-                        9)  # 8 days inclusive between 31/10 and 8/11
-
-    def test_workshop_create_recurring_weekly(self):  # noqa: D102
-        form_data = {
-            'event': '1',
-            'name': 'workshop name',
-            'date': '2018-11-01',
-            'start_time': '22:59',
-            'end_time': '23:59',
-            'location': 'k17 seminar room',
-            'repeat_workshop': 'WK'
-        }
-        form = WorkshopForm(data=form_data)
-        form.save()
-        self.assertTrue(len(Workshop.objects.all()) == 2)
-
-
-class EventCreateViewTest(TestCase):
-    """Test event create view."""
-
-    @classmethod
-    def setUpTestData(cls):  # noqa: D102
-        cls.su = models.CustomUser.objects.create_superuser(username='su',
-                                                            email='',
-                                                            password='1234')
-
-    def test_call_view_denies_non_staff(self):  # noqa: D102
-        expected_redirect_url = f"{reverse('admin:login')}?next={reverse('website:event_create')}"  # noqa: E501
-        response = self.client.get(reverse('website:event_create'),
-                                   follow=True)
-        self.assertRedirects(response, expected_redirect_url)
-        response = self.client.post(reverse('website:event_create'),
-                                    follow=True)
-        self.assertRedirects(response, expected_redirect_url)
-
-    def test_call_view_loads(self):  # noqa: D102
-        self.client.login(username='su', password='1234')
-        response = self.client.get(reverse('website:event_create'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'website/event_create.html')
+#     def test_workshop_create_recurring_weekly(self):  # noqa: D102
+#         form_data = {
+#             'event': '1',
+#             'name': 'workshop name',
+#             'date': '2018-11-01',
+#             'start_time': '22:59',
+#             'end_time': '23:59',
+#             'location': 'k17 seminar room',
+#             'repeat_workshop': 'WK'
+#         }
+#         form = WorkshopForm(data=form_data)
+#         form.save()
+#         self.assertTrue(len(Workshop.objects.all()) == 2)
 
 
-class VolunteerAssignmentModelTest(TestCase):
-    """Test for VolunteerAssignment model."""
+# class EventCreateViewTest(TestCase):
+#     """Test event create view."""
 
-    def setUp(self):
-        """Volunteer assignment."""
-        # create event with 1 workshop
-        self.event = make_event(**singular_event_args)
-        self.workshop = Workshop.objects.filter(event=self.event)[0]
+#     @classmethod
+#     def setUpTestData(cls):  # noqa: D102
+#         cls.su = models.CustomUser.objects.create_superuser(username='su',
+#                                                             email='',
+#                                                             password='1234')
 
-        # create volunteers Alice and Bob
-        user_alice = CustomUser.objects.create_user(username='alice',
-                                                    email='',
-                                                    password='1234')
-        user_bob = CustomUser.objects.create_user(username='bob',
-                                                  email='',
-                                                  password='1234')
-        self.alice = user_alice.volunteer
-        self.bob = user_bob.volunteer
+#     def test_call_view_denies_non_staff(self):  # noqa: D102
+#         expected_redirect_url = f"{reverse('admin:login')}?next={reverse('website:event_create')}"  # noqa: E501
+#         response = self.client.get(reverse('website:event_create'),
+#                                    follow=True)
+#         self.assertRedirects(response, expected_redirect_url)
+#         response = self.client.post(reverse('website:event_create'),
+#                                     follow=True)
+#         self.assertRedirects(response, expected_redirect_url)
 
-        # both available for workshop
-        self.workshop.available.add(self.alice)
-        self.workshop.available.add(self.bob)
+#     def test_call_view_loads(self):  # noqa: D102
+#         self.client.login(username='su', password='1234')
+#         response = self.client.get(reverse('website:event_create'))
+#         self.assertEqual(response.status_code, 200)
+#         self.assertTemplateUsed(response, 'website/event_create.html')
 
-        # only Alice is assigned, Bob is on waitlist
-        VolunteerAssignment.objects.create(workshop=self.workshop,
-                                           volunteer=self.alice,
-                                           status=VolunteerAssignment.ASSIGNED)
-        VolunteerAssignment.objects.create(workshop=self.workshop,
-                                           volunteer=self.bob,
-                                           status=VolunteerAssignment.WAITLIST)
+# NOTE: Disable these tests until Volunteer Assignment is re-enabled
+# class VolunteerAssignmentModelTest(TestCase):
+#     """Test for VolunteerAssignment model."""
 
-    def test_available(self):
-        """Check that both Alice and Bob are available for workshop."""
-        self.assertIn(self.alice, self.workshop.available.all())
-        self.assertIn(self.bob, self.workshop.available.all())
-        self.assertEqual(self.alice.workshops_available.first(), self.workshop)
-        self.assertEqual(self.bob.workshops_available.first(), self.workshop)
+#     def setUp(self):
+#         """Volunteer assignment."""
+#         # create event with 1 workshop
+#         self.event = make_event(**singular_event_args)
+#         self.workshop = Workshop.objects.filter(event=self.event)[0]
 
-    def test_assigned(self):
-        """Check that Alice and Bob are assigned correctly."""
-        self.assertIn(self.alice, self.workshop.assigned.all())
-        self.assertIn(self.bob, self.workshop.assigned.all())
-        self.assertEqual(self.alice.workshops_assigned.first(), self.workshop)
-        self.assertEqual(self.bob.workshops_assigned.first(), self.workshop)
-        self.assertEqual(len(self.workshop.assignment.all()), 2)
-        self.assertEqual(self.alice.assignment.first().status,
-                         VolunteerAssignment.ASSIGNED)
-        self.assertEqual(self.bob.assignment.first().status,
-                         VolunteerAssignment.WAITLIST)
+#         # create volunteers Alice and Bob
+#         user_alice = CustomUser.objects.create_user(username='alice',
+#                                                     email='',
+#                                                     password='1234')
+#         user_bob = CustomUser.objects.create_user(username='bob',
+#                                                   email='',
+#                                                   password='1234')
+#         self.alice = user_alice.volunteer
+#         self.bob = user_bob.volunteer
 
-    def test_form_valid(self):
-        """Test Assignment form with valid data."""
-        data = {
-            'workshop_id': self.workshop.id,
-            f'vol_{self.alice.id}': VolunteerAssignment.ASSIGNED,
-            f'vol_{self.bob.id}': VolunteerAssignment.WAITLIST
-        }
-        form = VolunteerAssignForm(data,
-                                   available=self.workshop.available.all(),
-                                   assignments=self.workshop.assignment.all())
-        self.assertTrue(form.is_valid)
+#         # both available for workshop
+#         self.workshop.available.add(self.alice)
+#         self.workshop.available.add(self.bob)
 
-    def test_view(self):
-        """Test assigning view called correctly."""
-        CustomUser.objects.create_superuser(username='su',
-                                            email='',
-                                            password='1234')
-        self.client.login(username='su', password='1234')
-        response = self.client.get(
-            reverse('website:assign_volunteers',
-                    args=[self.event.slug, self.event.id]))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'website/event_assign.html')
+#         # only Alice is assigned, Bob is on waitlist
+#         VolunteerAssignment.objects.create(workshop=self.workshop,
+#                                            volunteer=self.alice,
+#                                            status=VolunteerAssignment.ASSIGNED)
+#         VolunteerAssignment.objects.create(workshop=self.workshop,
+#                                            volunteer=self.bob,
+#                                            status=VolunteerAssignment.WAITLIST)
+
+#     def test_available(self):
+#         """Check that both Alice and Bob are available for workshop."""
+#         self.assertIn(self.alice, self.workshop.available.all())
+#         self.assertIn(self.bob, self.workshop.available.all())
+#         self.assertEqual(self.alice.workshops_available.first(),self.workshop)
+#         self.assertEqual(self.bob.workshops_available.first(), self.workshop)
+
+#     def test_assigned(self):
+#         """Check that Alice and Bob are assigned correctly."""
+#         self.assertIn(self.alice, self.workshop.assigned.all())
+#         self.assertIn(self.bob, self.workshop.assigned.all())
+#         self.assertEqual(self.alice.workshops_assigned.first(),self.workshop)
+#         self.assertEqual(self.bob.workshops_assigned.first(), self.workshop)
+#         self.assertEqual(len(self.workshop.assignment.all()), 2)
+#         self.assertEqual(self.alice.assignment.first().status,
+#                          VolunteerAssignment.ASSIGNED)
+#         self.assertEqual(self.bob.assignment.first().status,
+#                          VolunteerAssignment.WAITLIST)
+
+#     def test_form_valid(self):
+#         """Test Assignment form with valid data."""
+#         data = {
+#             'workshop_id': self.workshop.id,
+#             f'vol_{self.alice.id}': VolunteerAssignment.ASSIGNED,
+#             f'vol_{self.bob.id}': VolunteerAssignment.WAITLIST
+#         }
+#         form = VolunteerAssignForm(data,
+#                                    available=self.workshop.available.all(),
+#                                    assignments=self.workshop.assignment.all())
+#         self.assertTrue(form.is_valid)
+
+#     def test_view(self):
+#         """Test assigning view called correctly."""
+#         CustomUser.objects.create_superuser(username='su',
+#                                             email='',
+#                                             password='1234')
+#         self.client.login(username='su', password='1234')
+#         response = self.client.get(
+#             reverse('website:assign_volunteers',
+#                     args=[self.event.slug, self.event.id]))
+#         self.assertEqual(response.status_code, 200)
+#         self.assertTemplateUsed(response, 'website/event_assign.html')

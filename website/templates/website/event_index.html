@@ -12,6 +12,7 @@
       Event</a>
     {% endif %}
   </div>
+  {% if perms.website.view_event %}
   <div class="event-list">
     {% if events_list %}
     {% for event in events_list %}
@@ -55,6 +56,12 @@
     <h2>There aren't any events at this time</h2>
     <p>Stay tuned for future events!</p>
   </div>
+  {% endif %}
+  {% else %} 
+  <div class="event-list">
+    <h3>Please <a href="{% url 'website:login' %}">login</a> or <a href="{% url 'website:signup' %}">sign up</a> to gain access the workshops.</p>
+    <h3></h3>
+  </div> 
   {% endif %}
 </div>
 {% endblock %}

@@ -4,9 +4,14 @@ import datetime
 import re
 
 from django import forms
-from django.forms import DateInput, Form, ModelForm, TimeInput, ValidationError
+from django.forms import (DateInput, Form, ModelForm, TimeInput,
+                          ValidationError)
 from django.utils.translation import gettext_lazy as _
-from website.models import Event, Registration, VolunteerAssignment, Workshop
+
+from website.models import (CustomUser, Event, Registration, Student,
+                            VolunteerAssignment, Workshop)
+
+from django.contrib.auth.password_validation import validate_password
 
 
 class DatePicker(DateInput):
@@ -152,6 +157,125 @@ class WorkshopForm(ModelForm):
             self.make_recurring_workshops(datetime.timedelta(days=1))
         elif recurrence == 'WK':
             self.make_recurring_workshops(datetime.timedelta(days=7))
+
+
+class CreateUserForm(ModelForm):
+    """Create a new user."""
+
+    def __init__(self, *args, **kwargs):  # noqa: D107
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        # adding ".form-control" class to all fields so that they are styled by
+        # bootstrap.css
+        for field in self:
+            field.field.widget.attrs['class'] = 'form-control'
+
+    error_messages = {
+        'password_mismatch': _("The two password fields didn't match."),
+    }
+
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        help_text=_("Enter the same password as above."))
+
+    class Meta:  # noqa: D106
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email', 'username', 'password']
+        widgets = {
+            'first_name': forms.TextInput(
+                attrs={
+                    'autocomplete': 'given-name'}),
+            'last_name': forms.TextInput(
+                attrs={
+                    'autocomplete': 'family-name'}),
+            'username': forms.TextInput(
+                attrs={
+                    'autocomplete': 'username'}),
+            'email': forms.EmailInput(
+                attrs={
+                    'autocomplete': 'email'}),
+            'password': forms.PasswordInput(
+                attrs={
+                    'autocomplete': 'new-password'})}
+        help_texts = {
+            'email': 'An email that you will regularly check.',
+            'username': 'The name you will sign in with.'}
+
+    def clean_password(self):
+        """Validate password."""
+        password1 = self.cleaned_data.get("password")
+        try:
+            validate_password(password1, self.instance)
+        except forms.ValidationError as error:
+            self.add_error('password', error)
+
+        return password1
+
+    def clean_password2(self):
+        """Validate passwords match."""
+        password1 = self.cleaned_data.get("password")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
+
+    def save(self, commit=True):
+        """Save a new user."""
+        user = super(CreateUserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
+
+class CreateStudentForm(ModelForm):
+    """Create a student model."""
+
+    def __init__(self, *args, **kwargs):  # noqa: D107
+        super(CreateStudentForm, self).__init__(*args, **kwargs)
+        # adding ".form-control" class to all fields so that they are styled by
+        # bootstrap.css
+        for field in self:
+            if field.field.widget.attrs.get('class', None):
+                field.field.widget.attrs['class'] += ' form-control'
+            else:
+                field.field.widget.attrs['class'] = 'form-control'
+
+    class Meta:  # noqa: D106
+        model = Student
+        exclude = ('user',)
+
+        help_texts = {
+            'school': (
+                'If you are home schooled put Home School. ' +
+                'If your school isn\'t in the list put Other.')}
+
+        widgets = {
+            'school': forms.Select(
+                attrs={
+                    'class': 'selectpicker form-control',
+                    'data-live-search': 'true',
+                    'data-size': '5'}
+            ),
+        }
+
+        labels = {
+            'email_consent': (
+                'I agree to be sent emails related to CompClub ' +
+                'using my provided email.')
+        }
+
+    def clean_email_consent(self):
+        """Require email consent."""
+        email_consent = self.cleaned_data.get("email_consent")
+        if not email_consent:
+            raise forms.ValidationError(
+                'You must agree to receive emails from CompClub.')
+
+        return email_consent
 
 
 class RegistrationForm(ModelForm):
