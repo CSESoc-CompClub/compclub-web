@@ -264,7 +264,7 @@ class CreateStudentForm(ModelForm):
 
         labels = {
             'email_consent': (
-                'I agree to be sent email related to CompClub ' +
+                'I agree to be sent emails related to CompClub ' +
                 'using my provided email.')
         }
 
