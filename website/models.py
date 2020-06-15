@@ -123,6 +123,7 @@ class Event(models.Model):
         return self.name
 
     def clean(self):
+        """Restrict highlighting to events with display images only."""
         if self.highlighted_event and not self.display_image:
             raise ValidationError(
                 'You must provide a display image if highlighting the event.')
