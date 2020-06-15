@@ -14,7 +14,7 @@ $error-color: #ff4949;
 $banner-color: #ffffff;
 $dropdown-color: #ffffff;
 $dropdown-highlight-color: #f7f4f4;
-$secondary-font-color: #7e7e7e;
+$secondary-font-color: #555555;
 
 $normal-text-size: 16px;
 $breakpoint-tablet: 768px;
@@ -87,6 +87,12 @@ code {
     li {
         padding-right: 20px;
     }
+}
+
+.cta-link {
+    color: $background-color !important;
+    background-color: $secondary-color;
+    border-radius: 2px;
 }
 
 .dropdown-menu {
@@ -174,7 +180,11 @@ code {
 }
 
 .index-date {
-    color: #B1B1B1;
+    color: $secondary-font-color;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: $secondary-font-color;
 }
 
 .va {
@@ -317,6 +327,9 @@ code {
 
 
 a {
+    word-break: break-all;
+    word-break: break-word;
+
     color: $secondary-color;
     &:hover, &:focus { color: $primary-color; }
 }
