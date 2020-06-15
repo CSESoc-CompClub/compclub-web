@@ -115,7 +115,7 @@ class EventPage(PermissionRequiredMixin, DetailView):
     model = Event
     context_object_name = 'event'
     template_name = 'website/event.html'
-    permission_required = ("website.event.can_view")
+    permission_required = ("website.view_event")
 
     def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
