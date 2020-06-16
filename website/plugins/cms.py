@@ -14,7 +14,7 @@ def render_download(element):
     return format_html(
         """
         <br/>
-        <a class="btn btn-primary download-button"
+        <a class="btn download-button"
            href="{}" role="button" download>
             <i class="fa fa-download"></i> Download {}
         </a>
