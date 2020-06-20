@@ -131,8 +131,11 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         """Override save to update slug."""
         self.slug = slugify(self.name)
-        if self.display_image:
+        if self.display_image and str(
+                self.display_image.path) != str(
+                self.display_image.file):
             self.display_image = compressors.compress_image(self.display_image)
+
         super(Event, self).save(*args, **kwargs)
 
 
@@ -191,7 +194,8 @@ class LightBox(EventPlugin):
         verbose_name_plural = 'images'
 
     def save(self, *args, **kwargs):  # noqa: D102
-        self.file = compressors.compress_image(self.file)
+        if str(self.file.path) != str(self.file.file):
+            self.file = compressors.compress_image(self.file)
         super().save(*args, **kwargs)
 
 
