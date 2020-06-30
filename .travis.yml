@@ -11,7 +11,7 @@ install:
   - pipenv install --dev
 
 script: 
-  - flake8 $(git ls-files '*.py')
+  - flake8 --exclude=website/migrations/*.py,.git $(git ls-files '*.py')
   - ./manage.py makemigrations website
   - ./manage.py migrate
   - ./manage.py test
