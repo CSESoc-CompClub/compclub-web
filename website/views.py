@@ -120,7 +120,7 @@ class EventPage(PermissionRequiredMixin, DetailView):
     template_name = 'website/event.html'
     permission_required = ("website.view_event")
     permission_denied_message = "Event does not exist or you don't have permissions to view the event."   # noqa: E501
-    unreleased_message = "Event hasn't started yet!. It will be available {}{} 😄"   # noqa: E501
+    unreleased_message = "Event hasn't started yet! It will be available {}{} 😄"   # noqa: E501
 
     def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
