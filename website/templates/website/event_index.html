@@ -1,4 +1,5 @@
 {% extends "website/default.html" %}
+{% load list_tools %}
 
 {% block title %} {{ block.super }} - Events {% endblock %}
 
@@ -7,56 +8,25 @@
 <div class="container">
   <div class="event-list-header">
     <h1 class="event-list-title">Events</h1>
-    {% if perms.website.add_event %}
-    <a class="event-button" href="{% url 'website:event_create' %}"><i class="fas fa-calendar-plus"></i> Create
-      Event</a>
-    {% endif %}
   </div>
   {% if perms.website.view_event %}
-  <div class="event-list">
-    {% if events_list %}
-    {% for event in events_list %}
-    <div class="event-holder">
-      <div class="calendar">
-        {% if event.n_workshops > 1 %}
-        <div class="calendar-container calendar-from">
-          <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
-          <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
-        </div>
-        <p class="calendar-divider">&#8212;</p>
-        <div class="calendar-container calendar-to">
-          <h3 class="calendar-month">{{ event.finish_date|date:"M" }}</h3>
-          <p class="calendar-day">{{ event.finish_date|date:"d" }} </p>
-        </div>
-        <h5 class="calendar-nworkshops">{{ event.n_workshops }} Workshops</h5>
-        {% else %}
-        <div class="calendar-container calendar-to">
-          <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
-          <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
-        </div>
-        {% endif %}
-      </div>
-      <div class="event-list-card">
-        <div class="event-card-container">
-          <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
-            <h2 class="event-card-title">{{ event.name }}</h2>
-          </a>
-          <div class="event-card-footer">
-            <a class="event-button right" href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
-              <i class="fas fa-link"></i> Learn more
-            </a>
-          </div>
-        </div>
-      </div>
+    <div class="event-list">
+    {% if perms.website.view_hidden_event %}
+      {% for event in events_list %}
+      {% include "website/event_card.html" %}
+      {% empty %}
+      <h2>There aren't any events at this time</h2>
+      <p>Stay tuned for future events!</p>
+      {% endfor %}
+    {% else %}
+      {% for event in events_list|filterby:"hidden_event,False" %}
+      {% include "website/event_card.html" %}
+      {% empty %}
+      <h2>There aren't any events at this time</h2>
+      <p>Stay tuned for future events!</p>
+      {% endfor %}
+    {% endif %}
     </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="event-list">
-    <h2>There aren't any events at this time</h2>
-    <p>Stay tuned for future events!</p>
-  </div>
-  {% endif %}
   {% else %} 
   <div class="event-list">
     <h3>Please <a href="{% url 'website:login' %}">login</a> or <a href="{% url 'website:signup' %}">sign up</a> to gain access the workshops.</p>

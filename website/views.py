@@ -7,7 +7,7 @@ https://docs.djangoproject.com/en/2.1/topics/http/views/
 """
 import logging
 from collections import namedtuple
-from datetime import datetime
+from datetime import datetime, date
 from smtplib import SMTPSenderRefused
 
 from content_editor.contents import contents_for_item
@@ -25,6 +25,8 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404
+from django.contrib.humanize.templatetags.humanize import ordinal
+import calendar
 
 from website.forms import (CreateStudentForm, CreateUserForm, EventForm,
                            RegistrationForm, VolunteerAssignForm, WorkshopForm)
@@ -34,6 +36,7 @@ from website.plugins import cms
 from website.utils import generate_status_email
 
 logger = logging.getLogger(__name__)
+DISPLAY_ERROR = "$DISPLAY_ERROR$"
 
 
 class Index(ListView):
@@ -116,6 +119,8 @@ class EventPage(PermissionRequiredMixin, DetailView):
     context_object_name = 'event'
     template_name = 'website/event.html'
     permission_required = ("website.view_event")
+    permission_denied_message = "Event does not exist or you don't have permissions to view the event."   # noqa: E501
+    unreleased_message = "Event hasn't started yet!. It will be available {}{} 😄"   # noqa: E501
 
     def get_context_data(self, **kwargs):  # noqa: D102
         context = super().get_context_data(**kwargs)
@@ -124,10 +129,28 @@ class EventPage(PermissionRequiredMixin, DetailView):
     def get(self, request, event_id, slug):  # noqa: D102
         # check if url is valid
         event = get_object_or_404(Event, pk=event_id)
+
+        if (event.hidden_event and not self.request.user.has_perms(
+                "website.view_hidden_event")):
+            self.handle_no_permission()
+
         if event.slug != slug:
             return redirect('website:event_page',
                             event_id=event.pk,
                             slug=event.slug)
+
+        # Not start date yet
+        if (date.today() < event.start_date and not self.request.user.has_perm(
+                "website.view_unreleased_event")):
+            raise Http404(
+                self.get_unreleased_message().format(
+                    f"from {ordinal(event.start_date.day)} ",
+                    calendar.month_name[event.start_date.month]))
+
+        # Unreleased
+        if (not event.released and not self.request.user.has_perm(
+                "website.view_unreleased_event")):
+            raise Http404(self.get_unreleased_message().format("", "soon"))
 
         contents = contents_for_item(
             event, [RichText, Download, NoEmbed, LightBox])
@@ -152,10 +175,21 @@ class EventPage(PermissionRequiredMixin, DetailView):
             elif isinstance(element, LightBox):
                 yield cms.render_lightbox(element)
 
+    def get_unreleased_message(self):
+        """Get the unreleased event message."""
+        return DISPLAY_ERROR + self.unreleased_message
+
+    def get_permission_denied_message(self):
+        """Get the permission denied message.
+
+        This error message is only for debugging and shouldn't display since
+        it provides information to unauthorized users.
+        """
+        return self.permission_denied_message
+
     def handle_no_permission(self):
         """Redirect if no permissions to view page."""
-        raise Http404(
-            "Event does not exist or you don't have permissions to view the event.")  # noqa: E501
+        raise Http404(self.get_permission_denied_message())
 
 
 class SignUpPage(CreateView):
