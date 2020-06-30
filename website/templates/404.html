@@ -6,12 +6,15 @@
 <div class="row">
   <div class="col text-center">
     <h1 class='my-5'>
+    Page Not Found 😱
+    </h1>
+    <h2 class='my-5'>
       {% if exception and '$DISPLAY_ERROR$' in exception %}
       {{ exception|cut:'$DISPLAY_ERROR$' }}
       {% else %}
       That page doesn't exist or you don't have access to it yet.
       {% endif %}
-    </h1>
+    </h2>
     {% if not user.is_authenticated %}
     <p>You can try <a href="{% url 'website:login' %}">logging in</a>/<a href="{% url 'website:signup' %}">signing up.</a></p>
     {% endif %}
