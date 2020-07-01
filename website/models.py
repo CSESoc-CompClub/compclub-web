@@ -96,7 +96,7 @@ class Event(models.Model):
     """Model representing a CompClub event."""
 
     name = models.CharField(max_length=100)
-    start_date = models.DateField()
+    start_date = models.DateField(help_text="Users without the view_unreleased_event permission cannot see the event until start date and the event is released.")  # noqa: E501
     finish_date = models.DateField()
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     slug = models.SlugField(default='event',
@@ -113,10 +113,26 @@ class Event(models.Model):
     highlighted_event = models.BooleanField(
         default=False,
         help_text="Display this event on the homepage")
+    hidden_event = models.BooleanField(
+        default=True,
+        help_text="Users cannot view the event (including on the events feed)",  # noqa: E501
+    )
+    released = models.BooleanField(
+        default=True,
+        help_text="Leave this checked if you want to automatically release the event on the start date (at midnight).",  # noqa: E501
+    )
 
     regions = [
         Region(key='main', title='main region')
     ]
+
+    class Meta:   # noqa: D106
+        permissions = [
+            ("view_hidden_event",
+             "Can view hidden events"),
+            ("view_unreleased_event",
+             "Can view unreleased events"),
+        ]
 
     def __str__(self):
         """Return a string representation of an event."""
@@ -124,6 +140,9 @@ class Event(models.Model):
 
     def clean(self):
         """Restrict highlighting to events with display images only."""
+        if self.highlighted_event and self.hidden_event:
+            raise ValidationError(
+                'You can\'t highlight an event and hide it at the same time.')
         if self.highlighted_event and not self.display_image:
             raise ValidationError(
                 'You must provide a display image if highlighting the event.')

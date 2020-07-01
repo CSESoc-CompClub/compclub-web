@@ -1,0 +1,36 @@
+{% comment %}
+Requires an event to be passed in.
+{% endcomment%}
+<div class="event-holder">
+    <div class="calendar">
+    {% if event.n_workshops > 1 %}
+    <div class="calendar-container calendar-from">
+        <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
+        <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
+    </div>
+    <p class="calendar-divider">&#8212;</p>
+    <div class="calendar-container calendar-to">
+        <h3 class="calendar-month">{{ event.finish_date|date:"M" }}</h3>
+        <p class="calendar-day">{{ event.finish_date|date:"d" }} </p>
+    </div>
+    <h5 class="calendar-nworkshops">{{ event.n_workshops }} Workshops</h5>
+    {% else %}
+    <div class="calendar-container calendar-to">
+        <h3 class="calendar-month">{{ event.start_date|date:"M" }}</h3>
+        <p class="calendar-day">{{ event.start_date|date:"d" }} </p>
+    </div>
+    {% endif %}
+    </div>
+    <div class="event-list-card">
+    <div class="event-card-container">
+        <a href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
+        <h2 class="event-card-title">{{ event.name }}</h2>
+        </a>
+        <div class="event-card-footer">
+        <a class="event-button right" href="{% url 'website:event_page' slug=event.slug event_id=event.pk %}">
+            <i class="fas fa-link"></i> Learn more
+        </a>
+        </div>
+    </div>
+    </div>
+</div>
